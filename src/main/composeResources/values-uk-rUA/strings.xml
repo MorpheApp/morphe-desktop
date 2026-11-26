@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">Деінсталювати</string>
     <string name="home_dialog_continue_anyway">Усе одно продовжити</string>
     <string name="home_dialog_forget_title">Забути %1$s?</string>
-    <string name="home_dialog_forget_message">Це прибере %1$s з історії пропатчених застосунків. Воно не зачіпає жодних файлів — повторний патчинг додасть його назад</string>
+    <string name="home_dialog_forget_message">Це прибере %1$s з історії пропатчених застосунків. Пропатчений файл APK залишиться на диску, а повторний патчинг додасть його назад</string>
+    <string name="home_dialog_also_delete_original">Також видалити збережений оригінальний файл APK</string>
     <string name="home_dialog_uninstall_title">Видалити %1$s?</string>
     <string name="home_dialog_uninstall_message">Це видалить %1$s з підключеного пристрою. Пропатчений APK на диску та ваша історія зберігаються, якщо ви не оберете інакше нижче</string>
     <string name="home_dialog_uninstall_also_forget">Також видалити з «Ваших застосунків»</string>
@@ -567,6 +568,7 @@
     <string name="source_card_updates_manual">Вручну (замінити файл)</string>
     <string name="source_card_loads_newest">Найновіший .mpp у теці</string>
     <string name="source_card_loads_pr">Остання збірка pull-запиту</string>
+    <string name="source_card_loads_json">З JSON-маніфесту</string>
     <string name="source_card_disabled">Це джерело вимкнено. Увімкніть його, щоб завантажити патчі</string>
     <string name="source_card_disabled_tag">Вимкнено</string>
     <string name="source_card_last_enabled">Принаймні одне джерело має залишатися увімкненим</string>
@@ -580,6 +582,7 @@
     <string name="source_card_show_in_folder">Показати в теці</string>
     <string name="source_card_more_description">Інші дії</string>
     <string name="source_card_browse_patches">Переглянути патчі</string>
+    <string name="source_card_report_issue">Повідомити про проблему</string>
     <string name="source_card_priority">Пріоритет %1$d</string>
     <string name="source_card_open_link">Відкрити %1$s у браузері</string>
     <string name="source_card_enable_description">Увімкнути %1$s</string>
@@ -629,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Локальне</string>
     <string name="patch_source_dialog_valid_github">Репозиторій GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Репозиторій GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Репозиторій Codeberg</string>
+    <string name="patch_source_dialog_valid_json">JSON-пакет патчів</string>
     <string name="patch_source_dialog_valid_pr">Pull-запит #%1$s у %2$s. Завжди використовує останню збірку з цього PR</string>
     <string name="patch_source_dialog_builtin_note">Це вбудоване джерело патчів. Його назву та розташування змінити неможливо. Перемикайтеся між стабільною та попередньою версіями на його картці</string>
     <!-- Signing Key Trust Dialog -->
@@ -642,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Локальний файл</string>
     <string name="patch_source_dialog_name_label">Назва</string>
     <string name="patch_source_dialog_name_placeholder">Мої власні патчі</string>
-    <string name="patch_source_dialog_repo_url_label">URL репозиторію</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo або gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Приймає GitHub, GitLab або посилання morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL джерела</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo або example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Приймає GitHub, GitLab, Codeberg, .json URL або посилання morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Назва обов'язкова</string>
-    <string name="patch_source_dialog_error_invalid_url">Введіть дійсний URL GitHub або GitLab</string>
+    <string name="patch_source_dialog_error_invalid_url">Введіть коректну URL-адресу GitHub, GitLab, Codeberg або .json</string>
     <string name="patch_source_dialog_error_invalid_file">Виберіть дійсний файл .mpp</string>
     <string name="patch_source_dialog_add_button">Додати</string>
     <string name="patch_source_dialog_edit_title">Редагувати джерело</string>
     <string name="patch_source_dialog_type_github_repo">Репозиторій GitHub</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">Репозиторій GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Репозиторій Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON-пакет патчів</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp-файл або тека</string>
     <string name="patch_source_dialog_mpp_label">.mpp-файл</string>
     <string name="patch_source_dialog_path_placeholder_dev">Шлях до .mpp або теки</string>
@@ -806,6 +813,17 @@
     <string name="settings_output_folder_default">Тека APK (типово)</string>
     <string name="settings_output_folder_picker_title">Виберіть вихідну папку</string>
     <string name="settings_output_folder_not_found">Папку не знайдено, її буде створено під час наступного патчингу</string>
+    <string name="settings_section_original_apks">Оригінальні файли APK</string>
+    <string name="settings_original_apks_mode_label">Зберігати оригінальні файли APK</string>
+    <string name="settings_original_apks_mode_copy">Копіювати</string>
+    <string name="settings_original_apks_mode_move">Перемістити</string>
+    <string name="settings_original_apks_mode_desc_copy">Копіює оригінальний файл APK кожного застосунку після патчингу, щоб його можна було пропатчити повторно. Зберігається лише остання версія кожного застосунку</string>
+    <string name="settings_original_apks_mode_desc_move">Переміщує оригінальний файл APK кожного застосунку після патчингу, видаляючи його з місця, де ви його вибрали. Зберігається лише остання версія кожного застосунку</string>
+    <string name="settings_original_apks_mode_desc_off">Оригінальні файли APK не зберігаються. Для повторного патчингу вибраний вами файл APK має залишатися на місці</string>
+    <string name="settings_original_apks_kept_title">Збережені оригінальні файли APK</string>
+    <string name="settings_original_apks_open_button">Відкрити теку</string>
+    <string name="settings_original_apks_confirm_title">Видалити збережені оригінальні файли APK?</string>
+    <string name="settings_original_apks_confirm_message">Це видалить усі оригінальні файли APK, які зберіг Morphe. Для повторного патчингу застосунку знову знадобиться його файл APK</string>
     <string name="settings_toggle_auto_start_adb_label">Автозапуск ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Запускати демон ADB під час старту, щоб відстежувати підключені пристрої. Коли вимкнено, Morphe не запускає сервер, а функції встановлення/надсилання вимкнено</string>
     <string name="settings_section_storage">Пам'ять та кеш</string>
@@ -900,17 +918,17 @@
     <string name="settings_github_pat_label">Персональний токен доступу</string>
     <!-- App Info Dialog -->
     <string name="about_component">Десктоп</string>
-    <string name="about_version_patcher_library">Патчер v%1$s · Бібліотека v%2$s</string>
+    <string name="about_version_patcher">Патчер v%1$s</string>
     <string name="about_update_available">Доступне оновлення: %1$s</string>
     <string name="about_up_to_date">Актуальна версія</string>
     <string name="about_links">Офіційні посилання</string>
     <string name="about_link_donate">Підтримати</string>
     <string name="about_link_translations">Переклади</string>
     <string name="contributors">Учасники</string>
-    <string name="contributors_ranking">Ранжування за внеском</string>
+    <string name="contributors_ranking">Рейтинг за внеском</string>
     <string name="contributors_all_time">За весь час</string>
     <string name="contributors_6_months">Останні 6 місяців</string>
-    <string name="contributors_3_months">Останні 3 місяців</string>
+    <string name="contributors_3_months">Останні 3 місяці</string>
     <string name="credits_prior_development">Попередня розробка</string>
     <string name="supporters">Підтримувачі</string>
     <string name="supporters_description">Спонсори в Open Collective</string>

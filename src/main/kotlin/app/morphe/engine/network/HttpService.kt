@@ -42,7 +42,10 @@ import kotlinx.serialization.json.Json
  */
 class HttpService(
     @PublishedApi internal val http: HttpClient,
-    @PublishedApi internal val json: Json = Json { ignoreUnknownKeys = true },
+    @PublishedApi internal val json: Json = Json {
+        ignoreUnknownKeys = true
+        coerceInputValues = true
+    },
 ) {
 
     /**

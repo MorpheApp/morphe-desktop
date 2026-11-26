@@ -208,7 +208,8 @@
     <string name="home_dialog_uninstall_button">Uninstall</string>
     <string name="home_dialog_continue_anyway">Continue anyway</string>
     <string name="home_dialog_forget_title">Forget %1$s?</string>
-    <string name="home_dialog_forget_message">This removes %1$s from your patched-app history. It doesn't touch any files - repatching the app adds it back</string>
+    <string name="home_dialog_forget_message">This removes %1$s from your patched-app history. The patched APK stays on disk, repatching the app adds it back</string>
+    <string name="home_dialog_also_delete_original">Also delete its kept original APK</string>
     <string name="home_dialog_uninstall_title">Uninstall %1$s?</string>
     <string name="home_dialog_uninstall_message">This removes %1$s from the connected device. The patched APK on disk and your history are kept unless you choose otherwise below</string>
     <string name="home_dialog_uninstall_also_forget">Also remove from Your apps</string>
@@ -587,6 +588,7 @@
     <string name="source_card_updates_manual">Manual (replace file)</string>
     <string name="source_card_loads_newest">Newest .mpp in folder</string>
     <string name="source_card_loads_pr">Latest pull request build</string>
+    <string name="source_card_loads_json">From JSON manifest</string>
     <string name="source_card_disabled">This source is disabled. Enable it to load patches</string>
     <string name="source_card_disabled_tag">Disabled</string>
     <string name="source_card_last_enabled">At least one source must remain enabled</string>
@@ -600,6 +602,7 @@
     <string name="source_card_show_in_folder">Show in folder</string>
     <string name="source_card_more_description">More actions</string>
     <string name="source_card_browse_patches">Browse patches</string>
+    <string name="source_card_report_issue">Report an issue</string>
     <string name="source_card_priority">Priority %1$d</string>
     <string name="source_card_open_link">Open %1$s in browser</string>
     <string name="source_card_enable_description">Enable %1$s</string>
@@ -649,6 +652,8 @@
     <string name="patch_source_dialog_kind_local">Local</string>
     <string name="patch_source_dialog_valid_github">GitHub repository</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab repository</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg repository</string>
+    <string name="patch_source_dialog_valid_json">JSON patch bundle</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s on %2$s. Always uses the latest build from this PR</string>
     <string name="patch_source_dialog_builtin_note">This is the built-in patch source. Its name and location cannot be changed. Switch between stable and pre-release on its card</string>
 
@@ -664,17 +669,19 @@
     <string name="patch_source_dialog_local_file_label">Local file</string>
     <string name="patch_source_dialog_name_label">Name</string>
     <string name="patch_source_dialog_name_placeholder">My Custom Patches</string>
-    <string name="patch_source_dialog_repo_url_label">Repository URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo or gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Accepts GitHub, GitLab, or morphe.software/add-source link</string>
+    <string name="patch_source_dialog_repo_url_label">Source URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo or example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Accepts GitHub, GitLab, Codeberg, .json URL, or morphe.software/add-source link</string>
     <string name="patch_source_dialog_error_name_required">Name is required</string>
-    <string name="patch_source_dialog_error_invalid_url">Enter a valid GitHub or GitLab URL</string>
+    <string name="patch_source_dialog_error_invalid_url">Enter a valid GitHub, GitLab, Codeberg, or .json URL</string>
     <string name="patch_source_dialog_error_invalid_file">Select a valid .mpp file</string>
     <string name="patch_source_dialog_add_button">Add</string>
     <string name="patch_source_dialog_edit_title">Edit source</string>
     <string name="patch_source_dialog_type_github_repo">GitHub Repository</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab Repository</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg Repository</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON Patch Bundle</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp file or folder</string>
     <string name="patch_source_dialog_mpp_label">.mpp file</string>
     <string name="patch_source_dialog_path_placeholder_dev">Path to .mpp or folder</string>
@@ -836,6 +843,17 @@
     <string name="settings_output_folder_default">APK's folder (default)</string>
     <string name="settings_output_folder_picker_title">Select output folder</string>
     <string name="settings_output_folder_not_found">Folder not found, will be created on next patch</string>
+    <string name="settings_section_original_apks">Original APKs</string>
+    <string name="settings_original_apks_mode_label">Keep original APKs</string>
+    <string name="settings_original_apks_mode_copy">Copy</string>
+    <string name="settings_original_apks_mode_move">Move</string>
+    <string name="settings_original_apks_mode_desc_copy">Copies each app's original APK after patching, so it can be repatched later. Only the latest version of each app is kept</string>
+    <string name="settings_original_apks_mode_desc_move">Moves each app's original APK after patching, removing it from where you picked it. Only the latest version of each app is kept</string>
+    <string name="settings_original_apks_mode_desc_off">Original APKs are not kept. Repatching needs the APK you picked to still be there</string>
+    <string name="settings_original_apks_kept_title">Kept original APKs</string>
+    <string name="settings_original_apks_open_button">Open folder</string>
+    <string name="settings_original_apks_confirm_title">Delete kept original APKs?</string>
+    <string name="settings_original_apks_confirm_message">This will delete every original APK Morphe has kept. Repatching an app will need its APK again</string>
     <string name="settings_toggle_auto_start_adb_label">Auto-start ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Spawn the ADB daemon on launch so connected devices are monitored. When off, Morphe never starts the server, and install/push features are disabled</string>
     <string name="settings_section_storage">Storage &amp; cache</string>
@@ -936,7 +954,7 @@
 
     <!-- App Info Dialog -->
     <string name="about_component">Desktop</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Library v%2$s</string>
+    <string name="about_version_patcher">Patcher v%1$s</string>
     <string name="about_update_available">Update available: %1$s</string>
     <string name="about_up_to_date">Up to date</string>
     <string name="about_links">Official links</string>

@@ -7,6 +7,7 @@ package app.morphe.gui.ui.screens.patches
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.morphe.engine.OriginalApkStore
 import app.morphe.engine.PatchEngine
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_ALIAS
 import app.morphe.engine.PatchEngine.Config.Companion.DEFAULT_KEYSTORE_PASSWORD
@@ -32,7 +33,6 @@ import app.morphe.gui.data.repository.SeenPatchesRepository
 import app.morphe.gui.util.AvatarLoader
 import app.morphe.gui.util.PatchSourceNaming
 import app.morphe.morphe_desktop.generated.resources.*
-import app.morphe.patcher.dex.BytecodeMode
 import app.morphe.patcher.patch.InstallerType
 import app.morphe.patcher.resource.CpuArchitecture
 import kotlinx.coroutines.runBlocking
@@ -53,7 +53,9 @@ data class BundlePatches(
     val bundleName: String,
     val patches: List<PatchMetadata>,
     val sourceType: PatchSourceType = PatchSourceType.DEFAULT,
-    val avatarUrl: String? = null,
+    val avatarUrls: List<String> = emptyList(),
+    val sourceUrl: String? = null,
+    val patchesFilePath: String? = null,
 )
 
 class PatchSelectionViewModel(
@@ -321,14 +323,16 @@ class PatchSelectionViewModel(
             } else {
                 PatchSourceType.GITHUB
             }
-            val avatarUrl = matchedSource?.let { AvatarLoader.resolveAvatarUrl(it) }
+            val avatarUrls = matchedSource?.let(AvatarLoader::resolveAvatarUrls).orEmpty()
 
             BundlePatches(
                 bundleId = "bundle-$idx-${File(path).nameWithoutExtension}",
                 bundleName = displayName,
                 patches = patches.sortedBy { it.name.lowercase() },
                 sourceType = sourceType,
-                avatarUrl = avatarUrl,
+                avatarUrls = avatarUrls,
+                sourceUrl = matchedSource?.url,
+                patchesFilePath = path,
             )
         }
 
@@ -610,13 +614,21 @@ class PatchSelectionViewModel(
 
     fun createPatchConfig(continueOnError: Boolean = false): PatchEngine.Config {
         saveCurrentSelection()
+        val state = _uiState.value
+
+        // Name the output after the first bundle with selected patches, not the first enabled source.
+        val namingPatchesFilePath = state.bundles
+            .firstOrNull { state.selectedByBundle[it.bundleId].orEmpty().isNotEmpty() }
+            ?.patchesFilePath
+            ?: actualPatchesFilePath
 
         // Resolve output APK file destination.
         val inputFile = File(apkPath)
         val outputFile = ApkOutputNaming.outputApkPath(
             inputApk = inputFile,
-            patchesFile = File(actualPatchesFilePath),
-            baseOutputDir = defaultOutputDirectory?.let { File(it) },
+            patchesFile = File(namingPatchesFilePath),
+            baseOutputDir = defaultOutputDirectory?.let { File(it) }
+                ?: runBlocking { OriginalApkStore.shared.outputBaseFor(inputFile) },
             appDisplayName = apkName,
             appVersion = apkVersion,
         )
@@ -624,14 +636,9 @@ class PatchSelectionViewModel(
         // Flatten selections across bundles for patch engine execution.
         val (selectedPatchNames, disabledPatchNames) = flattenSelection()
 
-        val keepArches = (uiState.value.stripLibsStatus as? StripLibsStatus.WillStrip)
-            ?.keeping
-            ?.mapNotNull { CpuArchitecture.valueOfOrNull(it) }
-            ?.toSet()
-            ?: emptySet()
+        val keepArches = state.stripLibsStatus.architecturesToKeep()
 
         // Capture selection and source snapshots for history tracking.
-        val state = _uiState.value
         val selectionByBundle = state.bundles.associate { bundle ->
             bundle.bundleName to state.selectedByBundle[bundle.bundleId].orEmpty()
         }
@@ -652,7 +659,6 @@ class PatchSelectionViewModel(
         }
 
         val engineCfg = currentEngineConfig ?: runBlocking { engineConfigRepository.loadConfig() }
-        val devMode = engineCfg.developerOptions
 
         return PatchEngine.Config(
             inputApk = inputFile,
@@ -667,11 +673,9 @@ class PatchSelectionViewModel(
             forceCompatibility = true,
             architecturesToKeep = keepArches,
             failOnError = !continueOnError,
-            bytecodeMode = if (devMode) engineCfg.resolvedBytecodeMode() else BytecodeMode.STRIP_FAST,
-            validate = devMode && engineCfg.validateFingerprints,
-            sdkToolsPath = if (devMode) engineCfg.resolvedAndroidSdkPath() else null,
             disablePurge = !autoCleanupTempFiles,
             recordHistory = true,
+            saveOriginalApk = engineCfg.saveOriginalApkMode(),
             appDisplayName = apkName,
             historyMetadata = PatchEngine.HistoryMetadata(
                 originalPackageName = packageName,
@@ -1052,3 +1056,11 @@ internal fun computeStripLibsStatus(
         )
     }
 }
+
+/** Architectures for [PatchEngine.Config.architecturesToKeep], empty keeps all of them. */
+internal fun StripLibsStatus.architecturesToKeep(): Set<CpuArchitecture> =
+    (this as? StripLibsStatus.WillStrip)
+        ?.keeping
+        ?.mapNotNull { CpuArchitecture.valueOfOrNull(it) }
+        ?.toSet()
+        ?: emptySet()

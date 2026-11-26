@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">Odinstalovat</string>
     <string name="home_dialog_continue_anyway">Přesto pokračovat</string>
     <string name="home_dialog_forget_title">Zapomenout %1$s?</string>
-    <string name="home_dialog_forget_message">Tím se %1$s odstraní z historie záplatovaných aplikací. Nedotýká se žádných souborů - opětovné záplatování aplikace ji přidá zpět.</string>
+    <string name="home_dialog_forget_message">Tímto odeberete %1$s z historie upravených aplikací. Upravený APK zůstane na disku, ponovné upravení aplikace jej přidá zpět</string>
+    <string name="home_dialog_also_delete_original">Také smazat uložený originální APK</string>
     <string name="home_dialog_uninstall_title">Odinstalovat %1$s?</string>
     <string name="home_dialog_uninstall_message">Tím se %1$s odstraní z připojeného zařízení. Záplatovaný APK na disku a vaše historie zůstanou zachovány, pokud níže nezvolíte jinak.</string>
     <string name="home_dialog_uninstall_also_forget">Také odstranit z „Vaše aplikace“</string>
@@ -567,6 +568,7 @@
     <string name="source_card_updates_manual">Ručně (nahradit soubor)</string>
     <string name="source_card_loads_newest">Nejnovější .mpp ve složce</string>
     <string name="source_card_loads_pr">Nejnovější build z pull requestu</string>
+    <string name="source_card_loads_json">Z JSON manifestu</string>
     <string name="source_card_disabled">Tento zdroj je zakázán. Pro načtení oprav jej povolte</string>
     <string name="source_card_disabled_tag">Vypnuto</string>
     <string name="source_card_last_enabled">Alespon jeden zdroj musí zůstat povolen</string>
@@ -580,6 +582,7 @@
     <string name="source_card_show_in_folder">Zobrazit ve složce</string>
     <string name="source_card_more_description">Více akcí</string>
     <string name="source_card_browse_patches">Procházet záplaty</string>
+    <string name="source_card_report_issue">Nahlásit problém</string>
     <string name="source_card_priority">Priorita %1$d</string>
     <string name="source_card_open_link">Otevřít %1$s v prohlížeči</string>
     <string name="source_card_enable_description">Povolit %1$s</string>
@@ -629,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Lokální</string>
     <string name="patch_source_dialog_valid_github">GitHub repozitář</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab repozitář</string>
+    <string name="patch_source_dialog_valid_codeberg">Repozitář Codeberg</string>
+    <string name="patch_source_dialog_valid_json">JSON balíček oprav</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s na %2$s. Vždy používá nejnovější sestavení z tohoto PR</string>
     <string name="patch_source_dialog_builtin_note">Toto je vestavěný zdroj záplat. Jeho název a umístění nelze změnit. Na jeho kartě můžete přepínat mezi stabilní a předběžnou verzí</string>
     <!-- Signing Key Trust Dialog -->
@@ -642,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Lokální soubor</string>
     <string name="patch_source_dialog_name_label">Název</string>
     <string name="patch_source_dialog_name_placeholder">Moje vlastní záplaty</string>
-    <string name="patch_source_dialog_repo_url_label">URL úložiště</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/vlastnik/repo nebo gitlab.com/vlastnik/repo</string>
-    <string name="patch_source_dialog_repo_hint">Přijímá GitHub, GitLab nebo odkaz morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL zdroj</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/vlastnik/repo nebo example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Přijímá GitHub, GitLab, Codeberg, .json URL nebo odkaz morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Název je povinný</string>
-    <string name="patch_source_dialog_error_invalid_url">Zadejte platnou URL adresu GitHubu nebo GitLabu</string>
+    <string name="patch_source_dialog_error_invalid_url">Zadejte platnou URL adresu GitHub, GitLab, Codeberg nebo .json</string>
     <string name="patch_source_dialog_error_invalid_file">Vyberte platný soubor .mpp</string>
     <string name="patch_source_dialog_add_button">Přidat</string>
     <string name="patch_source_dialog_edit_title">Upravit zdroj</string>
     <string name="patch_source_dialog_type_github_repo">Úložiště GitHub</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">Úložiště GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Repozitář Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON balíček oprav</string>
     <string name="patch_source_dialog_mpp_or_folder_label">Soubor .mpp nebo složka</string>
     <string name="patch_source_dialog_mpp_label">Soubor .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">Cesta k .mpp nebo složce</string>
@@ -806,6 +813,17 @@
     <string name="settings_output_folder_default">Složka APK (výchozí)</string>
     <string name="settings_output_folder_picker_title">Vybrat výstupní složku</string>
     <string name="settings_output_folder_not_found">Složka nebyla nalezena, bude vytvořena při příštím záplatování.</string>
+    <string name="settings_section_original_apks">Originální APK</string>
+    <string name="settings_original_apks_mode_label">Zachovávat původní APK</string>
+    <string name="settings_original_apks_mode_copy">Kopírovat</string>
+    <string name="settings_original_apks_mode_move">Přesunout</string>
+    <string name="settings_original_apks_mode_desc_copy">Po patchování zkopíruje původní APK každé aplikace, aby bylo možné ji později znovu zapatchovat. Je zachovávána pouze nejnovější verze každé aplikace</string>
+    <string name="settings_original_apks_mode_desc_move">Po patchování přesune původní APK každé aplikace a odstraní jej z místa, kde jste jej vybrali. Je zachovávána pouze nejnovější verze každé aplikace</string>
+    <string name="settings_original_apks_mode_desc_off">Původní APK nejsou zachovávána. Pro opětovné patchování je nutné, aby vybrané APK zůstalo na svém místě</string>
+    <string name="settings_original_apks_kept_title">Zachovaná původní APK</string>
+    <string name="settings_original_apks_open_button">Otevřít složku</string>
+    <string name="settings_original_apks_confirm_title">Smazat zachované originální soubory APK?</string>
+    <string name="settings_original_apks_confirm_message">Tímto budou smazány všechny originální soubory APK, které Morphe zachoval. Pro opětovné patchování aplikace bude být APK opět vyžadován</string>
     <string name="settings_toggle_auto_start_adb_label">Automaticky spustit ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Spustit démon ADB při startu, aby byly připojená zařízení monitorována. Když je tato možnost vypnutá, Morphe nikdy nespustí server a funkce instalace/push jsou zakázány</string>
     <string name="settings_section_storage">Úložiště &amp; mezipaměť</string>
@@ -900,7 +918,7 @@
     <string name="settings_github_pat_label">Osobní přístupový token</string>
     <!-- App Info Dialog -->
     <string name="about_component">Stolní verze</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Knihovna v%2$s</string>
+    <string name="about_version_patcher">Patcher v%1$s</string>
     <string name="about_update_available">K dispozici aktualizace: %1$s</string>
     <string name="about_up_to_date">Aktuální verze</string>
     <string name="about_links">Odkazy na oficiální stránky</string>

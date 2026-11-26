@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">Odstrani</string>
     <string name="home_dialog_continue_anyway">Vseeno nadaljuj</string>
     <string name="home_dialog_forget_title">Pozabi %1$s?</string>
-    <string name="home_dialog_forget_message">To odstrani %1$s iz vaše zgodovine popravljenih aplikacij. Ne dotakne se nobenih datotek – ponovno popravljanje aplikacije jo doda nazaj</string>
+    <string name="home_dialog_forget_message">To odstrani %1$s iz vaše zgodovine popravljenih aplikacij. Popravljen APK ostane na disku, ponovno popravljanje aplikacije pa ga doda nazaj</string>
+    <string name="home_dialog_also_delete_original">Prav tako izbriši shranjen izvirni APK</string>
     <string name="home_dialog_uninstall_title">Odstrani %1$s?</string>
     <string name="home_dialog_uninstall_message">To odstrani %1$s s povezane naprave. Popravljena datoteka APK na disku in vaša zgodovina ostaneta, razen če spodaj izberete drugače</string>
     <string name="home_dialog_uninstall_also_forget">Odstrani tudi iz »Vaših aplikacij«</string>
@@ -567,6 +568,7 @@
     <string name="source_card_updates_manual">Ročno (zamenjava datoteke)</string>
     <string name="source_card_loads_newest">Najnovejša datoteka .mpp v mapi</string>
     <string name="source_card_loads_pr">Zadnji build zahteva za združevanje</string>
+    <string name="source_card_loads_json">Iz JSON manifesta</string>
     <string name="source_card_disabled">Ta vir je onemkljubljen. Omeylite ga za nalaganje popravkov</string>
     <string name="source_card_disabled_tag">Onemogočeno</string>
     <string name="source_card_last_enabled">Vsaj en vir mora ostati omogočen</string>
@@ -580,6 +582,7 @@
     <string name="source_card_show_in_folder">Pokaži v mapi</string>
     <string name="source_card_more_description">Več ukrepov</string>
     <string name="source_card_browse_patches">Prebrskaj popravke</string>
+    <string name="source_card_report_issue">Prijavite težavo</string>
     <string name="source_card_priority">Prioriteta %1$d</string>
     <string name="source_card_open_link">Odpri %1$s v brskalniku</string>
     <string name="source_card_enable_description">Omogoči %1$s</string>
@@ -629,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Lokalni</string>
     <string name="patch_source_dialog_valid_github">GitHub skladišče</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab skladišče</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg skladišče</string>
+    <string name="patch_source_dialog_valid_json">JSON paket popravkov</string>
     <string name="patch_source_dialog_valid_pr">Zahtev za združitev #%1$s na %2$s. Vedno uporabi najnovejšo različijo iz tega PR</string>
     <string name="patch_source_dialog_builtin_note">To je vgrajen vir popravkov. Njegovega imena in lokacije ni mogoče spremeniti. Na njegovi kartici lahko preklopite med stabilno različijo in predrazličjo</string>
     <!-- Signing Key Trust Dialog -->
@@ -642,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Lokalna datoteka</string>
     <string name="patch_source_dialog_name_label">Ime</string>
     <string name="patch_source_dialog_name_placeholder">Moji popravki po meri</string>
-    <string name="patch_source_dialog_repo_url_label">URL skladišča</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo ali gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Sprejema povezave GitHub, GitLab ali morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">Izvorni URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/lastnik/repo ali example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Sprejema GitHub, GitLab, Codeberg, .json URL ali povezavo morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Ime je obvezno</string>
-    <string name="patch_source_dialog_error_invalid_url">Vnesite veljaven URL za GitHub ali GitLab</string>
+    <string name="patch_source_dialog_error_invalid_url">Vnesite veljaven GitHub, GitLab, Codeberg ali .json URL</string>
     <string name="patch_source_dialog_error_invalid_file">Izberite veljavno datoteko .mpp</string>
     <string name="patch_source_dialog_add_button">Dodaj</string>
     <string name="patch_source_dialog_edit_title">Uredi vir</string>
     <string name="patch_source_dialog_type_github_repo">Skladišče GitHub</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">Skladišče GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg skladišče</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON paket popravkov</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp datoteka ali mapa</string>
     <string name="patch_source_dialog_mpp_label">.mpp datoteka</string>
     <string name="patch_source_dialog_path_placeholder_dev">Pot do .mpp ali mape</string>
@@ -806,6 +813,17 @@
     <string name="settings_output_folder_default">Mapa datoteke APK (privzeto)</string>
     <string name="settings_output_folder_picker_title">Izberi izhodno mapo</string>
     <string name="settings_output_folder_not_found">Mapa ni najdena; ustvarjena bo ob naslednjem popravljanju</string>
+    <string name="settings_section_original_apks">Izvirni APK-ji</string>
+    <string name="settings_original_apks_mode_label">Obdržite izvirne APK-je</string>
+    <string name="settings_original_apks_mode_copy">Kopiraj</string>
+    <string name="settings_original_apks_mode_move">Premakni</string>
+    <string name="settings_original_apks_mode_desc_copy">Po zakrpi kopira izvirni APK vsake aplikacije, da ga je mogoče kasneje ponovno zakrpi. Obdržana je le najnovejša različica vsake aplikacije</string>
+    <string name="settings_original_apks_mode_desc_move">Po zakrpi premakne izvirni APK vsake aplikacije in ga odstrani s kraja, kjer ste ga izbrali. Obdržana je le najnovejša različica vsake aplikacije</string>
+    <string name="settings_original_apks_mode_desc_off">Izvirni APK-ji niso obdržani. Za ponovno zakrpo je potrebno, da je izbrani APK še vedno na svojem mestu</string>
+    <string name="settings_original_apks_kept_title">Ohranjeni izvirni APK</string>
+    <string name="settings_original_apks_open_button">Odpri mapo</string>
+    <string name="settings_original_apks_confirm_title">Izbrisati ohranjene izvirne APK?</string>
+    <string name="settings_original_apks_confirm_message">To bo izbrisalo vsak izvirni APK, ki ga je Morphe ohranil. Za ponovno zakrpitev aplikacije bo APK ponovno potreben</string>
     <string name="settings_toggle_auto_start_adb_label">Samodejni zagon ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Ob zagonu zaženi ozadnji program ADB, da se povezane naprave spremljajo. Ko je izklopljeno, Morphe nikoli ne zažene strežnika, funkciji nameščanja in pošiljanja pa sta onemogočeni</string>
     <string name="settings_section_storage">Shranjevanje &amp; predpomnilnik</string>
@@ -900,7 +918,7 @@
     <string name="settings_github_pat_label">Osebni dostopni žeton</string>
     <!-- App Info Dialog -->
     <string name="about_component">Namizni računalnik</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Knjižnica v%2$s</string>
+    <string name="about_version_patcher">Popravilnik v%1$s</string>
     <string name="about_update_available">Na voljo je posodobitev: %1$s</string>
     <string name="about_up_to_date">Posodobljeno</string>
     <string name="about_links">Uradne povezave</string>

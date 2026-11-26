@@ -148,8 +148,9 @@ object ApkInspector {
                 .map { it.name }
                 .filter { it.endsWith(".apk", ignoreCase = true) }
                 .forEach { name ->
-                    val normalized = name.replace("_", "-")
-                    AndroidArchitectures.ALL.filter { arch -> normalized.contains(arch) }
+                    val normalized = name.replace("-", "_")
+                    AndroidArchitectures.ALL
+                        .filter { arch -> Regex("(?<![a-z0-9])${arch.replace("-", "_")}(?![a-z0-9_])").containsMatchIn(normalized) }
                         .forEach { architectures.add(it) }
                 }
 

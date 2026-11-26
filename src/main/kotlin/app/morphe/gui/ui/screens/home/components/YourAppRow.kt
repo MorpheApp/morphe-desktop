@@ -69,8 +69,8 @@ fun YourAppRow(
         listOfNotNull(versionPart, datePart, devicePart).joinToString(" · ")
     }
 
-    val hasUpdate = (state == PatchedAppState.PATCHED_WITH_UPDATES) ||
-        (updateInfo != null && (updateInfo.appOutdated || updateInfo.sources.any { it.outdated }))
+    val hasUpdate = state == PatchedAppState.PATCHED_WITH_UPDATES ||
+        updateInfo?.appOutdated == true
 
     val cardColors = appCardColors()
 

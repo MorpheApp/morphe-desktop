@@ -5,7 +5,6 @@
 
 package app.morphe.engine.patches
 
-import app.morphe.engine.model.PatchesBundle
 import app.morphe.engine.model.Release
 import app.morphe.engine.model.ReleaseAsset
 import app.morphe.engine.network.HttpService
@@ -33,14 +32,17 @@ import kotlinx.serialization.json.jsonPrimitive
 class GitLabPatchSource(
     private val http: HttpService,
     override val repoPath: String,
+    apiBase: String = API_BASE,
+    private val rawBase: String = RAW_BASE,
 ) : RemotePatchSource {
 
     override val provider = PatchProvider.GITLAB
+    override val supportsPrerelease: Boolean = true
 
     // GitLab's projects API expects the path URL-encoded as `owner%2Frepo`.
     private val releasesEndpoint: String = run {
         val encoded = URLEncoder.encode(repoPath, "UTF-8")
-        "$API_BASE/projects/$encoded/releases"
+        "$apiBase/projects/$encoded/releases"
     }
 
     override suspend fun listReleases(): Result<List<Release>> = withContext(Dispatchers.IO) {
@@ -58,37 +60,17 @@ class GitLabPatchSource(
         }
     }
 
-    override suspend fun fetchLatestFromManifest(prerelease: Boolean): Result<Release> = withContext(Dispatchers.IO) {
-        val branch = if (prerelease) "dev" else "main"
-        try {
-            val url = "$RAW_BASE/$repoPath/-/raw/$branch/patches-bundle.json"
-            Logger.info("GitLab: fetching patches-bundle.json from $url")
-            val bundle: PatchesBundle = http.request(url)
-            Logger.info("GitLab: bundle ($branch) → v${bundle.version} @ ${bundle.downloadUrl}")
-            Result.success(bundle.toRelease(prerelease))
-        } catch (e: Exception) {
-            val reason = (e as? HttpService.HttpException)?.status?.toString() ?: (e.message ?: "unknown error")
-            Logger.info("GitLab: no usable patches-bundle.json ($branch) for $repoPath ($reason); falling back to releases API")
-            Result.failure(e)
-        }
+    override suspend fun fetchLatestFromManifest(prerelease: Boolean): Result<Release> {
+        val branch = if (prerelease) BRANCH_DEV else BRANCH_STABLE
+        val url = "$rawBase/$repoPath/-/raw/$branch/$DEFAULT_BUNDLE_FILE"
+        return http.fetchManifestRelease("GitLab", url, repoPath, branch, prerelease)
     }
 
     override suspend fun downloadAsset(
         asset: ReleaseAsset,
         targetFile: File,
         onProgress: ((bytesRead: Long, contentLength: Long?) -> Unit)?,
-    ): Result<File> = withContext(Dispatchers.IO) {
-        try {
-            Logger.info("GitLab: downloading ${asset.name} from ${asset.downloadUrl}")
-            val file = http.downloadToFile(asset.downloadUrl, targetFile, onProgress) {
-                headers { append(HttpHeaders.Accept, "application/octet-stream") }
-            }
-            Logger.info("GitLab: wrote ${file.length()} bytes to ${file.absolutePath}")
-            Result.success(file)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
+    ): Result<File> = http.downloadPatchAsset("GitLab", asset, targetFile, onProgress)
 
     // ── Normalization ──────────────────────────────────────────────────────
 

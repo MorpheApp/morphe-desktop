@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">حذف</string>
     <string name="home_dialog_continue_anyway">به هر حال ادامه دهید</string>
     <string name="home_dialog_forget_title">«%1$s» فراموش شود؟</string>
-    <string name="home_dialog_forget_message">این کار %1$s را از تاریخچهٔ برنامه‌های پچ‌شده حذف می‌کند. به هیچ فایلی دست نمی‌زند - پچ کردن دوبارهٔ برنامه، آن را برمی‌گرداند</string>
+    <string name="home_dialog_forget_message">این مورد %1$s را از تاریخچه برنامه‌های پچ‌شده شما حذف می‌کند. APK پچ‌شده روی دیسک باقی می‌ماند و با پچ کردن مجدد برنامه، دوباره به لیست اضافه می‌شود</string>
+    <string name="home_dialog_also_delete_original">همچنین APK اصلی ذخیره‌شده را حذف کن</string>
     <string name="home_dialog_uninstall_title">«%1$s» حذف نصب شود؟</string>
     <string name="home_dialog_uninstall_message">این کار %1$s را از دستگاه متصل حذف می‌کند. APK پچ‌شده روی دیسک و تاریخچهٔ شما حفظ می‌شوند، مگر اینکه در ادامه طور دیگری انتخاب کنید</string>
     <string name="home_dialog_uninstall_also_forget">همچنین از «برنامههای شما» حذف شود</string>
@@ -567,6 +568,7 @@
     <string name="source_card_updates_manual">دستی (جایگزینی فایل)</string>
     <string name="source_card_loads_newest">جدیدترین .mpp در پوشه</string>
     <string name="source_card_loads_pr">آخرین بیلد pull request</string>
+    <string name="source_card_loads_json">از مانیفست JSON</string>
     <string name="source_card_disabled">این منبع غیرفعال است. برای بارگذاری پچ‌ها آن را فعال کنید</string>
     <string name="source_card_disabled_tag">غیرفعال</string>
     <string name="source_card_last_enabled">حداقل یک منبع باید فعال بماند</string>
@@ -580,6 +582,7 @@
     <string name="source_card_show_in_folder">نمایش در پوشه</string>
     <string name="source_card_more_description">عملیات بیشتر</string>
     <string name="source_card_browse_patches">مرور پچ‌ها</string>
+    <string name="source_card_report_issue">گزارش مشکل</string>
     <string name="source_card_priority">اولوییت %1$d</string>
     <string name="source_card_open_link">باز کردن %1$s در مرورگر</string>
     <string name="source_card_enable_description">فعال کردن %1$s</string>
@@ -629,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">محلی</string>
     <string name="patch_source_dialog_valid_github">مخزن گیت‌هاب</string>
     <string name="patch_source_dialog_valid_gitlab">مخزن GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">مخزن Codeberg</string>
+    <string name="patch_source_dialog_valid_json">بسته پچ JSON</string>
     <string name="patch_source_dialog_valid_pr">درخواست pull شماره %1$s در %2$s. همیشه از آخرین بیلد این PR استفاده می‌کند</string>
     <string name="patch_source_dialog_builtin_note">این منبع پچ داخلی است. نام و مکان آن قابل تغییر نیست. در کارت مربوطه بین نسخه‌های پایدار و پیش‌انتشار جابه‌جا شوید</string>
     <!-- Signing Key Trust Dialog -->
@@ -642,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">فایل محلی</string>
     <string name="patch_source_dialog_name_label">نام</string>
     <string name="patch_source_dialog_name_placeholder">پچ‌های سفارشی من</string>
-    <string name="patch_source_dialog_repo_url_label">آدرس مخزن</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo یا gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">پیوند GitHub، GitLab یا morphe.software/add-source را می‌پذیرد</string>
+    <string name="patch_source_dialog_repo_url_label">آدرس منبع</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo یا example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">پذیرای GitHub، GitLab، Codeberg، آدرس URL با پسوند .json یا لینک morphe.software/add-source است</string>
     <string name="patch_source_dialog_error_name_required">نام الزامی است</string>
-    <string name="patch_source_dialog_error_invalid_url">یک آدرس معتبر GitHub یا GitLab وارد کنید</string>
+    <string name="patch_source_dialog_error_invalid_url">یک آدرس URL معتبر از GitHub، GitLab، Codeberg یا .json وارد کنید</string>
     <string name="patch_source_dialog_error_invalid_file">یک فایل .mpp معتبر انتخاب کنید</string>
     <string name="patch_source_dialog_add_button">افزودن</string>
     <string name="patch_source_dialog_edit_title">ویرایش منبع</string>
     <string name="patch_source_dialog_type_github_repo">مخزن GitHub</string>
     <string name="patch_source_dialog_type_github_pr">درخواست کشش گیت‌هاب</string>
     <string name="patch_source_dialog_type_gitlab_repo">مخزن GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">مخزن Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">بسته پچ JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">فایل .mpp یا پوشه</string>
     <string name="patch_source_dialog_mpp_label">فایل .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">مسیر .mpp یا پوشه</string>
@@ -806,6 +813,17 @@
     <string name="settings_output_folder_default">پوشهٔ APK (پیش‌فرض)</string>
     <string name="settings_output_folder_picker_title">انتخاب پوشهٔ خروجی</string>
     <string name="settings_output_folder_not_found">پوشهٔ خروجی پیدا نشد؛ در پچ بعدی ساخته خواهد شد</string>
+    <string name="settings_section_original_apks">APKهای اصلی</string>
+    <string name="settings_original_apks_mode_label">نگه‌داشتن APKهای اصلی</string>
+    <string name="settings_original_apks_mode_copy">کپی</string>
+    <string name="settings_original_apks_mode_move">انتقال</string>
+    <string name="settings_original_apks_mode_desc_copy">پس از پچ کردن، یک کپی از APK اصلی هر برنامه گرفته می‌شود تا بعداً بتوان دوباره آن را پچ کرد. فقط آخرین نسخه از هر برنامه نگه داشته می‌شود</string>
+    <string name="settings_original_apks_mode_desc_move">پس از پچ کردن، APK اصلی هر برنامه منتقل شده و از جایی که آن را انتخاب کرده‌اید حذف می‌شود. فقط آخرین نسخه از هر برنامه نگه داشته می‌شود</string>
+    <string name="settings_original_apks_mode_desc_off">APKهای اصلی نگه داشته نمی‌شوند. برای پچ کردن مجدد، APK انتخابی شما باید همچنان در جای خود باشد</string>
+    <string name="settings_original_apks_kept_title">APKهای اصلی نگه داشته شده</string>
+    <string name="settings_original_apks_open_button">باز کردن پوشه</string>
+    <string name="settings_original_apks_confirm_title">APKهای اصلی ذخیره‌شده حذف شوند؟</string>
+    <string name="settings_original_apks_confirm_message">این کار تمام APKهای اصلی که Morphe ذخیره کرده است را حذف می‌کند. برای 패چ کردن مجدد یک برنامه، دوباره به APK آن نیاز خواهد بود</string>
     <string name="settings_toggle_auto_start_adb_label">شروع خودکار ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">هنگام راه‌اندازی، سرویس پس‌زمینهٔ ADB اجرا می‌شود تا دستگاه‌های متصل پایش شوند. وقتی خاموش باشد، Morphe هرگز سرور را شروع نمی‌کند و قابلیت‌های نصب/ارسال غیرفعال هستند</string>
     <string name="settings_section_storage">ذخیره‌سازی و حافظه پنهان</string>
@@ -900,7 +918,7 @@
     <string name="settings_github_pat_label">توکن دسترسی شخصی</string>
     <!-- App Info Dialog -->
     <string name="about_component">دسکتاپ</string>
-    <string name="about_version_patcher_library">پچر نسخه %1$s · کتابخانه نسخه %2$s</string>
+    <string name="about_version_patcher">پچر نسخه %1$s</string>
     <string name="about_update_available">به‌روزرسانی موجود است: %1$s</string>
     <string name="about_up_to_date">به‌روز است</string>
     <string name="about_links">پیوندهای رسمی</string>

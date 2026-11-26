@@ -23,6 +23,7 @@
     <string name="source_card_disabled_tag">បានផ្ដាច់</string>
     <!-- Signing Key Trust Dialog -->
     <!-- Patch Source Dialogs -->
+    <string name="patch_source_dialog_repo_url_label">URL ប្រភព</string>
     <!-- Device Indicator -->
     <!-- Error Dialog -->
     <!-- Banners -->

@@ -116,7 +116,7 @@ fun ChangelogPane(
             trailing = {
                 MorpheButton(
                     label = stringResource(Res.string.changelog_view_on_github_button),
-                    icon = MorpheIcons.Github,
+                    icon = MorpheIcons.GitHub,
                     onClick = {
                         val clean = tagVersion.normalizeVersion()
                         uriHandler.openUri("https://github.com/MorpheApp/morphe-desktop/releases/tag/v$clean")

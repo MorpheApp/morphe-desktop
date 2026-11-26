@@ -62,6 +62,7 @@ morphe-data/
   patches/         # cached .mpp patch bundles
   logs/            # application logs
   tmp/             # per-run patching scratch (the default --temporary-files-path location)
+  original-apks/   # kept original APKs, the latest version of each patched app (see Keep original APKs)
   libs/            # GUI runtime (Skiko, JNA) downloaded on the first GUI launch
   morphe.keystore  # shared default signing key (see --keystore)
   config.json      # preferences + configured sources
@@ -197,7 +198,7 @@ Morphe fetches the available releases from your configured source and tags them:
 
 <h4 id="gui-expert-sources">Managing patch sources</h4>
 
-The **Sources page** (accessed via the **Sources** tab in the top navigation pill) lets you manage the patch sources Morphe fetches from: add community sources (GitHub / GitLab repos, or `morphe.software/add-source` links), remove them, or refresh them on demand. Adding more than one source is the GUI counterpart to passing several `-p` URLs on the CLI: their patches show up together, grouped by bundle, on the patch selection screen.
+The **Sources page** (accessed via the **Sources** tab in the top navigation pill) lets you manage the patch sources Morphe fetches from: add community sources (GitHub / GitLab / Codeberg repos, `.json` bundle manifest URLs, or `morphe.software/add-source` links), remove them, or refresh them on demand. Adding more than one source is the GUI counterpart to passing several `-p` URLs on the CLI: their patches show up together, grouped by bundle, on the patch selection screen.
 
 Each source row displays its current version, release channel badge, and signing key fingerprint:
 
@@ -435,6 +436,7 @@ Open Settings from the **Settings** tab in the Home navigation pill, or via the 
 | **Auto-cleanup temp files**    | Delete scratch files after patching                                                                       | On                                                                                   | On by default; `--disable-purge` to turn off                                               |
 | **Check for updates**          | Stable, Prerelease, or Off app update checks (dropdown menu)                                              | Smart (Prerelease on dev builds, else Stable)                                        | `--prerelease` (loosely)                                                                   |
 | **Output folder**              | Default location for patched APKs                                                                         | The input APK's folder                                                               | `-o` / `--out`                                                                             |
+| **Keep original APKs**         | Copy, Move, or Off: keep each app's original APK in `morphe-data/original-apks/`                         | Copy                                                                                 | `--save-original` (`OFF` unless set here)                                                |
 | **Auto-start ADB**             | Start the ADB daemon on launch so devices are monitored                                                   | Off                                                                                  | enables `-i` / install features                                                            |
 | **Storage & cache**            | Inspect and clear caches, or open data root / logs directory                                              | –                                                                                    | [`utility clear-cache`](#utility-clear-cache)                                              |
 
@@ -448,6 +450,7 @@ A couple of items worth expanding on:
 - **Mode switching & patching lock** - Switching **Expert mode** is only available when Settings is opened from Home; opening Settings from any workflow sub-screen locks the toggle (*"Return home to change mode"*). Settings under **Advanced** and **System** that affect patching are disabled while a run is active (*"Disabled while patching"*) and automatically re-enable as soon as patching finishes, while **Appearance** (including **Language**) and **About** remain interactive throughout.
 - **About, Changelogs & Licenses** - **Settings → System → About** displays the application version, **View changelogs**, **Open Source licenses**, **Documentation**, and **Visit website**. The Changelog pane (also opened directly from update banners) features structured release notes parsed into categorized sections (*App support*, *Fixes*, *Improvements*, *New*, *Performance*, *Changes*) with change counters, clickable links, inline code chips, and release status badges (*Installed*, *Latest*, *Pre-release*).
 - **Storage & cache** - Found under **Settings → System**, this section displays live disk usage and file counts broken down by category (**Patches**, **Logs**, **Temporary files**, **Avatar cache**, and **App icon cache**). Each category can be cleared individually or all at once via **Clear all cache**, plus direct buttons to open Morphe's application data folder (`morphe-data/`) and logs folder (`morphe-data/logs/`) in your desktop file manager.
+- **Keep original APKs** - after a successful patch, Morphe keeps a copy of the APK you patched in `morphe-data/original-apks/`, named `<package>-<version>.<ext>`, and the app's repatch dialog uses that copy from then on, so you can tidy up your Downloads folder without losing it. The dropdown chooses **Copy** (the default), **Move**, which also removes the APK from where you picked it, or **Off**. When you **Forget** or **Uninstall** an app that has a kept APK, the dialog offers to delete that APK as well. When no **Output folder** is set, repatching from a kept APK saves the patched APK where the app's previous one was saved.
 - **Auto-start ADB** - when off, Morphe never starts the ADB server and all install/push features are disabled. Turn it on to install patched APKs to your phone from Morphe.
 - **Check for updates** - *Prerelease* surfaces pre-releases; *Stable* only stable ones; *Off* disables update checks. If you've never chosen, Morphe defaults smartly (Prerelease when you're running a dev build).
 - **Route links to patched app** - when on, every ADB install is followed by routing the app's supported web links to the patched app (the [Link handling](#gui-expert-links) step, run automatically). A nested **Disable stock app's links** option also stops the original app from opening those links – only relevant when a rename patch was used and the stock app is still installed. Both are reversible and need a connected device.
@@ -625,8 +628,9 @@ Here is a quick lookup for all the flags under this subcommand:
 | `--unsigned`                   | Skip signing the final APK                                                         |
 | `-t`, `--temporary-files-path` | Path to store temp files                                                           |
 | `--disable-purge`              | Keep this run's scratch files (deleted after patching by default)                  |
+| `--save-original`              | Keep the input APK in `morphe-data/original-apks/`: `COPY`, `MOVE`, or `OFF`        |
 | `--striplibs`                  | Architectures to keep, comma-separated (e.g.`arm64-v8a,x86`)                       |
-| `--bytecode-mode`              | Bytecode mode:`FULL`, `STRIP_SAFE`, or `STRIP_FAST`                                |
+| `--bytecode-mode`              | Bytecode mode: `STRIP_SAFE` or `STRIP_FAST`                                        |
 | `--verify-with-sdk`            | Verify the patched DEX/APK using an Android SDK                                    |
 | `--validate`                   | Verify each fingerprint `match()` matches only one method    |
 | `--continue-on-error`          | Continue patching if a patch fails                                                 |
@@ -647,7 +651,7 @@ Required: Yes
 
 Default: -
 
-This flag specifies the patch file(s) to apply to your APK. You can pass local `.mpp` file paths, directories containing `.mpp` files, or remote repository URLs (GitHub/GitLab repos or GitHub pull requests), and you can repeat `-p` to combine several bundles in one run (see [Using multiple patch bundles](#using-multiple-bundles) below). When a directory is provided, Morphe automatically detects and resolves the newest `.mpp` bundle inside it. When a remote URL is provided, Morphe downloads the bundle and caches it on disk for future runs.
+This flag specifies the patch file(s) to apply to your APK. You can pass local `.mpp` file paths, directories containing `.mpp` files, or remote URLs (GitHub/GitLab/Codeberg repos, GitHub pull requests, or `.json` bundle manifests), and you can repeat `-p` to combine several bundles in one run (see [Using multiple patch bundles](#using-multiple-bundles) below). When a directory is provided, Morphe automatically detects and resolves the newest `.mpp` bundle inside it. When a remote URL is provided, Morphe downloads the bundle and caches it on disk for future runs.
 
 ```
 # Local file or directory:
@@ -655,7 +659,7 @@ java -jar morphe-desktop-*-all.jar patch --patches patches-*.mpp your_app.apk
 java -jar morphe-desktop-*-all.jar patch --patches /path/to/patches/ your_app.apk
 ```
 
-You can also pass a GitHub or GitLab repo URL:
+You can also pass a GitHub, GitLab, Codeberg, or `.json` bundle URL:
 
 ```
 java -jar morphe-desktop-*-all.jar patch --patches https://github.com/MorpheApp/morphe-patches your_app.apk
@@ -709,7 +713,7 @@ Required: No
 
 Default: `false`
 
-When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release. If no dev pre-release is found on the repository, Morphe falls back to the latest stable release automatically.
+When using a GitHub, GitLab, Codeberg, or code-host `.json` URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release. If no dev pre-release is found on the repository, Morphe falls back to the latest stable release automatically.
 
 ```
 java -jar morphe-desktop-*-all.jar patch --patches https://github.com/MorpheApp/morphe-patches --prerelease your_app.apk
@@ -998,6 +1002,25 @@ By default, this run's scratch files are deleted once patching finishes. Pass th
 java -jar morphe-desktop-*-all.jar patch -p patches.mpp --disable-purge your_app.apk
 ```
 
+#### `--save-original`:
+
+Required: No
+
+Default: `OFF`
+
+Keeps the input APK in `morphe-data/original-apks/` after a successful patch, named `<package>-<version>.<ext>`. Only the latest kept version of each app stays: keeping a new one replaces the copy of the earlier version. The patch history then points at the kept APK, so the app can be repatched after the input APK is gone, and patching a kept APK again without `-o` saves the patched APK where the run that kept it saved its own.
+
+
+| Value  | Description                                                                                       |
+|--------|---------------------------------------------------------------------------------------------------|
+| `COPY` | Copies the input APK there and leaves it where it is.                                             |
+| `MOVE` | Copies the input APK there, then deletes it from where it was.                                    |
+| `OFF`  | Doesn't keep the input APK. Default when **Keep original APKs** was never set in the GUI.         |
+
+```
+java -jar morphe-desktop-*-all.jar patch -p patches.mpp --save-original MOVE your_app.apk
+```
+
 #### `--striplibs`:
 
 Required: No
@@ -1021,19 +1044,15 @@ Controls how Morphe processes the APK's bytecode (DEX) during patching. Trade-of
 
 | Value        | Description                                                                                                                  |
 |--------------|------------------------------------------------------------------------------------------------------------------------------|
-| `FULL`       | Rebuilds and includes all bytecode. Largest output, slowest, safest - use if you hit runtime issues with the stripped modes. |
 | `STRIP_SAFE` | Strips bytecode that is provably unused, while keeping anything reachable via reflection or dynamic loading.                 |
 | `STRIP_FAST` | Default. Aggressively strips unused bytecode for the smallest, fastest build. May break apps that rely on reflection.        |
 
 ```
-java -jar morphe-desktop-*-all.jar patch -p patches.mpp --bytecode-mode FULL your_app.apk
+java -jar morphe-desktop-*-all.jar patch -p patches.mpp --bytecode-mode STRIP_SAFE your_app.apk
 ```
 
 > [!TIP]
-> If a patched app crashes at startup or has odd missing-class errors, switch to `STRIP_SAFE` or `FULL` and see if it fixes things.
-
-> [!NOTE]
-> On Windows, Morphe currently forces bytecode mode to `FULL` regardless of what you pass to this flag (workaround for a platform-specific issue). The flag still works as expected on macOS and Linux.
+> If a patched app crashes at startup or has odd missing-class errors, switch to `STRIP_SAFE` and see if it fixes things.
 
 #### `--verify-with-sdk`:
 
@@ -1172,7 +1191,7 @@ Required: Yes
 
 Default: -
 
-One or more paths to `.mpp` patch files, directories containing `.mpp` files, or remote repository URLs (GitHub/GitLab repos or GitHub pull requests) to list patches from. When a directory is provided, Morphe automatically detects and resolves the newest `.mpp` bundle inside it. When a remote URL is provided, Morphe downloads the bundle and caches it on disk for future runs.
+One or more paths to `.mpp` patch files, directories containing `.mpp` files, or remote repository URLs (GitHub/GitLab/Codeberg repos, GitHub pull requests, or `.json` bundle manifests) to list patches from. When a directory is provided, Morphe automatically detects and resolves the newest `.mpp` bundle inside it. When a remote URL is provided, Morphe downloads the bundle and caches it on disk for future runs.
 
 ```
 java -jar morphe-desktop-*-all.jar list-patches --patches patches.mpp
@@ -1186,7 +1205,7 @@ Required: No
 
 Default: `false`
 
-When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release (automatically falling back to the other channel if the preferred channel is not available).
+When using a GitHub, GitLab, Codeberg, or code-host `.json` URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release (automatically falling back to the other channel if the preferred channel is not available).
 
 ```
 java -jar morphe-desktop-*-all.jar list-patches --patches https://github.com/MorpheApp/morphe-patches --prerelease
@@ -1327,7 +1346,7 @@ Required: Yes
 
 Default: -
 
-One or more paths to `.mpp` patch files, directories containing `.mpp` files, or remote repository URLs (GitHub/GitLab repos or GitHub pull requests). When a directory is provided, Morphe automatically detects and resolves the newest `.mpp` bundle inside it. When a URL is provided, Morphe downloads the bundle and caches it on disk for future runs.
+One or more paths to `.mpp` patch files, directories containing `.mpp` files, or remote repository URLs (GitHub/GitLab/Codeberg repos, GitHub pull requests, or `.json` bundle manifests). When a directory is provided, Morphe automatically detects and resolves the newest `.mpp` bundle inside it. When a URL is provided, Morphe downloads the bundle and caches it on disk for future runs.
 
 ```
 java -jar morphe-desktop-*-all.jar list-versions --patches patches.mpp
@@ -1341,7 +1360,7 @@ Required: No
 
 Default: `false`
 
-When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release (automatically falling back to the other channel if the preferred channel is not available).
+When using a GitHub, GitLab, Codeberg, or code-host `.json` URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release (automatically falling back to the other channel if the preferred channel is not available).
 
 ```
 java -jar morphe-desktop-*-all.jar list-versions --patches https://github.com/MorpheApp/morphe-patches --prerelease
@@ -1410,7 +1429,7 @@ Required: Yes
 
 Default: -
 
-One or more paths to `.mpp` patch files, directories containing `.mpp` files, or remote repository URLs (GitHub/GitLab repos or GitHub pull requests) to generate options from. When a directory is provided, Morphe automatically detects and resolves the newest `.mpp` bundle inside it. Multiple `-p` flags can be supplied to include options from multiple bundles in a single file. When a URL is provided, Morphe downloads the bundle and caches it on disk for future runs.
+One or more paths to `.mpp` patch files, directories containing `.mpp` files, or remote repository URLs (GitHub/GitLab/Codeberg repos, GitHub pull requests, or `.json` bundle manifests) to generate options from. When a directory is provided, Morphe automatically detects and resolves the newest `.mpp` bundle inside it. Multiple `-p` flags can be supplied to include options from multiple bundles in a single file. When a URL is provided, Morphe downloads the bundle and caches it on disk for future runs.
 
 ```
 java -jar morphe-desktop-*-all.jar options-create -p patches.mpp -o options.json
@@ -1424,7 +1443,7 @@ Required: No
 
 Default: `false`
 
-When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release (automatically falling back to the other channel if the preferred channel is not available).
+When using a GitHub, GitLab, Codeberg, or code-host `.json` URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release (automatically falling back to the other channel if the preferred channel is not available).
 
 ```
 java -jar morphe-desktop-*-all.jar options-create -p https://github.com/MorpheApp/morphe-patches --prerelease -o options.json

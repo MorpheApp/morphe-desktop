@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">Burahin</string>
     <string name="home_dialog_continue_anyway">Magpatuloy pa rin</string>
     <string name="home_dialog_forget_title">Kalimutan ang %1$s?</string>
-    <string name="home_dialog_forget_message">Aalisin nito ang %1$s mula sa iyong history ng mga na-patch na app. Hindi nito ginagalaw ang anumang file - ibabalik ito ng pag-repatch sa app</string>
+    <string name="home_dialog_forget_message">Aalisin nito ang %1$s mula sa iyong patched-app history. Mananatili ang patched APK sa disk, at ang muling pag-patch sa app ay ibabalik ito</string>
+    <string name="home_dialog_also_delete_original">Burahin din ang nakatagong original APK nito</string>
     <string name="home_dialog_uninstall_title">I-uninstall ang %1$s?</string>
     <string name="home_dialog_uninstall_message">Aalisin nito ang %1$s mula sa konektadong device. Ang na-patch na APK sa disk at ang iyong history ay mananatili maliban kung pipiliin mo kung hindi sa ibaba</string>
     <string name="home_dialog_uninstall_also_forget">Alisin din sa iyong mga app</string>
@@ -567,6 +568,7 @@
     <string name="source_card_updates_manual">Manwal (palitan ang file)</string>
     <string name="source_card_loads_newest">Pinakabagong .mpp sa folder</string>
     <string name="source_card_loads_pr">Pinakabagong pull request build</string>
+    <string name="source_card_loads_json">Mula sa JSON manifest</string>
     <string name="source_card_disabled">Ang source na ito ay naka-disable. I-enable ito para mag-load ng mga patch</string>
     <string name="source_card_disabled_tag">Nakapatay</string>
     <string name="source_card_last_enabled">Kailangang manatiling naka-enable ang kahit isang source</string>
@@ -580,6 +582,7 @@
     <string name="source_card_show_in_folder">Ipakita sa folder</string>
     <string name="source_card_more_description">Higit pang mga aksyon</string>
     <string name="source_card_browse_patches">Mag-browse ng mga patch</string>
+    <string name="source_card_report_issue">Iulat ang isang isyu</string>
     <string name="source_card_priority">Priyoridad %1$d</string>
     <string name="source_card_open_link">Buksan ang %1$s sa browser</string>
     <string name="source_card_enable_description">Paganahin ang %1$s</string>
@@ -629,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Lokal</string>
     <string name="patch_source_dialog_valid_github">GitHub repository</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab repository</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg repository</string>
+    <string name="patch_source_dialog_valid_json">JSON patch bundle</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s sa %2$s. Laging ginagamit ang pinakabagong build mula sa PR na ito</string>
     <string name="patch_source_dialog_builtin_note">Ito ang built-in patch source. Ang pangalan at lokasyon nito ay hindi maaaring baguhin. Mag-switch sa pagitan ng stable at pre-release sa card nito</string>
     <!-- Signing Key Trust Dialog -->
@@ -642,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Lokal na file</string>
     <string name="patch_source_dialog_name_label">Pangalan</string>
     <string name="patch_source_dialog_name_placeholder">Aking mga custom na patch</string>
-    <string name="patch_source_dialog_repo_url_label">URL ng repository</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo o gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Tumatanggap ng GitHub, GitLab, o morphe.software/add-source link</string>
+    <string name="patch_source_dialog_repo_url_label">Pinagmulan ng URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo o example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Tumatanggap ng GitHub, GitLab, Codeberg, .json URL, o morphe.software/add-source link</string>
     <string name="patch_source_dialog_error_name_required">Kinakailangan ang pangalan</string>
-    <string name="patch_source_dialog_error_invalid_url">Maglagay ng wastong GitHub o GitLab URL</string>
+    <string name="patch_source_dialog_error_invalid_url">Maglagay ng valid na GitHub, GitLab, Codeberg, o .json URL</string>
     <string name="patch_source_dialog_error_invalid_file">Pumili ng wastong .mpp file</string>
     <string name="patch_source_dialog_add_button">Idagdag</string>
     <string name="patch_source_dialog_edit_title">I-edit ang source</string>
     <string name="patch_source_dialog_type_github_repo">Repository ng GitHub</string>
     <string name="patch_source_dialog_type_github_pr">Pull Request sa GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">Repository ng GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg Repository</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON Patch Bundle</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp file o folder</string>
     <string name="patch_source_dialog_mpp_label">.mpp file</string>
     <string name="patch_source_dialog_path_placeholder_dev">Path papunta sa .mpp o folder</string>
@@ -806,6 +813,17 @@
     <string name="settings_output_folder_default">Folder ng APK (default)</string>
     <string name="settings_output_folder_picker_title">Pumili ng output folder</string>
     <string name="settings_output_folder_not_found">Hindi nahanap ang folder, gagawin ito sa susunod na pag-patch</string>
+    <string name="settings_section_original_apks">Mga orihinal na APK</string>
+    <string name="settings_original_apks_mode_label">Panatilihin ang mga orihinal na APK</string>
+    <string name="settings_original_apks_mode_copy">Kopyahin</string>
+    <string name="settings_original_apks_mode_move">Ilipat</string>
+    <string name="settings_original_apks_mode_desc_copy">Kinokopya ang orihinal na APK ng bawat app pagkatapos ng patching, para maaari itong i-patch muli mamaya. Ang pinakabagong bersyon lamang ng bawat app ang pinananatili</string>
+    <string name="settings_original_apks_mode_desc_move">Inililipat ang orihinal na APK ng bawat app pagkatapos ng patching, at tinatanggal ito mula sa pinagkunan mo. Ang pinakabagong bersyon lamang ng bawat app ang pinananatili</string>
+    <string name="settings_original_apks_mode_desc_off">Hindi pinananatili ang mga orihinal na APK. Ang muling pag-patch ay nangangailangan na ang APK na pinili mo ay naroon pa rin</string>
+    <string name="settings_original_apks_kept_title">Mga itinabing orihinal na APK</string>
+    <string name="settings_original_apks_open_button">Buksan ang folder</string>
+    <string name="settings_original_apks_confirm_title">Burahin ang mga itinabing orihinal na APK?</string>
+    <string name="settings_original_apks_confirm_message">Buburahin nito ang bawat orihinal na APK na itinabi ng Morphe. Kakailanganin muli ang APK nito kapag muling ni-repatch ang isang app</string>
     <string name="settings_toggle_auto_start_adb_label">Awtomatikong simulan ang ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Sisimulan ang ADB daemon sa paglunsad upang ma-monitor ang mga konektadong device. Kapag naka-off, hindi kailanman sisimulan ng Morphe ang server, at naka-disable ang mga install/push feature</string>
     <string name="settings_section_storage">Imbakan &amp; cache</string>
@@ -900,7 +918,7 @@
     <string name="settings_github_pat_label">Personal Access Token</string>
     <!-- App Info Dialog -->
     <string name="about_component">Desktop</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Library v%2$s</string>
+    <string name="about_version_patcher">Patcher v%1$s</string>
     <string name="about_update_available">Magagamit ang update: %1$s</string>
     <string name="about_up_to_date">Napapanahon na</string>
     <string name="about_links">Mga opisyal na link</string>

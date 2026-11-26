@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">Copot</string>
     <string name="home_dialog_continue_anyway">Lanjutkan saja</string>
     <string name="home_dialog_forget_title">Lupakan %1$s?</string>
-    <string name="home_dialog_forget_message">Ini akan menghapus %1$s dari riwayat aplikasi yang ditambal. Ini tidak menyentuh berkas apa pun - menambal ulang aplikasi akan menambahkannya kembali</string>
+    <string name="home_dialog_forget_message">Ini akan menghapus %1$s dari riwayat aplikasi yang dipatch. APK yang dipatch tetap tersimpan di disk, melakukan patch ulang aplikasi akan menambahkannya kembali</string>
+    <string name="home_dialog_also_delete_original">Hapus juga APK asli yang tersimpan</string>
     <string name="home_dialog_uninstall_title">Copot %1$s?</string>
     <string name="home_dialog_uninstall_message">Ini akan menghapus %1$s dari perangkat yang terhubung. APK hasil tambalan di disk dan riwayat Anda tetap disimpan kecuali Anda memilih sebaliknya di bawah</string>
     <string name="home_dialog_uninstall_also_forget">Juga hapus dari aplikasi Anda</string>
@@ -567,6 +568,7 @@
     <string name="source_card_updates_manual">Manual (ganti file)</string>
     <string name="source_card_loads_newest">.mpp terbaru di folder</string>
     <string name="source_card_loads_pr">Build pull request terbaru</string>
+    <string name="source_card_loads_json">Dari manifes JSON</string>
     <string name="source_card_disabled">Sumber ini dinonaktifkan. Aktifkan untuk memuat patch</string>
     <string name="source_card_disabled_tag">Tidak aktif</string>
     <string name="source_card_last_enabled">Setidaknya satu sumber harus tetap aktif</string>
@@ -580,6 +582,7 @@
     <string name="source_card_show_in_folder">Tampilkan di folder</string>
     <string name="source_card_more_description">Tindakan lainnya</string>
     <string name="source_card_browse_patches">Telusuri tambalan</string>
+    <string name="source_card_report_issue">Laporkan masalah</string>
     <string name="source_card_priority">Prioritas %1$d</string>
     <string name="source_card_open_link">Buka %1$s di peramban</string>
     <string name="source_card_enable_description">Aktifkan %1$s</string>
@@ -629,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Lokal</string>
     <string name="patch_source_dialog_valid_github">Repositori GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Repositori GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Repositori Codeberg</string>
+    <string name="patch_source_dialog_valid_json">Paket tambalan JSON</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s di %2$s. Selalu menggunakan build terbaru dari PR ini</string>
     <string name="patch_source_dialog_builtin_note">Ini adalah sumber patch bawaan. Nama dan lokasinya tidak dapat diubah. Beralihlah antara versi stabil dan pra-rilis pada kartunya</string>
     <!-- Signing Key Trust Dialog -->
@@ -642,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Berkas lokal</string>
     <string name="patch_source_dialog_name_label">Nama</string>
     <string name="patch_source_dialog_name_placeholder">Tambalan Kustom Saya</string>
-    <string name="patch_source_dialog_repo_url_label">URL repositori</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo atau gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Menerima tautan GitHub, GitLab, atau morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">Sumber URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo atau example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Menerima GitHub, GitLab, Codeberg, URL .json, atau tautan morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Nama wajib diisi</string>
-    <string name="patch_source_dialog_error_invalid_url">Masukkan URL GitHub atau GitLab yang valid</string>
+    <string name="patch_source_dialog_error_invalid_url">Masukkan URL GitHub, GitLab, Codeberg, atau .json yang valid</string>
     <string name="patch_source_dialog_error_invalid_file">Pilih berkas .mpp yang valid</string>
     <string name="patch_source_dialog_add_button">Tambah</string>
     <string name="patch_source_dialog_edit_title">Sunting sumber</string>
     <string name="patch_source_dialog_type_github_repo">Repositori GitHub</string>
     <string name="patch_source_dialog_type_github_pr">Pull Request GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">Repositori GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Repositori Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">Paket Tambalan JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">Berkas MPP atau folder</string>
     <string name="patch_source_dialog_mpp_label">Berkas MPP</string>
     <string name="patch_source_dialog_path_placeholder_dev">Jalur ke .mpp atau folder</string>
@@ -806,6 +813,17 @@
     <string name="settings_output_folder_default">Folder APK (default)</string>
     <string name="settings_output_folder_picker_title">Pilih folder keluaran</string>
     <string name="settings_output_folder_not_found">Folder tidak ditemukan, akan dibuat saat menambal berikutnya</string>
+    <string name="settings_section_original_apks">APK Asli</string>
+    <string name="settings_original_apks_mode_label">Simpan APK asli</string>
+    <string name="settings_original_apks_mode_copy">Salin</string>
+    <string name="settings_original_apks_mode_move">Pindahkan</string>
+    <string name="settings_original_apks_mode_desc_copy">Menyalin APK asli setiap aplikasi setelah patching, sehingga dapat dipatch ulang nanti. Hanya versi terbaru dari setiap aplikasi yang disimpan</string>
+    <string name="settings_original_apks_mode_desc_move">Memindahkan APK asli setiap aplikasi setelah patching, menghapusnya dari tempat Anda memilihnya. Hanya versi terbaru dari setiap aplikasi yang disimpan</string>
+    <string name="settings_original_apks_mode_desc_off">APK asli tidak disimpan. Patching ulang memerlukan APK yang Anda pilih untuk tetap ada di sana</string>
+    <string name="settings_original_apks_kept_title">APK asli yang disimpan</string>
+    <string name="settings_original_apks_open_button">Buka folder</string>
+    <string name="settings_original_apks_confirm_title">Hapus APK asli yang disimpan?</string>
+    <string name="settings_original_apks_confirm_message">Ini akan menghapus setiap APK asli yang disimpan Morphe. Melakukan patch ulang pada aplikasi akan membutuhkan APK-nya kembali</string>
     <string name="settings_toggle_auto_start_adb_label">Mulai ADB secara otomatis</string>
     <string name="settings_toggle_auto_start_adb_desc">Memulai daemon ADB saat peluncuran agar perangkat terhubung dipantau. Saat mati, Morphe tidak pernah memulai server, dan fitur pasang/kirim dinonaktifkan</string>
     <string name="settings_section_storage">Penyimpanan &amp; cache</string>
@@ -900,7 +918,7 @@
     <string name="settings_github_pat_label">Token Akses Pribadi</string>
     <!-- App Info Dialog -->
     <string name="about_component">Desktop</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Library v%2$s</string>
+    <string name="about_version_patcher">Patcher v%1$s</string>
     <string name="about_update_available">Tersedia pembaruan: %1$s</string>
     <string name="about_up_to_date">Terbaru</string>
     <string name="about_links">Tautan resmi</string>

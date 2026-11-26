@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">アンインストール</string>
     <string name="home_dialog_continue_anyway">続行</string>
     <string name="home_dialog_forget_title">%1$s を忘れますか？</string>
-    <string name="home_dialog_forget_message">これにより %1$s がパッチ済みアプリの履歴から削除されます。ファイルには影響しません - アプリを再パッチすると履歴に戻ります</string>
+    <string name="home_dialog_forget_message">これにより、パッチ適用済みのアプリ履歴から%1$sが削除されます。パッチ適用済みのAPKはディスクに残るため、アプリに再度パッチを適用すると履歴に追加されます</string>
+    <string name="home_dialog_also_delete_original">保存されている元のAPKも削除する</string>
     <string name="home_dialog_uninstall_title">%1$s をアンインストールしますか？</string>
     <string name="home_dialog_uninstall_message">これにより、接続されたデバイスから %1$s が削除されます。ディスク上のパッチ適用済み APK および履歴は、以下で別途選択しない限り保持されます</string>
     <string name="home_dialog_uninstall_also_forget">「マイアプリ」からも削除</string>
@@ -568,6 +569,7 @@
     <string name="source_card_updates_manual">手動（ファイルを置換）</string>
     <string name="source_card_loads_newest">フォルダ内の最新の.mpp</string>
     <string name="source_card_loads_pr">最新のプルリクエストビルド</string>
+    <string name="source_card_loads_json">JSONマニフェストから</string>
     <string name="source_card_disabled">このソースは無効です。パッチをロードするには有効にしてください</string>
     <string name="source_card_disabled_tag">無効</string>
     <string name="source_card_last_enabled">少なくとも1つのソースは有効のままにする必要があります。</string>
@@ -581,6 +583,7 @@
     <string name="source_card_show_in_folder">フォルダで表示</string>
     <string name="source_card_more_description">その他のアクション</string>
     <string name="source_card_browse_patches">パッチを閲覧</string>
+    <string name="source_card_report_issue">問題を報告する</string>
     <string name="source_card_priority">優先度 %1$d</string>
     <string name="source_card_open_link">ブラウザで %1$s を開く</string>
     <string name="source_card_enable_description">%1$s を有効にする</string>
@@ -630,6 +633,8 @@
     <string name="patch_source_dialog_kind_local">ローカル</string>
     <string name="patch_source_dialog_valid_github">GitHub リポジトリ</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab リポジトリ</string>
+    <string name="patch_source_dialog_valid_codeberg">Codebergリポジトリ</string>
+    <string name="patch_source_dialog_valid_json">JSONパッチバンドル</string>
     <string name="patch_source_dialog_valid_pr">%2$s のプルリクエスト #%1$s。常にこの PR の最新ビルドを使用します</string>
     <string name="patch_source_dialog_builtin_note">これは組み込みのパッチソースです。名前と場所は変更できません。カード上で安定版とプレリリース版を切り替えてください</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +648,19 @@
     <string name="patch_source_dialog_local_file_label">ローカルファイル</string>
     <string name="patch_source_dialog_name_label">名前</string>
     <string name="patch_source_dialog_name_placeholder">マイカスタムパッチ</string>
-    <string name="patch_source_dialog_repo_url_label">リポジトリ URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo または gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">GitHub、GitLab、または morphe.software/add-source リンクを受け付けます</string>
+    <string name="patch_source_dialog_repo_url_label">ソース URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo または example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">GitHub、GitLab、Codeberg、.json URL、または morphe.software/add-source リンクに対応しています</string>
     <string name="patch_source_dialog_error_name_required">名前は必須です</string>
-    <string name="patch_source_dialog_error_invalid_url">有効な GitHub または GitLab の URL を入力してください</string>
+    <string name="patch_source_dialog_error_invalid_url">有効なGitHub、GitLab、Codeberg、または .json URLを入力してください</string>
     <string name="patch_source_dialog_error_invalid_file">有効な .mpp ファイルを選択してください</string>
     <string name="patch_source_dialog_add_button">追加</string>
     <string name="patch_source_dialog_edit_title">ソースを編集</string>
     <string name="patch_source_dialog_type_github_repo">GitHub リポジトリ</string>
     <string name="patch_source_dialog_type_github_pr">GitHub プルリクエスト</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab リポジトリ</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codebergリポジトリ</string>
+    <string name="patch_source_dialog_type_json_bundle">JSONパッチバンドル</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp ファイルまたはフォルダ</string>
     <string name="patch_source_dialog_mpp_label">.mpp ファイル</string>
     <string name="patch_source_dialog_path_placeholder_dev">.mpp またはフォルダへのパス</string>
@@ -807,6 +814,17 @@
     <string name="settings_output_folder_default">APK のフォルダ（デフォルト）</string>
     <string name="settings_output_folder_picker_title">出力フォルダを選択</string>
     <string name="settings_output_folder_not_found">フォルダが見つかりません。次回のパッチ適用時に作成されます</string>
+    <string name="settings_section_original_apks">オリジナルの APK</string>
+    <string name="settings_original_apks_mode_label">オリジナルの APK を保持する</string>
+    <string name="settings_original_apks_mode_copy">コピー</string>
+    <string name="settings_original_apks_mode_move">移動</string>
+    <string name="settings_original_apks_mode_desc_copy">パッチ適用後、各アプリのオリジナルの APK をコピーして保存し、後で再パッチ適用できるようにします。各アプリの最新バージョンのみが保持されます</string>
+    <string name="settings_original_apks_mode_desc_move">パッチ適用後、各アプリのオリジナルの APK を移動させ、選択した場所から削除します。各アプリの最新バージョンのみが保持されます</string>
+    <string name="settings_original_apks_mode_desc_off">オリジナルの APK は保持されません。再パッチ適用には、選択した APK がそのまま残っている必要があります</string>
+    <string name="settings_original_apks_kept_title">保存済みのオリジナル APK</string>
+    <string name="settings_original_apks_open_button">フォルダを開く</string>
+    <string name="settings_original_apks_confirm_title">保存済みのオリジナル APK を削除しますか？</string>
+    <string name="settings_original_apks_confirm_message">Morphe が保存したすべてのオリジナル APK が削除されます。アプリを再度パッチする場合、もう一度 APK が必要になります</string>
     <string name="settings_toggle_auto_start_adb_label">ADB の自動起動</string>
     <string name="settings_toggle_auto_start_adb_desc">起動時に ADB デーモンを起動し、接続されたデバイスを監視します。オフにすると、Morphe はサーバーを起動せず、インストール／プッシュ機能は無効になります</string>
     <string name="settings_section_storage">ストレージ &amp; キャッシュ</string>
@@ -901,7 +919,7 @@
     <string name="settings_github_pat_label">個人アクセストークン</string>
     <!-- App Info Dialog -->
     <string name="about_component">デスクトップ</string>
-    <string name="about_version_patcher_library">パッチャー v%1$s · ライブラリ v%2$s</string>
+    <string name="about_version_patcher">パッチャー v%1$s</string>
     <string name="about_update_available">利用可能な更新があります: %1$s</string>
     <string name="about_up_to_date">最新の状態です</string>
     <string name="about_links">公式リンク</string>

@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">Avinstallera</string>
     <string name="home_dialog_continue_anyway">Fortsätt ändå</string>
     <string name="home_dialog_forget_title">Glöm %1$s?</string>
-    <string name="home_dialog_forget_message">Detta tar bort %1$s från din historik över patchade appar. Det rör inga filer - att patcha appen igen lägger tillbaka den</string>
+    <string name="home_dialog_forget_message">Detta tar bort %1$s från din historik över patchade appar. Den patchade APK:n finns kvar på disken, och om du patchar appen igen läggs den till igen</string>
+    <string name="home_dialog_also_delete_original">Ta även bort dess sparade original-APK</string>
     <string name="home_dialog_uninstall_title">Avinstallera %1$s?</string>
     <string name="home_dialog_uninstall_message">Detta tar bort %1$s från den anslutna enheten. Den patchade APK-filen på disken och din historik behålls om du inte väljer annat nedan.</string>
     <string name="home_dialog_uninstall_also_forget">Ta även bort från Dina appar</string>
@@ -567,6 +568,7 @@
     <string name="source_card_updates_manual">Manuell (ersätt fil)</string>
     <string name="source_card_loads_newest">Nyaste .mpp i mappen</string>
     <string name="source_card_loads_pr">Senaste pull request-build</string>
+    <string name="source_card_loads_json">Från JSON-manifest</string>
     <string name="source_card_disabled">Den här källan är inaktiverad. Aktivera den för att ladda tillägg</string>
     <string name="source_card_disabled_tag">Inaktiverad</string>
     <string name="source_card_last_enabled">Minst en källa måste förbli aktiverad</string>
@@ -580,6 +582,7 @@
     <string name="source_card_show_in_folder">Visa i mapp</string>
     <string name="source_card_more_description">Fler åtgärder</string>
     <string name="source_card_browse_patches">Bläddra bland patchar</string>
+    <string name="source_card_report_issue">Rapportera ett problem</string>
     <string name="source_card_priority">Prioritet %1$d</string>
     <string name="source_card_open_link">Öppna %1$s i webbläsare</string>
     <string name="source_card_enable_description">Aktivera %1$s</string>
@@ -629,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Lokal</string>
     <string name="patch_source_dialog_valid_github">GitHub-arkiv</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab-arkiv</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg-förråd</string>
+    <string name="patch_source_dialog_valid_json">JSON-patchpaket</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s på %2$s. Använder alltid den senaste builden från denna PR</string>
     <string name="patch_source_dialog_builtin_note">Detta är den inbyggda patch-källan. Dess namn och plats kan inte ändras. Växla mellan stabil och förhandsversion på dess kort</string>
     <!-- Signing Key Trust Dialog -->
@@ -642,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Lokal fil</string>
     <string name="patch_source_dialog_name_label">Namn</string>
     <string name="patch_source_dialog_name_placeholder">Mina anpassade patchar</string>
-    <string name="patch_source_dialog_repo_url_label">Arkiv-URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo eller gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Accepterar GitHub-, GitLab- eller morphe.software/add-source-länk</string>
+    <string name="patch_source_dialog_repo_url_label">Källadress</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/ägare/förråd eller example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Accepterar GitHub, GitLab, Codeberg, .json-URL eller morphe.software/add-source-länk</string>
     <string name="patch_source_dialog_error_name_required">Namn krävs</string>
-    <string name="patch_source_dialog_error_invalid_url">Ange en giltig GitHub- eller GitLab-URL</string>
+    <string name="patch_source_dialog_error_invalid_url">Ange en giltig GitHub-, GitLab-, Codeberg- eller .json-URL</string>
     <string name="patch_source_dialog_error_invalid_file">Välj en giltig .mpp-fil</string>
     <string name="patch_source_dialog_add_button">Lägg till</string>
     <string name="patch_source_dialog_edit_title">Redigera källa</string>
     <string name="patch_source_dialog_type_github_repo">GitHub-arkiv</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab-arkiv</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg-förråd</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON-patchpaket</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp-fil eller mapp</string>
     <string name="patch_source_dialog_mpp_label">.mpp-fil</string>
     <string name="patch_source_dialog_path_placeholder_dev">Sökväg till .mpp eller mapp</string>
@@ -806,6 +813,17 @@
     <string name="settings_output_folder_default">APK-filens mapp (standard)</string>
     <string name="settings_output_folder_picker_title">Välj utdatamapp</string>
     <string name="settings_output_folder_not_found">Mappen hittades inte, kommer att skapas vid nästa patchning</string>
+    <string name="settings_section_original_apks">Ursprungliga APK-filer</string>
+    <string name="settings_original_apks_mode_label">Spara ursprungliga APK-filer</string>
+    <string name="settings_original_apks_mode_copy">Kopiera</string>
+    <string name="settings_original_apks_mode_move">Flytta</string>
+    <string name="settings_original_apks_mode_desc_copy">Kopierar varje apps ursprungliga APK efter patchning, så att den kan patchas om senare. Endast den senaste versionen av varje app sparas</string>
+    <string name="settings_original_apks_mode_desc_move">Flyttar varje apps ursprungliga APK efter patchning och tar bort den från platsen där du valde den. Endast den senaste versionen av varje app sparas</string>
+    <string name="settings_original_apks_mode_desc_off">Ursprungliga APK-filer sparas inte. Ompatchning kräver att APK-filen du valde fortfarande finns kvar</string>
+    <string name="settings_original_apks_kept_title">Sparade ursprungliga APK-filer</string>
+    <string name="settings_original_apks_open_button">Öppna mapp</string>
+    <string name="settings_original_apks_confirm_title">Radera sparade ursprungliga APK-filer?</string>
+    <string name="settings_original_apks_confirm_message">Detta kommer att radera varje ursprunglig APK som Morphe har sparat. För att patcha om en app behövs dess APK igen</string>
     <string name="settings_toggle_auto_start_adb_label">Starta ADB automatiskt</string>
     <string name="settings_toggle_auto_start_adb_desc">Starta ADB-demonen vid start så att anslutna enheter övervakas. När den är av startar Morphe aldrig servern och installera/skicka-funktionerna är inaktiverade</string>
     <string name="settings_section_storage">Lagring &amp; cache</string>
@@ -900,7 +918,7 @@
     <string name="settings_github_pat_label">Personlig åtkomsttoken</string>
     <!-- App Info Dialog -->
     <string name="about_component">Skrivbord</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Bibliotek v%2$s</string>
+    <string name="about_version_patcher">Modifierare v%1$s</string>
     <string name="about_update_available">Uppdatering tillgänglig: %1$s</string>
     <string name="about_up_to_date">Uppdaterat</string>
     <string name="about_links">Officiella länkar</string>

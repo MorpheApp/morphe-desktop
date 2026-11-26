@@ -6,9 +6,8 @@ kotlin = "2.4.21"
 # CLI
 picocli = "4.7.7"
 # Keep in step with morphe-patcher: Gradle ships only one of the two, picked by comparing hashes as versions
-arsclib = "50418a07a8"
-morphe-patcher = "2.5.0"
-morphe-library = "1.4.0"
+arsclib = "6435903152"
+morphe-patcher = "2.6.0"
 
 # Compose Desktop
 compose = "1.12.2"
@@ -31,14 +30,14 @@ kotlinx-serialization = "1.13.0"
 jna = "5.19.1"
 
 # FileKit (native file/folder pickers across Win/macOS/Linux)
-filekit = "0.17.0"
+filekit = "0.17.1"
 
 # Logging
 slf4j = "2.0.20"
 
 # Libraries
 about-libraries = "15.3.0"
-oshi = "7.7.3"
+oshi = "7.8.0"
 
 [libraries]
 # Morphe Core
@@ -46,7 +45,6 @@ arsclib = { module = "com.github.MorpheApp:ARSCLib", version.ref = "arsclib" }
 junit-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }
 picocli = { module = "info.picocli:picocli", version.ref = "picocli" }
 morphe-patcher = { module = "app.morphe:morphe-patcher", version.ref = "morphe-patcher" }
-morphe-library = { module = "app.morphe:morphe-library-jvm", version.ref = "morphe-library" }
 
 # Ktor Client
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }

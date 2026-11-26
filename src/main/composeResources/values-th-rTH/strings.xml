@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">ถอนการติดตั้ง</string>
     <string name="home_dialog_continue_anyway">ดำเนินการต่อ</string>
     <string name="home_dialog_forget_title">ลืม %1$s ไหม?</string>
-    <string name="home_dialog_forget_message">การนี้จะนำ %1$s ออกจากประวัติแอปที่แพตช์ของคุณ ไม่กระทบไฟล์ใดๆ - การแพตช์แอปใหม่จะเพิ่มกลับมา</string>
+    <string name="home_dialog_forget_message">สิ่งนี้จะลบ %1$s ออกจากประวัติแอปที่แพตช์ของคุณ ไฟล์ APK ที่แพตช์แล้วจะยังคงอยู่ในดิสก์ และการแพตช์แอปซ้ำจะเพิ่มรายการนี้กลับเข้ามา</string>
+    <string name="home_dialog_also_delete_original">ลบ APK ต้นฉบับที่เก็บไว้ด้วย</string>
     <string name="home_dialog_uninstall_title">ถอนการติดตั้ง %1$s ไหม?</string>
     <string name="home_dialog_uninstall_message">การนี้จะนำ %1$s ออกจากอุปกรณ์ที่เชื่อมต่อ APK ที่แพตช์แล้วบนดิสก์และประวัติของคุณจะยังคงอยู่เว้นแต่คุณเลือกเป็นอย่างอื่นด้านล่าง</string>
     <string name="home_dialog_uninstall_also_forget">เอาออกจากแอปของคุณด้วย</string>
@@ -567,6 +568,7 @@
     <string name="source_card_updates_manual">กำหนดเอง (แทนที่ไฟล์)</string>
     <string name="source_card_loads_newest">ไฟล์ .mpp ล่าสุดในโฟลเดอร์</string>
     <string name="source_card_loads_pr">บิลด์ pull request ล่าสุด</string>
+    <string name="source_card_loads_json">จาก JSON manifest</string>
     <string name="source_card_disabled">แหล่งที่มานี้ถูกปิดใช้งาน โปรดเปิดใช้งานเพื่อโหลดแพตช์</string>
     <string name="source_card_disabled_tag">ปิดใช้งาน</string>
     <string name="source_card_last_enabled">ต้องมีแหล่งที่มาอย่างน้อยหนึ่งแห่งที่เปิดใช้งานอยู่</string>
@@ -580,6 +582,7 @@
     <string name="source_card_show_in_folder">แสดงในโฟลเดอร์</string>
     <string name="source_card_more_description">การดำเนินการเพิ่มเติม</string>
     <string name="source_card_browse_patches">เรียกดูแพตช์</string>
+    <string name="source_card_report_issue">รายงานปัญหา</string>
     <string name="source_card_priority">ลำดับความสำคัญ %1$d</string>
     <string name="source_card_open_link">เปิด %1$s ในเบราว์เซอร์</string>
     <string name="source_card_enable_description">เปิดใช้งาน %1$s</string>
@@ -629,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">ในเครื่อง</string>
     <string name="patch_source_dialog_valid_github">คลัง GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">คลัง GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">รีโพสิทอรี Codeberg</string>
+    <string name="patch_source_dialog_valid_json">ชุดแพตช์ JSON</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s บน %2$s โดยจะใช้บิลด์ล่าสุดจาก PR นี้เสมอ</string>
     <string name="patch_source_dialog_builtin_note">นี่คือแหล่งแพตช์ในตัว ไม่สามารถเปลี่ยนชื่อและตำแหน่งได้ คุณสามารถสลับระหว่างรุ่นเสถียรและรุ่นก่อนเผยแพร่ได้ที่การ์ดของแหล่งนี้</string>
     <!-- Signing Key Trust Dialog -->
@@ -642,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">ไฟล์ในเครื่อง</string>
     <string name="patch_source_dialog_name_label">ชื่อ</string>
     <string name="patch_source_dialog_name_placeholder">แพตช์กำหนดเองของฉัน</string>
-    <string name="patch_source_dialog_repo_url_label">URL ที่เก็บ</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo หรือ gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">รองรับ GitHub, GitLab หรือลิงก์ morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL แหล่งที่มา</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo หรือ example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">รองรับ GitHub, GitLab, Codeberg, URL .json หรือลิงก์ morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">จำเป็นต้องระบุชื่อ</string>
-    <string name="patch_source_dialog_error_invalid_url">ป้อน URL GitHub หรือ GitLab ที่ถูกต้อง</string>
+    <string name="patch_source_dialog_error_invalid_url">กรุณาป้อน URL ของ GitHub, GitLab, Codeberg หรือ .json ที่ถูกต้อง</string>
     <string name="patch_source_dialog_error_invalid_file">เลือกไฟล์ .mpp ที่ถูกต้อง</string>
     <string name="patch_source_dialog_add_button">เพิ่ม</string>
     <string name="patch_source_dialog_edit_title">แก้ไขแหล่ง</string>
     <string name="patch_source_dialog_type_github_repo">ที่เก็บ GitHub</string>
     <string name="patch_source_dialog_type_github_pr">Pull Request ของ GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">ที่เก็บ GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">รีโพสิทอรี Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">ชุดแพตช์ JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">ไฟล์ .mpp หรือโฟลเดอร์</string>
     <string name="patch_source_dialog_mpp_label">ไฟล์ .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">เส้นทางไปยัง .mpp หรือโฟลเดอร์</string>
@@ -806,6 +813,17 @@
     <string name="settings_output_folder_default">โฟลเดอร์ของ APK (ค่าเริ่มต้น)</string>
     <string name="settings_output_folder_picker_title">เลือกโฟลเดอร์เอาต์พุต</string>
     <string name="settings_output_folder_not_found">ไม่พบโฟลเดอร์ จะสร้างขึ้นเมื่อแพตช์ครั้งถัดไป</string>
+    <string name="settings_section_original_apks">APK ต้นฉบับ</string>
+    <string name="settings_original_apks_mode_label">เก็บ APK ต้นฉบับไว้</string>
+    <string name="settings_original_apks_mode_copy">คัดลอก</string>
+    <string name="settings_original_apks_mode_move">ย้าย</string>
+    <string name="settings_original_apks_mode_desc_copy">คัดลอก APK ต้นฉบับของแต่ละแอปหลังจากแพตช์ เพื่อให้สามารถนำมาแพตช์ซ้ำได้ในภายหลัง โดยจะเก็บไว้เฉพาะเวอร์ชันล่าสุดของแต่ละแอปเท่านั้น</string>
+    <string name="settings_original_apks_mode_desc_move">ย้าย APK ต้นฉบับของแต่ละแอปหลังจากแพตช์ โดยลบออกจากตำแหน่งที่คุณเลือกไว้ โดยจะเก็บไว้เฉพาะเวอร์ชันล่าสุดของแต่ละแอปเท่านั้น</string>
+    <string name="settings_original_apks_mode_desc_off">ไม่มีการเก็บ APK ต้นฉบับไว้ การแพตช์ซ้ำจำเป็นต้องมี APK ที่คุณเลือกอยู่ในตำแหน่งเดิม</string>
+    <string name="settings_original_apks_kept_title">เก็บ APK ต้นฉบับไว้</string>
+    <string name="settings_original_apks_open_button">เปิดโฟลเดอร์</string>
+    <string name="settings_original_apks_confirm_title">ลบ APK ต้นฉบับที่เก็บไว้หรือไม่?</string>
+    <string name="settings_original_apks_confirm_message">สิ่งนี้จะลบ APK ต้นฉบับทุกไฟล์ที่ Morphe เก็บไว้ การแพตช์แอปอีกครั้งจะต้องใช้ APK ของแอปนั้นอีกครั้ง</string>
     <string name="settings_toggle_auto_start_adb_label">เริ่ม ADB อัตโนมัติ</string>
     <string name="settings_toggle_auto_start_adb_desc">เริ่มเดมอน ADB เมื่อเปิดแอปเพื่อตรวจสอบอุปกรณ์ที่เชื่อมต่อ เมื่อปิด Morphe จะไม่เริ่มเซิร์ฟเวอร์ และฟีเจอร์ติดตั้ง/ส่งจะถูกปิดใช้งาน</string>
     <string name="settings_section_storage">พื้นที่จัดเก็บ &amp; แคช</string>
@@ -900,7 +918,7 @@
     <string name="settings_github_pat_label">โทเค็นการเข้าถึงส่วนบุคคล</string>
     <!-- App Info Dialog -->
     <string name="about_component">เดสก์ท็อป</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Library v%2$s</string>
+    <string name="about_version_patcher">ตัวแพตช์ v%1$s</string>
     <string name="about_update_available">มีการอัปเดตพร้อมใช้งาน: %1$s</string>
     <string name="about_up_to_date">เป็นเวอร์ชันล่าสุดแล้ว</string>
     <string name="about_links">ลิงก์อย่างเป็นทางการ</string>

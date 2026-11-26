@@ -5,12 +5,18 @@
 
 package app.morphe.gui.util
 
+import app.morphe.engine.patches.DEFAULT_BUNDLE_FILE
+import app.morphe.engine.patches.JSON_EXTENSION
 import app.morphe.engine.patches.PatchBundleLoader
+import app.morphe.engine.patches.PatchCache
+import app.morphe.engine.patches.PatchProvider
 import app.morphe.engine.patches.RemotePatchSourceFactory
+import app.morphe.engine.patches.SourceUrl
 import app.morphe.gui.data.model.DEFAULT_PATCH_SOURCE
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
 import java.io.File
+import java.util.Locale
 
 object PatchSourceNaming {
     const val FALLBACK_DEFAULT_NAME = "Morphe Patches"
@@ -26,12 +32,17 @@ object PatchSourceNaming {
         return false
     }
 
-    /** Extracts owner/repo identifier from a repository URL. */
+    /** Extracts a human-readable display name from a repository or JSON bundle URL. */
     fun suggestNameFromUrl(input: String?): String? {
         if (input.isNullOrBlank()) return null
         val parsed = RemotePatchSourceFactory.parse(input)
         if (parsed != null) {
-            return if (parsed.prNumber != null) "${parsed.repoPath}#${parsed.prNumber}" else parsed.repoPath.takeIf { it.isNotBlank() }
+            return when (parsed.provider) {
+                PatchProvider.GITHUB_PR -> "${parsed.repoPath}#${parsed.prNumber}"
+                PatchProvider.JSON -> suggestNameFromJsonEndpoint(parsed.canonicalUrl)
+                PatchProvider.GITHUB, PatchProvider.GITLAB, PatchProvider.CODEBERG ->
+                    parsed.repoPath.takeIf { it.isNotBlank() }
+            }
         }
         val trimmed = input.trim().removeSuffix("/")
         val lastSlash = trimmed.lastIndexOf('/')
@@ -44,6 +55,24 @@ object PatchSourceNaming {
         } else {
             lastSegment
         }
+    }
+
+    private fun suggestNameFromJsonEndpoint(endpoint: String): String? {
+        val source = SourceUrl.parse(endpoint) ?: return null
+        val fileName = source.segments.lastOrNull()?.takeIf { it.endsWith(".$JSON_EXTENSION", ignoreCase = true) }
+        val isGenericDefault = fileName.equals(DEFAULT_BUNDLE_FILE, ignoreCase = true)
+        if (source.codeHost != null && (fileName == null || isGenericDefault)) {
+            return source.repoPath
+        }
+        val baseName = fileName?.dropLast(JSON_EXTENSION.length + 1)
+            ?.replace(Regex("[._\\-]+"), " ")
+            ?.replace(Regex("\\s+"), " ")
+            ?.trim()
+            ?.lowercase(Locale.US)
+        if (!baseName.isNullOrBlank() && baseName !in setOf("bundle", "bundles", "patches bundle")) {
+            return baseName.replaceFirstChar { it.titlecase(Locale.US) }
+        }
+        return source.repoPath ?: source.host
     }
 
     /** Resolves a human-readable patch source name from candidate name, file, or sources. */
@@ -72,10 +101,8 @@ object PatchSourceNaming {
             val parentName = file.parentFile?.name
             if (parentName != null) {
                 val repoMatch = sources.firstOrNull { s ->
-                    val repo = s.url?.removePrefix("https://github.com/")
-                        ?.removePrefix("https://gitlab.com/")
-                        ?.trimEnd('/')
-                    repo != null && parentName.equals(repo.replace("/", "-"), ignoreCase = true)
+                    val parsed = s.url?.let(RemotePatchSourceFactory::parse)
+                    parsed != null && parentName.equals(PatchCache.dirName(parsed.repoPath), ignoreCase = true)
                 }
                 if (repoMatch != null) return repoMatch.name
             }

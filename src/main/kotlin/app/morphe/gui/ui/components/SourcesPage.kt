@@ -51,6 +51,7 @@ import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.ui.components.sources.SourceCard
 import app.morphe.gui.ui.components.sources.SourceCardActions
 import app.morphe.gui.ui.components.sources.SourceCardModel
+import app.morphe.gui.ui.components.sources.resolveIssuesUrl
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.util.SourceDetails
@@ -152,6 +153,7 @@ fun SourcesPage(
                                 isLoading = isLoading && source.enabled && id in reloadingSourceIds,
                                 isLastEnabled = enabledCount == 1,
                             )
+                            val issuesUrl = resolveIssuesUrl(source, sourceDetails[id]?.pageUrl)
                             val actions = SourceCardActions(
                                 onToggleEnabled = { onToggleEnabled(id, it) },
                                 onChannelChange = { pre -> if (pre) confirmingPrerelease = source else onChannelChange(source, false) },
@@ -159,6 +161,7 @@ fun SourcesPage(
                                 onRemove = if (source.deletable) ({ removingSource = source }) else null,
                                 onOpenPatches = onOpenPatches?.let { open -> { open(id) } },
                                 onOpenPullRequest = { source.url?.let { runCatching { uriHandler.openUri(it) } } },
+                                onReportIssue = issuesUrl?.let { url -> { runCatching { uriHandler.openUri(url) } } },
                                 onFollowLatest = { onFollowLatest(source) },
                                 onRetry = onRefresh,
                                 onReviewSigner = { trustingSourceId = id },

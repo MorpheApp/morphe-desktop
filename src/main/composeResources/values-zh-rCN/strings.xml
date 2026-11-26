@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">卸载</string>
     <string name="home_dialog_continue_anyway">仍然继续</string>
     <string name="home_dialog_forget_title">忘记 %1$s？</string>
-    <string name="home_dialog_forget_message">这会将 %1$s 从您的已修补应用历史中移除。它不会触碰任何文件 - 重新修补该应用会将其加回</string>
+    <string name="home_dialog_forget_message">这将从您的补丁应用历史记录中移除 %1$s。补丁后的 APK 将保留在磁盘中，重新对该应用打补丁会将其重新添加回来</string>
+    <string name="home_dialog_also_delete_original">同时删除其保留的原始 APK</string>
     <string name="home_dialog_uninstall_title">卸载 %1$s？</string>
     <string name="home_dialog_uninstall_message">这会将 %1$s 从已连接的设备中移除。除非您在下方另行选择，否则磁盘上的已修补 APK 和您的历史记录将保留</string>
     <string name="home_dialog_uninstall_also_forget">同时从“你的应用”中移除</string>
@@ -567,6 +568,7 @@
     <string name="source_card_updates_manual">手动（替换文件）</string>
     <string name="source_card_loads_newest">文件夹中最新的 .mpp</string>
     <string name="source_card_loads_pr">最新的拉取请求构建</string>
+    <string name="source_card_loads_json">来自 JSON 清单</string>
     <string name="source_card_disabled">此源已禁用。请启用它以加载补丁</string>
     <string name="source_card_disabled_tag">已禁用</string>
     <string name="source_card_last_enabled">必须至少保留一个启用的源</string>
@@ -580,6 +582,7 @@
     <string name="source_card_show_in_folder">在文件夹中显示</string>
     <string name="source_card_more_description">更多操作</string>
     <string name="source_card_browse_patches">浏览补丁</string>
+    <string name="source_card_report_issue">报告问题</string>
     <string name="source_card_priority">优先级 %1$d</string>
     <string name="source_card_open_link">在浏览器中打开 %1$s</string>
     <string name="source_card_enable_description">启用 %1$s</string>
@@ -629,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">本地</string>
     <string name="patch_source_dialog_valid_github">GitHub 仓库</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab 仓库</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg 仓库</string>
+    <string name="patch_source_dialog_valid_json">JSON 补丁包</string>
     <string name="patch_source_dialog_valid_pr">%2$s 上的 Pull Request #%1$s。始终使用此 PR 的最新构建版本</string>
     <string name="patch_source_dialog_builtin_note">这是内置的补丁源。其名称和位置无法更改。可以在其卡片上切换稳定版和预发布版</string>
     <!-- Signing Key Trust Dialog -->
@@ -642,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">本地文件</string>
     <string name="patch_source_dialog_name_label">名称</string>
     <string name="patch_source_dialog_name_placeholder">我的自定义补丁</string>
-    <string name="patch_source_dialog_repo_url_label">仓库 URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo 或 gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">接受 GitHub、GitLab 或 morphe.software/add-source 链接</string>
+    <string name="patch_source_dialog_repo_url_label">来源 URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo 或 example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">支持 GitHub、GitLab、Codeberg、.json URL 或 morphe.software/add-source 链接</string>
     <string name="patch_source_dialog_error_name_required">名称为必填项</string>
-    <string name="patch_source_dialog_error_invalid_url">输入有效的 GitHub 或 GitLab URL</string>
+    <string name="patch_source_dialog_error_invalid_url">请输入有效的 GitHub、GitLab、Codeberg 或 .json URL</string>
     <string name="patch_source_dialog_error_invalid_file">选择有效的 .mpp 文件</string>
     <string name="patch_source_dialog_add_button">添加</string>
     <string name="patch_source_dialog_edit_title">编辑来源</string>
     <string name="patch_source_dialog_type_github_repo">GitHub 仓库</string>
     <string name="patch_source_dialog_type_github_pr">GitHub 拉取请求</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab 仓库</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg 仓库</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON 补丁包</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp 文件或文件夹</string>
     <string name="patch_source_dialog_mpp_label">.mpp 文件</string>
     <string name="patch_source_dialog_path_placeholder_dev">.mpp 或文件夹的路径</string>
@@ -806,6 +813,17 @@
     <string name="settings_output_folder_default">APK 所在文件夹（默认）</string>
     <string name="settings_output_folder_picker_title">选择输出文件夹</string>
     <string name="settings_output_folder_not_found">未找到文件夹，将在下次修补时创建</string>
+    <string name="settings_section_original_apks">原始 APK</string>
+    <string name="settings_original_apks_mode_label">保留原始 APK</string>
+    <string name="settings_original_apks_mode_copy">复制</string>
+    <string name="settings_original_apks_mode_move">移动</string>
+    <string name="settings_original_apks_mode_desc_copy">在修补后复制每个应用的原始 APK，以便稍后重新修补。仅保留每个应用的最新版本</string>
+    <string name="settings_original_apks_mode_desc_move">在修补后移动每个应用的原始 APK，将其从您选择的位置移除。仅保留每个应用的最新版本</string>
+    <string name="settings_original_apks_mode_desc_off">不保留原始 APK。重新修补需要您选择的 APK 仍然存在</string>
+    <string name="settings_original_apks_kept_title">已保留的原始 APK</string>
+    <string name="settings_original_apks_open_button">打开文件夹</string>
+    <string name="settings_original_apks_confirm_title">删除保留的原始 APK？</string>
+    <string name="settings_original_apks_confirm_message">这将删除 Morphe 保留的所有原始 APK。重新修补应用将再次需要其 APK</string>
     <string name="settings_toggle_auto_start_adb_label">自动启动 ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">启动时生成 ADB 守护进程，以监视已连接的设备。关闭时，Morphe 不会启动服务器，安装/推送功能将被禁用</string>
     <string name="settings_section_storage">存储 &amp; 缓存</string>
@@ -900,7 +918,7 @@
     <string name="settings_github_pat_label">个人访问令牌</string>
     <!-- App Info Dialog -->
     <string name="about_component">桌面</string>
-    <string name="about_version_patcher_library">补丁程序 v%1$s · 库 v%2$s</string>
+    <string name="about_version_patcher">补丁程序 v%1$s</string>
     <string name="about_update_available">有可用更新：%1$s</string>
     <string name="about_up_to_date">已是最新版本</string>
     <string name="about_links">官方链接</string>

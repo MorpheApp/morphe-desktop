@@ -202,7 +202,8 @@
     <string name="home_dialog_uninstall_button">سڕینەوە</string>
     <string name="home_dialog_continue_anyway">بە هەر حاڵ بەردەوام بە</string>
     <string name="home_dialog_forget_title">%1$s لەبیر بکەم؟</string>
-    <string name="home_dialog_forget_message">ئەمە %1$s لە مێژووی ئەپی پاتچکراوت لادەبات. دەستکاری هیچ فایلێک ناکات - دووبارە پاتچکردنی ئەپەکە دەیگەرێنێتەوە</string>
+    <string name="home_dialog_forget_message">ئەمە %1$s لە مێژووی ئەپڵیکەیشنە چاککراوەکانت لادەبات. فایلی APK چاککراوەکە لەسەر دیسکەکە دەمێنێتەوە، دووبارە چاککردنەوەی ئەپەکە دیسایە و دەگەڕێتەوە</string>
+    <string name="home_dialog_also_delete_original">هەروەها فایلی APK ڕەسەنی پارێزراوەکەشی بسڕەوە</string>
     <string name="home_dialog_uninstall_title">%1$s بسڕمەوە؟</string>
     <string name="home_dialog_uninstall_message">ئەمە %1$s لە ئامێرە بەستراوەکە لادەبات. APK پاتچکراوەکە لەسەر دیسک و مێژووەکەت دەمێننەوە مەگەر لە خوارەوە بڕیار بدەیت بە شێوەیەکی تر</string>
     <string name="home_dialog_uninstall_also_forget">هەروەها لە ئەپەکانی تۆش لابەرە</string>
@@ -571,6 +572,7 @@
     <string name="source_card_updates_manual">دەستی (گۆڕینی فایل)</string>
     <string name="source_card_loads_newest">نوێترین .mpp لە فۆڵدەرەکەدا</string>
     <string name="source_card_loads_pr">دوایین بڵاوکراوەی pull request</string>
+    <string name="source_card_loads_json">لە مانیفێستی JSON</string>
     <string name="source_card_disabled">ئەم سەرچاوەیە ناچالاکە. چالاکی بکە بۆ بارکردنی پاتچەکان</string>
     <string name="source_card_disabled_tag">ناچالاک</string>
     <string name="source_card_last_enabled">دەبێت لانی کەم یەک سەرچاوە چالاک بمێنێت</string>
@@ -584,6 +586,7 @@
     <string name="source_card_show_in_folder">نیشاندانی لە فۆڵدەر</string>
     <string name="source_card_more_description">کردارەکانی تر</string>
     <string name="source_card_browse_patches">گەڕان لە پاتچەکان</string>
+    <string name="source_card_report_issue">ڕاگەیاندنی کێشەیەک</string>
     <string name="source_card_priority">ئەولەویەتی %1$d</string>
     <string name="source_card_open_link">کردنەوەی %1$s لە وێبگەڕ</string>
     <string name="source_card_enable_description">چالاککردنی %1$s</string>
@@ -633,6 +636,8 @@
     <string name="patch_source_dialog_kind_local">ناوخۆ</string>
     <string name="patch_source_dialog_valid_github">کۆگای GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">کۆگای GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">کۆگای Codeberg</string>
+    <string name="patch_source_dialog_valid_json">باندڵی پاتچی JSON</string>
     <string name="patch_source_dialog_valid_pr">داواکاری ڕاکێشانی #%1$s لە %2$s. هەمیشە نوێترین وەشان لەم PR-ە بەکاردەهێنێت</string>
     <string name="patch_source_dialog_builtin_note">ئەمە سەرچاوەی پاتچی داخراوە. ناوی و شوێنەکەی ناگۆڕێت. لەسەر کارتەکەی نێوان جێگیر و پێش-بڵاوکردن بگۆڕە</string>
     <!-- Signing Key Trust Dialog -->
@@ -646,17 +651,19 @@
     <string name="patch_source_dialog_local_file_label">فایلی ناوخۆیی</string>
     <string name="patch_source_dialog_name_label">ناو</string>
     <string name="patch_source_dialog_name_placeholder">پاتچە تایبەتەکانی من</string>
-    <string name="patch_source_dialog_repo_url_label">بەستەری کۆگا (URL)</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo یا gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">پشتگیری لە لینکی GitHub، GitLab یان morphe.software/add-source دەکات</string>
+    <string name="patch_source_dialog_repo_url_label">URLی سەرچاوە</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo یان example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">پشتگیری لە GitHub, GitLab, Codeberg, .json URL, یان لینکی morphe.software/add-source دەکات</string>
     <string name="patch_source_dialog_error_name_required">ناو پێویستە</string>
-    <string name="patch_source_dialog_error_invalid_url">ناونیشانێکی (URL) دروستی GitHub یان GitLab بنووسە</string>
+    <string name="patch_source_dialog_error_invalid_url">ناونیشانێکی دروستی GitHub, GitLab, Codeberg, یان .json بنوسە</string>
     <string name="patch_source_dialog_error_invalid_file">فایلێکی دروستی .mpp هەڵبژێرە</string>
     <string name="patch_source_dialog_add_button">زیادکردن</string>
     <string name="patch_source_dialog_edit_title">دەستکاریکردنی سەرچاوە</string>
     <string name="patch_source_dialog_type_github_repo">کۆگای GitHub</string>
     <string name="patch_source_dialog_type_github_pr">داواکاری ڕاکێشانی GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">کۆگای GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">کۆگای Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">باندڵی پاتچی JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">فایلی .mpp یان فۆڵدەر</string>
     <string name="patch_source_dialog_mpp_label">فایلی .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">ڕێگای .mpp یان فۆڵدەر</string>
@@ -810,6 +817,17 @@
     <string name="settings_output_folder_default">فۆڵدەری APK (پێشنیارکراو)</string>
     <string name="settings_output_folder_picker_title">فۆڵدەری دەرئەنجام هەڵبژێرە</string>
     <string name="settings_output_folder_not_found">فۆڵدەرەکە نەدۆزرایەوە، لە پاتچی داهاتوودا دروست دەکرێت</string>
+    <string name="settings_section_original_apks">فایلە APK ڕەسەنەکان</string>
+    <string name="settings_original_apks_mode_label">پاشەکەوتکردنی APK ڕەسەنەکان</string>
+    <string name="settings_original_apks_mode_copy">کۆپیکردن</string>
+    <string name="settings_original_apks_mode_move">گواستنەوە</string>
+    <string name="settings_original_apks_mode_desc_copy">کۆپیی APK ڕەسەنی هەر ئەپێک دەکات دوای پاتشکردن، بۆ ئەوەی بتوانرێت دواتر دووبارە پاتچی بکرێتەوە. تەنها نوێترین وەشانى هەر ئەپێک دەمێنێتەوە</string>
+    <string name="settings_original_apks_mode_desc_move">APK ڕەسەنی هەر ئەپێک دەگوازێتەوە دوای پاتشکردن، و لەو شوێنەی کە هەڵتبژاردبوو لای دەبات. تەنها نوێترین وەشانى هەر ئەپێک دەمێنێتەوە</string>
+    <string name="settings_original_apks_mode_desc_off">APK ڕەسەنەکان ناهێڵرێنەوە. بۆ دووبارە پاتشکردنەوە پێویستە ئەو APKی هەڵتبژاردبوو هێشتا لەو شوێنەدا بێت</string>
+    <string name="settings_original_apks_kept_title">APK ڕەسەنەکانی پاشەکەوتکراو</string>
+    <string name="settings_original_apks_open_button">کردنەوەی فۆڵدەر</string>
+    <string name="settings_original_apks_confirm_title">سڕینی APK-کانی ڕەسەنی پارێزراو؟</string>
+    <string name="settings_original_apks_confirm_message">ئەمە هەموو APK-کانی ڕەسەن کە Morphe پارێزیویەتی دەسڕێتەوە. بۆ دووبارەکردنەوەی پاتچی ئەپێک، دووبارە پێویستی بە APK-ی دەبێت</string>
     <string name="settings_toggle_auto_start_adb_label">دەستپێکردنی خۆکار ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">دەستپێکردنی ADB daemon لە کاتی کردنەوەی ئەپدا بۆ ئەوەی ئامێرە بەستراوەکان چاودێری بکرێن. کاتێک لایە، Morphe هەرگیز سێرڤەرەکە دەستپێناکات، و تایبەتمەندییەکانی دامەزراندن/ناردن ناچالێن</string>
     <string name="settings_section_storage">کۆگا و کاش</string>
@@ -904,7 +922,7 @@
     <string name="settings_github_pat_label">تۆکنی دەسترسی کەسی</string>
     <!-- App Info Dialog -->
     <string name="about_component">دێسکتۆپ</string>
-    <string name="about_version_patcher_library">پاچەر v%1$s · کتێبخانە v%2$s</string>
+    <string name="about_version_patcher">پاچی وێرژن %1$s</string>
     <string name="about_update_available">نوێکردنەوەی بەردەستە: %1$s</string>
     <string name="about_up_to_date">نوێکراوە</string>
     <string name="about_links">لینکە فەرمییەکان</string>

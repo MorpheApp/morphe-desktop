@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">ຖອນການຕິດຕັ້ງ</string>
     <string name="home_dialog_continue_anyway">ດຳເນີນການຕໍ່ຢ່າງໃດກໍ່ຕາມ</string>
     <string name="home_dialog_forget_title">ລຶບ %1$s ອອກບໍ?</string>
-    <string name="home_dialog_forget_message">ການເຮັດແບບນີ້ຈະລຶບ %1$s ອອກຈາກປະຫວັດແອັບທີ່ຖືກປັບແກ້ຂອງທ່ານ. ມັນຈະບໍ່ລຶບໄຟລ໌ໃດໆ - ການປັບແກ້ແອັບໃໝ່ຈະເພີ່ມມັນກັບຄືນມາ</string>
+    <string name="home_dialog_forget_message">ສິ່ງນີ້ຈະລົບ %1$s ອອກຈາກປະຫວັດແອັບທີ່ຖືກປັບແກ້ຂອງທ່ານ. ໄຟລ໌ APK ທີ່ປັບແກ້ແລ້ວຍັງຄົງຢູ່ໃນດິດ, ການປັບແກ້ແອັບຄືນໃໝ່ຈະເພີ່ມມັນກັບຄືນມາ</string>
+    <string name="home_dialog_also_delete_original">ລົບ APK ດັ້ງເດີມທີ່ຖືກເກັບໄວ້ຂອງມັນນຳ</string>
     <string name="home_dialog_uninstall_title">ຖອນການຕິດຕັ້ງ %1$s ບໍ?</string>
     <string name="home_dialog_uninstall_message">ການເຮັດແບບນີ້ຈະລຶບ %1$s ອອກຈາກອຸປະກອນທີ່ເຊື່ອມຕໍ່. ໄຟລ໌ APK ທີ່ຖືກປັບແກ້ໃນດິດ ແລະ ປະຫວັດຂອງທ່ານຈະຖືກເກັບໄວ້ ເວັ້ນເສຍແຕ່ທ່ານຈະເລືອກເປັນຢ່າງອື່ນລຸ່ມນີ້</string>
     <string name="home_dialog_uninstall_also_forget">ລຶບອອກຈາກ ແອັບຂອງທ່ານ ນຳດ້ວຍ</string>
@@ -567,6 +568,7 @@
     <string name="source_card_updates_manual">ດ້ວຍຕົນເອງ (ປ່ຽນແທນໄຟລ໌)</string>
     <string name="source_card_loads_newest">.mpp ຫຼ້າສຸດໃນໂຟນເດີ</string>
     <string name="source_card_loads_pr">ການສ້າງ pull request ຫຼ້າສຸດ</string>
+    <string name="source_card_loads_json">ຈາກ JSON manifest</string>
     <string name="source_card_disabled">ແຫຼ່ງຂໍ້ມູນນີ້ຖືກປິດໃຊ້ງານ. ກະລຸນາເປີດໃຊ້ງານເພື່ອໂຫຼດ patches</string>
     <string name="source_card_disabled_tag">ປິດໃຊ້ງານ</string>
     <string name="source_card_last_enabled">ຕ້ອງມີຢ່າງໜ້ອຍໜຶ່ງແຫຼ່ງຂໍ້ມູນທີ່ເປີດໃຊ້ງານຢູ່</string>
@@ -580,6 +582,7 @@
     <string name="source_card_show_in_folder">ສະແດງໃນໂຟນເດີ</string>
     <string name="source_card_more_description">ການດຳເນີນການເພີ່ມເຕີມ</string>
     <string name="source_card_browse_patches">ເບິ່ງ patches</string>
+    <string name="source_card_report_issue">ລາຍງານບັນຫາ</string>
     <string name="source_card_priority">ລຳດັບຄວາມສຳຄັນ %1$d</string>
     <string name="source_card_open_link">ເປີດ %1$s ໃນບຣາວເຊີ</string>
     <string name="source_card_enable_description">ເປີດໃຊ້ %1$s</string>
@@ -629,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">ທ້ອງຖິ່ນ</string>
     <string name="patch_source_dialog_valid_github">ສາງเก็บຂໍ້ມູນ GitHub (GitHub repository)</string>
     <string name="patch_source_dialog_valid_gitlab">ຄັງເກັບ GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">ຄັງเก็บ Codeberg</string>
+    <string name="patch_source_dialog_valid_json">ຊຸດ patch JSON</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s ໃນ %2$s. ຈະໃຊ້ການບິລລ໌ຫຼ້າສຸດຈາກ PR ນີ້ສະເໝີ</string>
     <string name="patch_source_dialog_builtin_note">ນີ້ແມ່ນແຫຼ່ງ patch ທີ່ຕິດຕັ້ງມາພ້ອມກັບລະບົບ. ຊື່ ແລະ ຕຳແໜ່ງຂອງມັນບໍ່ສາມາດປ່ຽນໄດ້. ສະລັບລະຫວ່າງ stable ແລະ pre-release ໄດ້ໃນບັດຂອງມັນ</string>
     <!-- Signing Key Trust Dialog -->
@@ -642,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">ໄຟລ໌ທ້ອງຖິ່ນ</string>
     <string name="patch_source_dialog_name_label">ຊື່</string>
     <string name="patch_source_dialog_name_placeholder">Custom Patches ຂອງຂ້ອຍ</string>
-    <string name="patch_source_dialog_repo_url_label">URL ຂອງ Repository</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo ຫຼື gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">ຍອມຮັບລິ້ງ GitHub, GitLab, ຫຼື morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL ຂອງແຫຼ່ງຂໍ້ມູນ</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo ຫຼື example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">ຮອງຮັບ GitHub, GitLab, Codeberg, .json URL, ຫຼື ລິ້ງ morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">ຈຳເປັນຕ້ອງໃສ່ຊື່</string>
-    <string name="patch_source_dialog_error_invalid_url">ກະລຸນາປ້ອນ URL ຂອງ GitHub ຫຼື GitLab ທີ່ຖືກຕ້ອງ</string>
+    <string name="patch_source_dialog_error_invalid_url">ກະລຸນາປ້ອນ URL ຂອງ GitHub, GitLab, Codeberg, ຫຼື .json ທີ່ຖືກຕ້ອງ</string>
     <string name="patch_source_dialog_error_invalid_file">ກະລຸນາເລືອກໄຟລ໌ .mpp ທີ່ຖືກຕ້ອງ</string>
     <string name="patch_source_dialog_add_button">ເພີ່ມ</string>
     <string name="patch_source_dialog_edit_title">ແກ້ໄຂແຫຼ່ງທີ່ມາ</string>
     <string name="patch_source_dialog_type_github_repo">ຄັງເກັບຂໍ້ມູນ GitHub</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">ຄັງເກັບຂໍ້ມູນ GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">ຄັງเก็บ Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">ຊຸດ Patch JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">ໄຟລ໌ ຫຼື ໂຟນເດີ .mpp</string>
     <string name="patch_source_dialog_mpp_label">ໄຟລ໌ .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">ເສັ້ນທາງໄປຫາ .mpp ຫຼື ໂຟນເດີ</string>
@@ -806,6 +813,17 @@
     <string name="settings_output_folder_default">ໂຟນເດີ APK (ຄ່າເລີ່ມຕົ້ນ)</string>
     <string name="settings_output_folder_picker_title">ເລືອກໂຟນເດີຜົນໄດ້ຮັບ</string>
     <string name="settings_output_folder_not_found">ບໍ່ພົບໂຟນເດີ, ຈະຖືກສ້າງຂຶ້ນໃນການປັບປຸງຄັ້ງຕໍ່ໄປ</string>
+    <string name="settings_section_original_apks">APK ດັ້ງເດີມ</string>
+    <string name="settings_original_apks_mode_label">ເກັບຮັກສາ APK ຕົ້ນສະບັບ</string>
+    <string name="settings_original_apks_mode_copy">ຄັດລອກ</string>
+    <string name="settings_original_apks_mode_move">ຍ້າຍ</string>
+    <string name="settings_original_apks_mode_desc_copy">ຄັດລອກ APK ຕົ້ນສະບັບຂອງແຕ່ລະແອັບຫຼັງຈາກການ patch, ເພື່ອໃຫ້ສາມາດ patch ຄືນໃໝ່ໄດ້ໃນພາຍຫຼັງ. ຈະເກັບຮັກສາໄວ້ສະເພາະເວີຊັນຫຼ້າສຸດຂອງແຕ່ລະແອັບເທົ່ານັ້ນ</string>
+    <string name="settings_original_apks_mode_desc_move">ຍ້າຍ APK ຕົ້ນສະບັບຂອງແຕ່ລະແອັບຫຼັງຈາກການ patch, ໂດຍການລຶບມັນອອກຈາກບ່ອນທີ່ທ່ານເລືອກ. ຈະເກັບຮັກສາໄວ້ສະເພາະເວີຊັນຫຼ້າສຸດຂອງແຕ່ລະແອັບເທົ່ານັ້ນ</string>
+    <string name="settings_original_apks_mode_desc_off">ບໍ່ມີການເກັບຮັກສາ APK ຕົ້ນສະບັບ. ການ patch ຄືນໃໝ່ຕ້ອງມີ APK ທີ່ທ່ານເລືອກຢູ່ໃນບ່ອນເກົ່າ</string>
+    <string name="settings_original_apks_kept_title">APK ຕົ້ນສະບັບທີ່ຖືກເກັບຮັກສາໄວ້</string>
+    <string name="settings_original_apks_open_button">ເປີດໂຟນເດີ</string>
+    <string name="settings_original_apks_confirm_title">ລຶບ APK ຕົ້ນສະບັບທີ່ເກັບໄວ້ບໍ?</string>
+    <string name="settings_original_apks_confirm_message">ສິ່ງນີ້ຈະລຶບທຸກ APK ຕົ້ນສະບັບທີ່ Morphe ໄດ້ເກັບໄວ້. ການ Patch ແອັບຄືນໃໝ່ຈະຕ້ອງໃຊ້ APK ຂອງມັນອີກຄັ້ງ</string>
     <string name="settings_toggle_auto_start_adb_label">ເລີ່ມ ADB ອັດຕະໂນມັດ</string>
     <string name="settings_toggle_auto_start_adb_desc">ເປີດ ADB daemon ເມື່ອເລີ່ມຕົ້ນ ເພື່ອໃຫ້ອຸປະກອນທີ່ເຊື່ອມຕໍ່ຖືກຕິດຕາມ. ເມື່ອປິດ, Morphe ຈະບໍ່ເລີ່ມເຊີບເວີເລີຍ, ແລະ ຄຸນສົມບັດການຕິດຕັ້ງ/push ຈະຖືກປິດການໃຊ້ງານ</string>
     <string name="settings_section_storage">ບ່ອນເກັບຂໍ້ມູນ &amp; ແຄຊ</string>
@@ -900,7 +918,7 @@
     <string name="settings_github_pat_label">ໂທເຄັນການເຂົ້າເຖິງສ່ວນຕົວ (Personal Access Token)</string>
     <!-- App Info Dialog -->
     <string name="about_component">ເດັສທັອບ</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · ຫໍສະໝຸດ v%2$s</string>
+    <string name="about_version_patcher">ຕົວປັບປຸງ Patcher v%1$s</string>
     <string name="about_update_available">ມີການອັບເດດ: %1$s</string>
     <string name="about_up_to_date">ເປັນເວີຊັນຫຼ້າສຸດແລ້ວ</string>
     <string name="about_links">ລິ້ງທາງການ</string>

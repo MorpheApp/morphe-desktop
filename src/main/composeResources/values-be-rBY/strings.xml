@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">Выдаліць</string>
     <string name="home_dialog_continue_anyway">Усё роўна працягнуць</string>
     <string name="home_dialog_forget_title">Забыць %1$s?</string>
-    <string name="home_dialog_forget_message">Гэта выдаляе %1$s з гісторыі вашых патчаных праграм. Файлы не закранаюцца: паўторны патч праграмы вяртае запіс назад</string>
+    <string name="home_dialog_forget_message">Гэта выдаляе %1$s з гісторыі вашых патчаных праграм. Патчаны APK застаецца на дыску, паўторны патч праграмы вяртае запіс назад</string>
+    <string name="home_dialog_also_delete_original">Таксама выдаліць захаваны арыгінальны APK</string>
     <string name="home_dialog_uninstall_title">Выдаліць %1$s?</string>
     <string name="home_dialog_uninstall_message">Гэта выдаляе %1$s з падключанай прылады. Патчаны APK на дыску і ваша гісторыя застануцца, калі вы не выбераце іншае ніжэй</string>
     <string name="home_dialog_uninstall_also_forget">Таксама выдаліць з Вашых праграм</string>
@@ -567,6 +568,7 @@
     <string name="source_card_updates_manual">Уручную (замяніць файл)</string>
     <string name="source_card_loads_newest">Найсвежае .mpp у папцы</string>
     <string name="source_card_loads_pr">Апошняя зборка pull-запыту</string>
+    <string name="source_card_loads_json">З JSON-маніфесту</string>
     <string name="source_card_disabled">Гэты крыніца адключана. Уключыце яе, каб загрузіць патчы</string>
     <string name="source_card_disabled_tag">Адключана</string>
     <string name="source_card_last_enabled">Прынаймені адна крыніца павінна заставацца ўключанай</string>
@@ -580,6 +582,7 @@
     <string name="source_card_show_in_folder">Паказаць у папцы</string>
     <string name="source_card_more_description">Больш дзеянняў</string>
     <string name="source_card_browse_patches">Прагляд патчаў</string>
+    <string name="source_card_report_issue">Паведаміць пра праблему</string>
     <string name="source_card_priority">Прыярытэт %1$d</string>
     <string name="source_card_open_link">Адкрыць %1$s у браўзеры</string>
     <string name="source_card_enable_description">Уключаць %1$s</string>
@@ -629,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Лакальны</string>
     <string name="patch_source_dialog_valid_github">Рэпазіторый GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Рэпазіторый GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Рэпазіторый Codeberg</string>
+    <string name="patch_source_dialog_valid_json">JSON-пакет патчаў</string>
     <string name="patch_source_dialog_valid_pr">Pull-запыт #%1$s на %2$s. Заўсёды выкарыстоўваюцца найсвежае зборкі з гэтага PR</string>
     <string name="patch_source_dialog_builtin_note">Гэта ўбудаванае крыніца патчаў. Яе назву і месцазнаходжанне нельга змяніць. Пераключайцеся паміж стабільнай і падгатовочнай версіямі на яе картцы</string>
     <!-- Signing Key Trust Dialog -->
@@ -642,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Локальны файл</string>
     <string name="patch_source_dialog_name_label">Назва</string>
     <string name="patch_source_dialog_name_placeholder">Мае ўласныя патчы</string>
-    <string name="patch_source_dialog_repo_url_label">URL рэпазіторыя</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo або gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Прымае спасылкі GitHub, GitLab або morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL крыніцы</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo або example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Прыймае GitHub, GitLab, Codeberg, .json URL або спасылку morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Назва абавязковая</string>
-    <string name="patch_source_dialog_error_invalid_url">Увядзіце правільны URL GitHub або GitLab</string>
+    <string name="patch_source_dialog_error_invalid_url">Увядзіце сапраўдны URL GitHub, GitLab, Codeberg або .json</string>
     <string name="patch_source_dialog_error_invalid_file">Выберыце правільны файл .mpp</string>
     <string name="patch_source_dialog_add_button">Дадаць</string>
     <string name="patch_source_dialog_edit_title">Рэдагаваць крыніцу</string>
     <string name="patch_source_dialog_type_github_repo">Рэпазіторый GitHub</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">Рэпазіторый GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Рэпазіторый Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON-пакет патчаў</string>
     <string name="patch_source_dialog_mpp_or_folder_label">файл .mpp або папка</string>
     <string name="patch_source_dialog_mpp_label">Файл .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">Шлях да .mpp або папкі</string>
@@ -806,6 +813,17 @@
     <string name="settings_output_folder_default">Папка APK (па змаўчанні)</string>
     <string name="settings_output_folder_picker_title">Выбраць папку вываду</string>
     <string name="settings_output_folder_not_found">Папка не знойдзена, яна будзе створана пры наступным патчынгу</string>
+    <string name="settings_section_original_apks">Арыгінальныя APK</string>
+    <string name="settings_original_apks_mode_label">Захоўваць арыгінальныя APK</string>
+    <string name="settings_original_apks_mode_copy">Капіяваць</string>
+    <string name="settings_original_apks_mode_move">Перамяшчаць</string>
+    <string name="settings_original_apks_mode_desc_copy">Капіявае арыгінальны APK кожнай праграмы пасля патчынга, каб яго можна было патчыць зноў пазней. Захоўваецца толькі апошняя версія кожнай праграмы</string>
+    <string name="settings_original_apks_mode_desc_move">Перамяшчае арыгінальны APK кожнай праграмы пасля патчынга, выдаляючы яго з месца, дзе вы яго выбралі. Захоўваецца толькі апошняя версія кожнай праграмы</string>
+    <string name="settings_original_apks_mode_desc_off">Арыгінальныя APK не захоўваюцца. Для паўторнага патчынга APK, які вы выбралі, павінен застацца на месцы</string>
+    <string name="settings_original_apks_kept_title">Захоўныя арыгінальныя APK</string>
+    <string name="settings_original_apks_open_button">Адкрыць папку</string>
+    <string name="settings_original_apks_confirm_title">Выдаліць захаваныя арыгінальныя APK?</string>
+    <string name="settings_original_apks_confirm_message">Гэта выдаліць кожны арыгінальны APK, які захаваў Morphe. Для паўторнага патчынга праграмы зноў спатрэбіцца яе APK</string>
     <string name="settings_toggle_auto_start_adb_label">Аўтазапуск ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Запускаць дэмон ADB пры старце, каб падключаныя прылады маніторыліся. Калі гэтая функцыя выключана, Morphe ніколі не запускае сервер, а функцыі ўстаноўкі/перадачы файлаў недаступныя</string>
     <string name="settings_section_storage">Сховішча і кэш</string>
@@ -900,7 +918,7 @@
     <string name="settings_github_pat_label">Персанальны токен доступу</string>
     <!-- App Info Dialog -->
     <string name="about_component">Настольны</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Бібліятэка v%2$s</string>
+    <string name="about_version_patcher">Патчар v%1$s</string>
     <string name="about_update_available">Даступна абнаўленне: %1$s</string>
     <string name="about_up_to_date">Актуальная версія</string>
     <string name="about_links">Афіцыйныя спасылкі</string>

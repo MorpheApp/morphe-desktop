@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">अनइंस्टॉल करें</string>
     <string name="home_dialog_continue_anyway">फिर भी जारी रखें</string>
     <string name="home_dialog_forget_title">%1$s भूल जाएँ?</string>
-    <string name="home_dialog_forget_message">यह %1$s को आपके पैच किए गए ऐप इतिहास से हटाता है। यह किसी भी फ़ाइल को नहीं छूता - ऐप को पुनः पैच करने से यह वापस जुड़ जाता है</string>
+    <string name="home_dialog_forget_message">यह आपके पैच किए गए ऐप इतिहास से %1$s को हटा देता है। पैच किया गया APK डिस्क पर रहता है, ऐप को फिर से पैच करने पर यह वापस जुड़ जाता है</string>
+    <string name="home_dialog_also_delete_original">इसके सुरक्षित रखे गए मूल APK को भी हटाएँ</string>
     <string name="home_dialog_uninstall_title">%1$s अनइंस्टॉल करें?</string>
     <string name="home_dialog_uninstall_message">यह %1$s को कनेक्टेड डिवाइस से हटाता है। डिस्क पर पैच किया गया APK और आपका इतिहास रखा जाता है जब तक आप नीचे अन्यथा न चुनें</string>
     <string name="home_dialog_uninstall_also_forget">अपने ऐप्स से भी हटाएँ</string>
@@ -567,6 +568,7 @@
     <string name="source_card_updates_manual">मैनुअल (फ़ाइल बदलें)</string>
     <string name="source_card_loads_newest">फ़ोल्डर में नवीनतम .mpp</string>
     <string name="source_card_loads_pr">नवीनतम पुल रिक्वेस्ट बिल्ड</string>
+    <string name="source_card_loads_json">JSON मेनिफेस्ट से</string>
     <string name="source_card_disabled">यह स्रोत अक्षम है। पैच लोड करने के लिए इसे सक्षम करें</string>
     <string name="source_card_disabled_tag">बंद किया गया</string>
     <string name="source_card_last_enabled">कम से कम एक स्रोत सक्षम रहना चाहिए</string>
@@ -580,6 +582,7 @@
     <string name="source_card_show_in_folder">फ़ोल्डर में दिखाएं</string>
     <string name="source_card_more_description">अधिक कार्य</string>
     <string name="source_card_browse_patches">पैच ब्राउज़ करें</string>
+    <string name="source_card_report_issue">समस्या की रिपोर्ट करें</string>
     <string name="source_card_priority">प्राथमिकता %1$d</string>
     <string name="source_card_open_link">%1$s को ब्राउज़र में खोलें</string>
     <string name="source_card_enable_description">%1$s चालू करें</string>
@@ -629,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">लोकल</string>
     <string name="patch_source_dialog_valid_github">GitHub रिपॉजिटरी</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab रिपॉजिटरी</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg रिपॉजिटरी</string>
+    <string name="patch_source_dialog_valid_json">JSON पैच बंडल</string>
     <string name="patch_source_dialog_valid_pr">%2$s पर पुल रिक्वेस्ट #%1$s। हमेशा इस PR से नवीनतम बिल्ड का उपयोग करता है</string>
     <string name="patch_source_dialog_builtin_note">यह बिल्ट-इन पैच सोर्स है। इसका नाम और स्थान बदला नहीं जा सकता। इसके कार्ड पर स्टेबल और प्री-रिलीज़ के बीच स्विच करें</string>
     <!-- Signing Key Trust Dialog -->
@@ -642,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">स्थानीय फ़ाइल</string>
     <string name="patch_source_dialog_name_label">नाम</string>
     <string name="patch_source_dialog_name_placeholder">मेरे कस्टम पैच</string>
-    <string name="patch_source_dialog_repo_url_label">रिपॉज़िटरी URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo या gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">GitHub, GitLab, या morphe.software/add-source लिंक स्वीकार करता है</string>
+    <string name="patch_source_dialog_repo_url_label">स्रोत URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo या example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">GitHub, GitLab, Codeberg, .json URL, या morphe.software/add-source लिंक स्वीकार करता है</string>
     <string name="patch_source_dialog_error_name_required">नाम आवश्यक है</string>
-    <string name="patch_source_dialog_error_invalid_url">एक मान्य GitHub या GitLab URL दर्ज करें</string>
+    <string name="patch_source_dialog_error_invalid_url">एक मान्य GitHub, GitLab, Codeberg, या .json URL दर्ज करें</string>
     <string name="patch_source_dialog_error_invalid_file">एक मान्य .mpp फ़ाइल चुनें</string>
     <string name="patch_source_dialog_add_button">जोड़ें</string>
     <string name="patch_source_dialog_edit_title">स्रोत संपादित करें</string>
     <string name="patch_source_dialog_type_github_repo">गिटहब रिपॉज़िटरी</string>
     <string name="patch_source_dialog_type_github_pr">GitHub पुल रिक्वेस्ट</string>
     <string name="patch_source_dialog_type_gitlab_repo">गिटलैब रिपॉज़िटरी</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg रिपॉजिटरी</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON पैच बंडल</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp फ़ाइल या फ़ोल्डर</string>
     <string name="patch_source_dialog_mpp_label">.mpp फ़ाइल</string>
     <string name="patch_source_dialog_path_placeholder_dev">.mpp या फ़ोल्डर का पथ</string>
@@ -806,6 +813,17 @@
     <string name="settings_output_folder_default">APK का फ़ोल्डर (डिफ़ॉल्ट)</string>
     <string name="settings_output_folder_picker_title">आउटपुट फ़ोल्डर चुनें</string>
     <string name="settings_output_folder_not_found">फ़ोल्डर नहीं मिला, अगले पैच पर बनाया जाएगा</string>
+    <string name="settings_section_original_apks">मूल APKs</string>
+    <string name="settings_original_apks_mode_label">मूल APK सुरक्षित रखें</string>
+    <string name="settings_original_apks_mode_copy">कॉपी</string>
+    <string name="settings_original_apks_mode_move">मूव करें</string>
+    <string name="settings_original_apks_mode_desc_copy">पैचिंग के बाद प्रत्येक ऐप के मूल APK की प्रतियाँ बनाता है, ताकि बाद में उन्हें फिर से पैच किया जा सके। प्रत्येक ऐप का केवल नवीनतम संस्करण रखा जाता है</string>
+    <string name="settings_original_apks_mode_desc_move">पैचिंग के बाद प्रत्येक ऐप के मूल APK को मूव करता है, जिससे यह उस स्थान से हट जाता है जहाँ से आपने इसे चुना था। प्रत्येक ऐप का केवल नवीनतम संस्करण रखा जाता है</string>
+    <string name="settings_original_apks_mode_desc_off">मूल APK सुरक्षित नहीं रखे जाते हैं। फिर से पैच करने के लिए आपके द्वारा चुने गए APK का वहाँ होना आवश्यक है</string>
+    <string name="settings_original_apks_kept_title">सुरक्षित रखे गए मूल APK</string>
+    <string name="settings_original_apks_open_button">फ़ोल्डर खोलें</string>
+    <string name="settings_original_apks_confirm_title">सुरक्षित रखे गए मूल APK हटाएं?</string>
+    <string name="settings_original_apks_confirm_message">इससे Morphe द्वारा सुरक्षित रखे गए सभी मूल APK हट जाएंगे। किसी ऐप को फिर से पैच करने के लिए उसके APK की फिर से आवश्यकता होगी</string>
     <string name="settings_toggle_auto_start_adb_label">ADB ऑटो-स्टार्ट</string>
     <string name="settings_toggle_auto_start_adb_desc">लॉन्च पर ADB डेमॉन स्पॉन करें ताकि कनेक्टेड डिवाइसों की निगरानी हो। बंद होने पर, Morphe कभी सर्वर प्रारंभ नहीं करता, और इंस्टॉल/पुश सुविधाएँ अक्षम होती हैं</string>
     <string name="settings_section_storage">स्टोरेज और कैश</string>
@@ -900,7 +918,7 @@
     <string name="settings_github_pat_label">व्यक्तिगत एक्सेस टोकन</string>
     <!-- App Info Dialog -->
     <string name="about_component">डेस्कटॉप</string>
-    <string name="about_version_patcher_library">पॅचर v%1$s · लाइब्रेरी v%2$s</string>
+    <string name="about_version_patcher">पैचर v%1$s</string>
     <string name="about_update_available">अपडेट उपलब्ध है: %1$s</string>
     <string name="about_up_to_date">अप-टू-डेट</string>
     <string name="about_links">आधिकारिक लिंक</string>

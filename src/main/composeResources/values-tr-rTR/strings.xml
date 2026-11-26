@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">Kaldır</string>
     <string name="home_dialog_continue_anyway">Yine de devam et</string>
     <string name="home_dialog_forget_title">%1$s unutulsun mu?</string>
-    <string name="home_dialog_forget_message">Bu işlem, %1$s ögesini yamalanmış uygulama geçmişinizden kaldırır. Hiçbir dosyaya dokunmaz - uygulamayı yeniden yamamak bunu geri ekler.</string>
+    <string name="home_dialog_forget_message">Bu işlem, %1$s ögesini yamalanmış uygulama geçmişinizden kaldırır. Yamalanmış APK diskte kalır; uygulamayı yeniden yamamak bunu geri ekler</string>
+    <string name="home_dialog_also_delete_original">Saklanan orijinal APK'sını da sil</string>
     <string name="home_dialog_uninstall_title">%1$s kaldırılsın mı?</string>
     <string name="home_dialog_uninstall_message">Bu işlem %1$s ögesini bağlı cihazdan kaldırır. Aşağıda aksini seçmediğiniz sürece diskteki yamalanmış APK ve geçmişiniz saklanır.</string>
     <string name="home_dialog_uninstall_also_forget">Ayrıca Uygulamalarım'dan kaldır</string>
@@ -568,6 +569,7 @@
     <string name="source_card_updates_manual">Manuel (dosyayı değiştir)</string>
     <string name="source_card_loads_newest">Klasördeki en yeni .mpp</string>
     <string name="source_card_loads_pr">En son çekme isteği derlemesi</string>
+    <string name="source_card_loads_json">JSON manifestosundan</string>
     <string name="source_card_disabled">Bu kaynak devre dışı. Yamaları yüklemek için etkinleştirin</string>
     <string name="source_card_disabled_tag">Devre dışı</string>
     <string name="source_card_last_enabled">En az bir kaynak etkin kalmalıdır</string>
@@ -581,6 +583,7 @@
     <string name="source_card_show_in_folder">Klasörde göster</string>
     <string name="source_card_more_description">Daha fazla işlem</string>
     <string name="source_card_browse_patches">Yamalara göz at</string>
+    <string name="source_card_report_issue">Bir sorun bildir</string>
     <string name="source_card_priority">Öncelik %1$d</string>
     <string name="source_card_open_link">%1$s tarayıcıda açılsın</string>
     <string name="source_card_enable_description">%1$s etkinleştir</string>
@@ -630,6 +633,8 @@
     <string name="patch_source_dialog_kind_local">Yerel</string>
     <string name="patch_source_dialog_valid_github">GitHub deposu</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab deposu</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg deposu</string>
+    <string name="patch_source_dialog_valid_json">JSON yama paketi</string>
     <string name="patch_source_dialog_valid_pr">%2$s üzerindeki #%1$s numaralı çekme isteği. Her zaman bu PR'ın en son derlemesini kullanır</string>
     <string name="patch_source_dialog_builtin_note">Bu, yerleşik yama kaynağıdır. Adı ve konumu değiştirilemez. Kartı üzerinden kararlı ve ön sürüm arasında geçiş yapın</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +648,19 @@
     <string name="patch_source_dialog_local_file_label">Yerel dosya</string>
     <string name="patch_source_dialog_name_label">Ad</string>
     <string name="patch_source_dialog_name_placeholder">Özel Yamalarım</string>
-    <string name="patch_source_dialog_repo_url_label">Depo URL'si</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo veya gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">GitHub, GitLab veya morphe.software/add-source bağlantısını kabul eder</string>
+    <string name="patch_source_dialog_repo_url_label">Kaynak URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/sahip/depo veya example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">GitHub, GitLab, Codeberg, .json URL'si veya morphe.software/add-source bağlantısı kabul edilir</string>
     <string name="patch_source_dialog_error_name_required">Ad gereklidir</string>
-    <string name="patch_source_dialog_error_invalid_url">Geçerli bir GitHub veya GitLab URL'si girin</string>
+    <string name="patch_source_dialog_error_invalid_url">Geçerli bir GitHub, GitLab, Codeberg veya .json URL'si girin</string>
     <string name="patch_source_dialog_error_invalid_file">Geçerli bir .mpp dosyası seçin</string>
     <string name="patch_source_dialog_add_button">Ekle</string>
     <string name="patch_source_dialog_edit_title">Kaynağı düzenle</string>
     <string name="patch_source_dialog_type_github_repo">GitHub Deposu</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab Deposu</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg Deposu</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON Yama Paketi</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp dosyası veya klasör</string>
     <string name="patch_source_dialog_mpp_label">.mpp dosyası</string>
     <string name="patch_source_dialog_path_placeholder_dev">.mpp veya klasör yolu</string>
@@ -807,6 +814,17 @@
     <string name="settings_output_folder_default">APK'nın klasörü (varsayılan)</string>
     <string name="settings_output_folder_picker_title">Çıktı klasörünü seç</string>
     <string name="settings_output_folder_not_found">Klasör bulunamadı, sonraki yamalamada oluşturulacak</string>
+    <string name="settings_section_original_apks">Orijinal APK'lar</string>
+    <string name="settings_original_apks_mode_label">Orijinal APK'leri tut</string>
+    <string name="settings_original_apks_mode_copy">Kopyala</string>
+    <string name="settings_original_apks_mode_move">Taşı</string>
+    <string name="settings_original_apks_mode_desc_copy">Yamalamadan sonra her uygulamanın orijinal APK'sinin bir kopyasını oluşturur, böylece daha sonra tekrar yamalanabilir. Her uygulamanın yalnızca en son sürümü tutulur</string>
+    <string name="settings_original_apks_mode_desc_move">Yamalamadan sonra her uygulamanın orijinal APK'sini taşır ve seçtiğiniz yerden kaldırır. Her uygulamanın yalnızca en son sürümü tutulur</string>
+    <string name="settings_original_apks_mode_desc_off">Orijinal APK'ler tutulmaz. Yeniden yamalamak için seçtiğiniz APK'nin hâlâ orada olması gerekir</string>
+    <string name="settings_original_apks_kept_title">Saklanan orijinal APK'ler</string>
+    <string name="settings_original_apks_open_button">Klasörü aç</string>
+    <string name="settings_original_apks_confirm_title">Saklanan orijinal APK'ler silinsin mi?</string>
+    <string name="settings_original_apks_confirm_message">Bu işlem, Morphe tarafından saklanan tüm orijinal APK'leri silecektir. Bir uygulamayı yeniden yamalamak için APK'sine tekrar ihtiyaç duyulacaktır</string>
     <string name="settings_toggle_auto_start_adb_label">ADB'yi otomatik başlat</string>
     <string name="settings_toggle_auto_start_adb_desc">Başlangıçta ADB arka plan sürecini başlatarak bağlı cihazların izlenmesini sağlar. Kapalıyken Morphe sunucuyu asla başlatmaz ve kurulum/gönderme özellikleri devre dışı kalır</string>
     <string name="settings_section_storage">Depolama ve önbellek</string>
@@ -901,7 +919,7 @@
     <string name="settings_github_pat_label">Kişisel Erişim Belirteci</string>
     <!-- App Info Dialog -->
     <string name="about_component">Masaüstü</string>
-    <string name="about_version_patcher_library">Yamalayıcı v%1$s · Kütüphane v%2$s</string>
+    <string name="about_version_patcher">Yama Aracı v%1$s</string>
     <string name="about_update_available">Güncelleme mevcut: %1$s</string>
     <string name="about_up_to_date">Güncel</string>
     <string name="about_links">Resmî bağlantılar</string>

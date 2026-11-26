@@ -82,13 +82,14 @@ fun SourceUpdateBanner(
                     SourceUpdateStatus.Updating -> MorpheBannerProgressRing(progress = ringProgress) {
                         val activeSource = state.activeSource
                         if (activeSource != null) {
-                            val avatarUrl = remember(activeSource.id, activeSource.url, activeSource.type) {
-                                AvatarLoader.resolveAvatarUrl(activeSource)
+                            val avatarUrls = remember(activeSource.id, activeSource.url, activeSource.type) {
+                                AvatarLoader.resolveAvatarUrls(activeSource)
                             }
                             BundleIcon(
                                 bundleName = activeSource.name,
                                 sourceType = activeSource.type,
-                                avatarUrl = avatarUrl,
+                                avatarUrls = avatarUrls,
+                                sourceUrl = activeSource.url,
                                 modifier = Modifier.size(24.dp),
                             )
                         } else {

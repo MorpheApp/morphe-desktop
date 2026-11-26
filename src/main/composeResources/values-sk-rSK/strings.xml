@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Common Components -->
-    <string name="morphe_logo_content_description">Logo Morphe</string>
+    <string name="morphe_logo_content_description">Morphe Logo</string>
     <string name="dismiss">Zavrieť</string>
     <string name="ok">OK</string>
     <string name="retry">Znova</string>
     <string name="clear">Vyčistiť</string>
     <string name="search">Hľadať</string>
     <string name="no_matches">Žiadne zhody</string>
-    <string name="remove">Vymazať</string>
+    <string name="remove">Odstrániť</string>
     <string name="collapse">Zbaliť</string>
     <string name="expand">Rozbaliť</string>
     <string name="cancel">Zrušiť</string>
     <string name="close">Zatvoriť</string>
     <string name="trust">Dôvera</string>
     <string name="delete">Odstrániť</string>
-    <string name="disabled_while_patching">Zakázané počas záplatovania</string>
+    <string name="disabled_while_patching">Zakázané počas aktualizovania</string>
     <string name="drop_apk_here">Presuňte APK sem</string>
     <string name="release_to_drop">Uvoľnite pre vloženie</string>
     <string name="click_to_browse">alebo kliknutím vyberte</string>
@@ -68,13 +68,13 @@
     <string name="app_info_extensions_label">.apk  ·  .apkm  ·  .xapk  ·  .apks</string>
     <string name="app_info_shared_label">Informácie o aplikácii</string>
     <string name="form_factor_tv">Televízor</string>
-    <string name="form_factor_automotive">Automobil</string>
+    <string name="form_factor_automotive">Automobilový</string>
     <string name="patches_search_hint">Hľadať záplaty…</string>
-    <string name="status_patching_completed">Záplatovanie dokončené</string>
-    <string name="status_patching_failed">Záplatovanie zlyhalo</string>
-    <string name="status_patching_cancelled">Záplatovanie zrušené</string>
+    <string name="status_patching_completed">Aktualizovanie dokončené</string>
+    <string name="status_patching_failed">Aktualizovanie zlyhalo</string>
+    <string name="status_patching_cancelled">Aktualizovanie zrušené</string>
     <string name="view_full_logs_button">Zobraziť úplné protokoly</string>
-    <string name="error_patching_unknown">Záplatovanie zlyhalo z neznámeho dôvodu</string>
+    <string name="error_patching_unknown">Aktualizovanie zlyhalo z neznámeho dôvodu</string>
     <string name="error_log_label">Záznam o chybách</string>
     <string name="back">Späť</string>
     <string name="open">Otvoriť</string>
@@ -129,7 +129,7 @@
     <string name="adb_error_user_restricted">Inštalácia obmedzená nastaveniami používateľa</string>
     <string name="adb_error_verification_failure">Overenie balíka zlyhalo</string>
     <string name="adb_error_generic">Inštalácia zlyhala: %1$s</string>
-    <string name="adb_error_not_found">ADB sa nenašiel. Nainštalujte Android SDK Platform Tools</string>
+    <string name="adb_error_not_found">ADB sa nenašiel. Nainštalujte Android SDK platformové nástroje</string>
     <string name="adb_error_unauthorized">Zariadenie je pripojené, ale nie je autorizované. Prijmite výzvu na ladenie cez USB v zariadení</string>
     <string name="adb_error_no_devices">Žiadne pripojené zariadenia. Pripojte svoje Android zariadenie s povoleným USB alebo Wi-Fi ladením</string>
     <string name="adb_error_device_not_found">Zariadenie %1$s sa nenašlo</string>
@@ -142,7 +142,7 @@
     <string name="adb_error_clear_logs">Vymazanie protokolov zlyhalo: %1$s</string>
     <string name="adb_error_capture_logs">Zachytenie protokolov zlyhalo: %1$s</string>
     <string name="adb_error_run_command">Spustenie príkazu zlyhalo: %1$s</string>
-    <string name="adb_error_pm_list_packages">pm list packages zlyhalo: %1$s</string>
+    <string name="adb_error_pm_list_packages">pm list packages zlyhal: %1$s</string>
     <string name="adb_status_routing_links">Smerovanie odkazov na %1$s…</string>
     <string name="adb_status_restoring_links">Obnovuje sa predvolené spracovanie odkazov…</string>
     <string name="adb_status_disabling_links">Deaktivujú sa odkazy v %1$s…</string>
@@ -151,7 +151,7 @@
     <string name="version_status_checksum_mismatch">Nezhoda kontrolného súčtu</string>
     <string name="version_status_checksum_corrupted">Súbor môže byť poškodený, znova si ho stiahnite z APKMirror</string>
     <string name="version_status_checksum_failed">Overenie kontrolného súčtu zlyhalo</string>
-    <string name="version_status_checksum_matches">Kontrolný súčet sa zhoduje s APKMirror</string>
+    <string name="version_status_checksum_matches">Kontrola sa zhoduje s APKMirror</string>
     <string name="version_status_newer_stable_available">Nová stabilná verzia v%1$s je dostupná</string>
     <string name="version_status_newer_stable_available_fallback">Je dostupná novšia stabilná verzia</string>
     <string name="version_status_experimental_detail">Podporované, ale nemusí fungovať správne</string>
@@ -198,9 +198,10 @@
     <string name="home_dialog_uninstall_button">Odinštalovať</string>
     <string name="home_dialog_continue_anyway">Napriek tomu pokračovať</string>
     <string name="home_dialog_forget_title">Zabudnúť %1$s?</string>
-    <string name="home_dialog_forget_message">Tým sa %1$s odstráni z histórie záplatovaných aplikácií. Nedotkne sa žiadnych súborov - opätovné záplatovanie aplikácie ju pridá späť</string>
+    <string name="home_dialog_forget_message">Tým sa %1$s odstráni z histórie záplatovaných aplikácií. Záplatovaný súbor APK zostane na disku, opätovné záplatovanie aplikácie ju pridá späť</string>
+    <string name="home_dialog_also_delete_original">Taktiež vymazať uchovaný pôvodný APK</string>
     <string name="home_dialog_uninstall_title">Odinštalovať %1$s?</string>
-    <string name="home_dialog_uninstall_message">Tým sa %1$s odstráni z pripojeného zariadenia. Záplatovaný APK na disku a vaša histórie zostanú zachované, pokiaľ nižšie nezvolíte inak</string>
+    <string name="home_dialog_uninstall_message">Týmto sa %1$s odstráni z pripojeného zariadenia. Aktualizované APK na disku a vaša história zostanú zachované, pokiaľ nižšie nezvolíte inak</string>
     <string name="home_dialog_uninstall_also_forget">Odstrániť aj z Vašich aplikácií</string>
     <!-- Home Screen - HomeHeader -->
     <string name="home_header_manage_sources_button">Spravovať zdroje</string>
@@ -561,11 +562,13 @@
     <string name="source_card_browse_patches_tip">Prezerať záplaty</string>
     <string name="source_card_size">Veľkosť</string>
     <string name="source_card_apps">Aplikácie</string>
+    <string name="source_card_search_apps">Hľadať %1$d aplikácií</string>
     <string name="source_card_channel">Kanál</string>
     <string name="source_card_updates">Aktualizácie</string>
     <string name="source_card_updates_manual">Ručne (nahradiť súbor)</string>
     <string name="source_card_loads_newest">Najnovší .mpp v priečinku</string>
     <string name="source_card_loads_pr">Najnovšia build pull requestu</string>
+    <string name="source_card_loads_json">Z JSON manifestu</string>
     <string name="source_card_disabled">Tento zdroj je deaktivovaný. Aktivujte ho na načítanie záplat</string>
     <string name="source_card_disabled_tag">Vypnutý</string>
     <string name="source_card_last_enabled">Aspon jeden zdroj musí zostať aktivovaný</string>
@@ -579,6 +582,7 @@
     <string name="source_card_show_in_folder">Zobraziť v priečinku</string>
     <string name="source_card_more_description">Ďalšie akcie</string>
     <string name="source_card_browse_patches">Prehliadať záplaty</string>
+    <string name="source_card_report_issue">Nahlásiť problém</string>
     <string name="source_card_priority">Priorita %1$d</string>
     <string name="source_card_open_link">Otvoriť %1$s v prehliadači</string>
     <string name="source_card_enable_description">Povoliť %1$s</string>
@@ -605,6 +609,7 @@
     <string name="versions_universal_scope">Akákoľvek aplikácia</string>
     <string name="versions_new_app">Nová aplikácia</string>
     <string name="versions_search_apps_and_patches">Vyhľadať aplikácie a záplaty</string>
+    <string name="versions_search_patches">Hľadať %1$d záplat</string>
     <string name="versions_patch_removed">Odstránené</string>
     <string name="versions_patch_off">Predvolene vypnuté</string>
     <string name="versions_patch_off_tip">Predvolene zakázané, pokiaľ nie je zapnuté manuálne</string>
@@ -627,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Lokálne</string>
     <string name="patch_source_dialog_valid_github">Repozitárium GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Repozitárium GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Repozitár Codeberg</string>
+    <string name="patch_source_dialog_valid_json">JSON balík záplát</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s na %2$s. Vždy používa najnovšiu verziu z tohto PR</string>
     <string name="patch_source_dialog_builtin_note">Toto je vstavaný zdroj záplat. Jeho názov a poloha sa nedajú zmeniť. Prepínajte medzi stabilnou a preduvydanou verziou na jeho karte</string>
     <!-- Signing Key Trust Dialog -->
@@ -640,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Lokálny súbor</string>
     <string name="patch_source_dialog_name_label">Názov</string>
     <string name="patch_source_dialog_name_placeholder">Moje vlastné záplaty</string>
-    <string name="patch_source_dialog_repo_url_label">URL úložiska</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo alebo gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Akceptuje odkaz GitHub, GitLab alebo morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL zdroja</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/vlastník/repo alebo example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Akceptuje GitHub, GitLab, Codeberg, .json URL alebo odkaz morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Názov je povinný</string>
-    <string name="patch_source_dialog_error_invalid_url">Zadajte platnú adresu URL GitHub alebo GitLab</string>
+    <string name="patch_source_dialog_error_invalid_url">Zadajte platnú URL adresu GitHub, GitLab, Codeberg alebo .json</string>
     <string name="patch_source_dialog_error_invalid_file">Vyberte platný súbor .mpp</string>
     <string name="patch_source_dialog_add_button">Pridať</string>
     <string name="patch_source_dialog_edit_title">Upraviť zdroj</string>
     <string name="patch_source_dialog_type_github_repo">GitHub úložisko</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab úložisko</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Repozitár Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON balík záplát</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp súbor alebo priečinok</string>
     <string name="patch_source_dialog_mpp_label">.mpp súbor</string>
     <string name="patch_source_dialog_path_placeholder_dev">Cesta k .mpp alebo priečinku</string>
@@ -804,6 +813,17 @@
     <string name="settings_output_folder_default">Priečinok APK (predvolený)</string>
     <string name="settings_output_folder_picker_title">Vybrať výstupný priečinok</string>
     <string name="settings_output_folder_not_found">Priečinok sa nenašiel, vytvorí sa pri najbližšom záplatovaní</string>
+    <string name="settings_section_original_apks">Pôvodné APK súbory</string>
+    <string name="settings_original_apks_mode_label">Uchovať pôvodné APK</string>
+    <string name="settings_original_apks_mode_copy">Kopírovať</string>
+    <string name="settings_original_apks_mode_move">Presunúť</string>
+    <string name="settings_original_apks_mode_desc_copy">Po patchovaní kopíruje pôvodný APK každej aplikácie, aby bolo možné ho neskôr znova patchovať. Uchováva sa len najnovšia verzia každej aplikácie</string>
+    <string name="settings_original_apks_mode_desc_move">Po patchovaní presunie pôvodný APK každej aplikácie a odstráni ho z miesta, odkiaľ ste ho vybrali. Uchováva sa len najnovšia verzia každej aplikácie</string>
+    <string name="settings_original_apks_mode_desc_off">Pôvodné APK sa neuchovávajú. Opätovné patchovanie vyžaduje, aby vybraný APK súbor stále existoval</string>
+    <string name="settings_original_apks_kept_title">Uložené pôvodné APK súbory</string>
+    <string name="settings_original_apks_open_button">Otvoriť priečinok</string>
+    <string name="settings_original_apks_confirm_title">Vymazať uložené pôvodné APK súbory?</string>
+    <string name="settings_original_apks_confirm_message">Týmto vymažete všetky pôvodné APK súbory, ktoré Morphe uložil. Opätovné patchovanie aplikácie bude vyžadovať jej APK súbor znova</string>
     <string name="settings_toggle_auto_start_adb_label">Automaticky spustiť ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Pri spustení sa spustí démon ADB, aby sa sledovali pripojené zariadenia. Keď je vypnuté, Morphe nikdy nespustí server a funkcie inštalácie/odosielania sú zakázané</string>
     <string name="settings_section_storage">Úložisko &amp; vyrovnávacia pamäť</string>
@@ -898,7 +918,7 @@
     <string name="settings_github_pat_label">Osobný prístupový token</string>
     <!-- App Info Dialog -->
     <string name="about_component">Komputer</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Knihovňa v%2$s</string>
+    <string name="about_version_patcher">Patcher v%1$s</string>
     <string name="about_update_available">Dostupná aktualizácia: %1$s</string>
     <string name="about_up_to_date">Aktuálne</string>
     <string name="about_links">Oficiálne odkazy</string>

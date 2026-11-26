@@ -117,7 +117,7 @@ internal fun AddPatchSourceDialog(
                 onConfirm = {
                     when (sourceType) {
                         PatchSourceType.GITHUB -> {
-                            // Resolve actual provider (GitHub vs GitLab) from the entered URL.
+                            // Resolve actual provider (GitHub, GitLab, Codeberg, or JSON) from the entered URL.
                             val resolved = resolveRemoteSourceUrl(form.url.trim())
                             if (resolved == null) {
                                 form.error = errInvalidUrl; return@MorpheDialogActions
@@ -131,7 +131,7 @@ internal fun AddPatchSourceDialog(
                                 type = resolved.provider,
                                 url = resolved.canonicalUrl,
                                 deletable = true,
-                                usePreRelease = form.usePreRelease
+                                usePreRelease = form.usePreRelease || resolved.defaultPreRelease
                             ))
                             return@MorpheDialogActions
                         }
@@ -200,6 +200,8 @@ internal fun EditPatchSourceDialog(
                             isPullRequest -> stringResource(Res.string.patch_source_dialog_type_github_pr)
                             source.type == PatchSourceType.GITHUB -> stringResource(Res.string.patch_source_dialog_type_github_repo)
                             source.type == PatchSourceType.GITLAB -> stringResource(Res.string.patch_source_dialog_type_gitlab_repo)
+                            source.type == PatchSourceType.CODEBERG -> stringResource(Res.string.patch_source_dialog_type_codeberg_repo)
+                            source.type == PatchSourceType.JSON -> stringResource(Res.string.patch_source_dialog_type_json_bundle)
                             source.type == PatchSourceType.LOCAL -> stringResource(Res.string.patch_source_dialog_local_file_label)
                             else -> ""
                         },
@@ -217,7 +219,7 @@ internal fun EditPatchSourceDialog(
                     }
 
                     when (source.type) {
-                        PatchSourceType.GITHUB, PatchSourceType.GITLAB -> {
+                        PatchSourceType.GITHUB, PatchSourceType.GITLAB, PatchSourceType.CODEBERG, PatchSourceType.JSON -> {
                             LabeledField(label = stringResource(Res.string.patch_source_dialog_repo_url_label)) {
                                 SlimTextField(
                                     value = form.url,
@@ -267,7 +269,7 @@ internal fun EditPatchSourceDialog(
                 onConfirm = {
                     if (form.name.isBlank()) { form.error = errNameRequired; return@MorpheDialogActions }
                     when (source.type) {
-                        PatchSourceType.GITHUB, PatchSourceType.GITLAB -> {
+                        PatchSourceType.GITHUB, PatchSourceType.GITLAB, PatchSourceType.CODEBERG, PatchSourceType.JSON -> {
                             // Re-resolve provider from URL in case the host was edited.
                             val resolved = resolveRemoteSourceUrl(form.url.trim())
                             if (resolved == null) {
@@ -277,7 +279,11 @@ internal fun EditPatchSourceDialog(
                                 name = form.name.trim(),
                                 type = resolved.provider,
                                 url = resolved.canonicalUrl,
-                                usePreRelease = form.usePreRelease
+                                usePreRelease = if (resolved.canonicalUrl != source.url && resolved.defaultPreRelease) {
+                                    true
+                                } else {
+                                    form.usePreRelease
+                                }
                             ))
                             return@MorpheDialogActions
                         }
@@ -313,6 +319,8 @@ private fun RemoteUrlHint(url: String) {
             MorpheIcons.Check,
         )
         parsed.provider == PatchProvider.GITLAB -> Triple(stringResource(Res.string.patch_source_dialog_valid_gitlab), colors.secondary, MorpheIcons.Check)
+        parsed.provider == PatchProvider.CODEBERG -> Triple(stringResource(Res.string.patch_source_dialog_valid_codeberg), colors.secondary, MorpheIcons.Check)
+        parsed.provider == PatchProvider.JSON -> Triple(stringResource(Res.string.patch_source_dialog_valid_json), colors.secondary, MorpheIcons.Check)
         else -> Triple(stringResource(Res.string.patch_source_dialog_valid_github), colors.secondary, MorpheIcons.Check)
     }
     Row(
@@ -328,7 +336,8 @@ private fun RemoteUrlHint(url: String) {
 /** Parsed remote source details with canonical URL and provider type. */
 internal data class ResolvedRemoteSource(
     val canonicalUrl: String,
-    val provider: PatchSourceType, // GITHUB or GITLAB only
+    val provider: PatchSourceType,
+    val defaultPreRelease: Boolean = false,
 )
 
 /** Parses and maps a remote source URL to a [ResolvedRemoteSource]. */
@@ -337,8 +346,14 @@ internal fun resolveRemoteSourceUrl(input: String): ResolvedRemoteSource? {
     val type = when (parsed.provider) {
         PatchProvider.GITHUB, PatchProvider.GITHUB_PR -> PatchSourceType.GITHUB
         PatchProvider.GITLAB -> PatchSourceType.GITLAB
+        PatchProvider.CODEBERG -> PatchSourceType.CODEBERG
+        PatchProvider.JSON -> PatchSourceType.JSON
     }
-    return ResolvedRemoteSource(canonicalUrl = parsed.canonicalUrl, provider = type)
+    return ResolvedRemoteSource(
+        canonicalUrl = parsed.canonicalUrl,
+        provider = type,
+        defaultPreRelease = parsed.defaultPreRelease,
+    )
 }
 
 /** Returns the directory path to remember for subsequent file picker invocations. */

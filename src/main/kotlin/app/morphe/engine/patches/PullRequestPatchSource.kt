@@ -26,6 +26,7 @@ class PullRequestPatchSource(
 ) : GitHubPatchSource(http, "$owner/$repo") {
 
     override val provider: PatchProvider = PatchProvider.GITHUB_PR
+    override val supportsPrerelease: Boolean = false
 
     private var cachedRelease: Release? = null
 

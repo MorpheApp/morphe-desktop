@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">Устгах</string>
     <string name="home_dialog_continue_anyway">Шаардлагагүйгээр үргэлжлүүлэх</string>
     <string name="home_dialog_forget_title">%1$s-ийг мартах уу?</string>
-    <string name="home_dialog_forget_message">Энэ нь %1$s-ийг таны патчлагдсан апп-ын түүхээс устгана. Файлуудад нөлөөлөхгүй - апп-ыг дахин патчлахад буцаан нэмэгдэнэ</string>
+    <string name="home_dialog_forget_message">Энэ нь %1$s-ийг таны патч хийсэн апп-ын түүхээс устгана. Патч хийсэн APK файл дискэн дээр үлдэнэ бөгөөд апп-ыг дахин патчлах үед түүнд эргэн нэмэгдэнэ</string>
+    <string name="home_dialog_also_delete_original">Мөн хадгалагдсан эх APK файлыг устгах</string>
     <string name="home_dialog_uninstall_title">%1$s-ийг устгах уу?</string>
     <string name="home_dialog_uninstall_message">Энэ нь %1$s-ийг холбогдсон төхөөрөмжөөс устгана. Та доор өөр сонголт хийгээгүй тохиолдолд диск дээрх патчлагдсан APK болон таны түүх хадгалагдана</string>
     <string name="home_dialog_uninstall_also_forget">Мөн \"Миний апп\" хэсгээс хасах</string>
@@ -567,6 +568,7 @@
     <string name="source_card_updates_manual">Гар аргаар (файлыг солих)</string>
     <string name="source_card_loads_newest">Хавтас дахь хамгийн сүүлийн .mpp файл</string>
     <string name="source_card_loads_pr">Pull request-ийн хамгийн сүүлийн build</string>
+    <string name="source_card_loads_json">JSON манифестээс</string>
     <string name="source_card_disabled">Энэ эх сурвалж идэвхгүй байна. Патч ачаалахын тулд үүнийг идэвхжүүлнэ үү</string>
     <string name="source_card_disabled_tag">Идэвхгүй</string>
     <string name="source_card_last_enabled">Наад зах нь нэг эх сурвалж идэвхтэй байх ёстой</string>
@@ -580,6 +582,7 @@
     <string name="source_card_show_in_folder">Хавтсанд харуулах</string>
     <string name="source_card_more_description">Нэмэлт үйлдлүүд</string>
     <string name="source_card_browse_patches">Засваруудыг үзэх</string>
+    <string name="source_card_report_issue">Асуудлыг мэдэгдэх</string>
     <string name="source_card_priority">Чухалшил %1$d</string>
     <string name="source_card_open_link">%1$s-ийг хөтөч дээр нээх</string>
     <string name="source_card_enable_description">%1$s-ийг идэвхжүүлэх</string>
@@ -629,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Дотоод</string>
     <string name="patch_source_dialog_valid_github">GitHub репозитори</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab репозитори</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg репозиториум</string>
+    <string name="patch_source_dialog_valid_json">JSON патчийн багц</string>
     <string name="patch_source_dialog_valid_pr">%2$s дээрх %1$s дугаартай pull request. Энэхүү PR-ийн хамгийн сүүлийн билдийг үргэлж ашиглана</string>
     <string name="patch_source_dialog_builtin_note">Энэ бол суурилуулсан патчийн эх сурвалж юм. Үүний нэр болон байршлыг өөрчилж болохгүй. Түүний карт дээр тогтвортой болон урьдчилсан хувилбарын хооронд шилжинэ</string>
     <!-- Signing Key Trust Dialog -->
@@ -642,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Локал файл</string>
     <string name="patch_source_dialog_name_label">Нэр</string>
     <string name="patch_source_dialog_name_placeholder">Миний өөрийн патчууд</string>
-    <string name="patch_source_dialog_repo_url_label">Репозиторийн URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo эсвэл gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">GitHub, GitLab эсвэл morphe.software/add-source холбоосыг дэмждэг</string>
+    <string name="patch_source_dialog_repo_url_label">Эх сурвалжийн URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo эсвэл example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">GitHub, GitLab, Codeberg, .json URL эсвэл morphe.software/add-source холбоосыг хүлээн авна</string>
     <string name="patch_source_dialog_error_name_required">Нэр заавал шаардлагатай</string>
-    <string name="patch_source_dialog_error_invalid_url">GitHub эсвэл GitLab-ийн зөв URL оруулна уу</string>
+    <string name="patch_source_dialog_error_invalid_url">GitHub, GitLab, Codeberg эсвэл .json-ийн зөв URL оруулна уу</string>
     <string name="patch_source_dialog_error_invalid_file">Зөв .mpp файлыг сонгоно уу</string>
     <string name="patch_source_dialog_add_button">Нэмэх</string>
     <string name="patch_source_dialog_edit_title">Эх сурвалжийг засах</string>
     <string name="patch_source_dialog_type_github_repo">GitHub репозитори</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab репозитори</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg Репозиториум</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON Патчийн Багц</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp файл эсвэл хавтас</string>
     <string name="patch_source_dialog_mpp_label">.mpp файл</string>
     <string name="patch_source_dialog_path_placeholder_dev">.mpp эсвэл хавтасны зам</string>
@@ -806,6 +813,17 @@
     <string name="settings_output_folder_default">APK хавтас (анхны тохиргоо)</string>
     <string name="settings_output_folder_picker_title">Гаралтын хавтсыг сонгох</string>
     <string name="settings_output_folder_not_found">Хавтас олдсонгүй, дараагийн патчинг үеэр үүсгэх болно</string>
+    <string name="settings_section_original_apks">Эх APK файлууд</string>
+    <string name="settings_original_apks_mode_label">Эх APK-г хадгалах</string>
+    <string name="settings_original_apks_mode_copy">Хуулах</string>
+    <string name="settings_original_apks_mode_move">Шилжүүлэх</string>
+    <string name="settings_original_apks_mode_desc_copy">Аппликейшнийг патч хийсний дараа эх APK-г хуулж хадгална, ингэснээр дараа нь дахин патчлах боломжтой болно. Зөвхөн хамгийн сүүлийн хувилбарыг хадгална</string>
+    <string name="settings_original_apks_mode_desc_move">Аппликейшнийг патч хийсний дараа эх APK-г сонгосон байрлалыг нь устгаж шилжүүлнэ. Зөвхөн хамгийн сүүлийн хувилбарыг хадгална</string>
+    <string name="settings_original_apks_mode_desc_off">Эх APK-г хадгалахгүй. Дахин патчлахын тулд таны сонгосон APK тухайн байрлалдаа байх шаардлагатай</string>
+    <string name="settings_original_apks_kept_title">Хадгалсан эх APK-нууд</string>
+    <string name="settings_original_apks_open_button">Хавтсаг нээх</string>
+    <string name="settings_original_apks_confirm_title">Хадгалсан эх APK-уудыг устгах уу?</string>
+    <string name="settings_original_apks_confirm_message">Энэ нь Morphe-ийн хадгалсан бүх эх APK-уудыг устгана. Аппликейшнийг дахин патчихэд APK файл дахин шаардлагатай болно</string>
     <string name="settings_toggle_auto_start_adb_label">ADB-г автоматаар эхлүүлэх</string>
     <string name="settings_toggle_auto_start_adb_desc">Холбогдсон төхөөрөмжүүдийг хянахын тулд эхлүүлэх үед ADB daemon-ыг ажиллуулна. Унтраалттай үед Morphe сервер эхлүүлэхгүй бөгөөд суулгах/push функцууд идэвхгүй болно</string>
     <string name="settings_section_storage">Хадгалах &amp; кэш</string>
@@ -900,7 +918,7 @@
     <string name="settings_github_pat_label">Хувийн хандалтын токен (Personal Access Token)</string>
     <!-- App Info Dialog -->
     <string name="about_component">Ширээ</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Санол v%2$s</string>
+    <string name="about_version_patcher">Патчер v%1$s</string>
     <string name="about_update_available">Шинэчлэл боломжтой: %1$s</string>
     <string name="about_up_to_date">Хамгийн сүүлийн хувилбар</string>
     <string name="about_links">Албан ёсны холбоосууд</string>

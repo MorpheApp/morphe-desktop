@@ -13,7 +13,6 @@ import app.morphe.engine.patches.PatchBundleSignerChangedException
 import app.morphe.engine.patches.PatchRepository
 import app.morphe.engine.patches.PatchResolver
 import app.morphe.engine.patches.SupportedAppCatalog
-import app.morphe.engine.patches.SupportedAppCatalog.toMetadata
 import app.morphe.engine.util.Logger
 import app.morphe.gui.data.model.FollowMode
 import app.morphe.gui.data.model.PatchSource
@@ -44,6 +43,7 @@ object EnabledSourcesLoader {
         val resolvedVersion: String? = null,
         val latestAvailableVersion: String? = null,
         val releasedAtMillis: Long? = null,
+        val pageUrl: String? = null,
         val isOffline: Boolean = false,
         val isPinned: Boolean = false,
         val error: String? = null,
@@ -183,11 +183,12 @@ object EnabledSourcesLoader {
             MultiSourceLoader.load(inputs)
         }
 
-        val unionPatches = loaded.allPatches.map { it.toMetadata() }
         val patchesBySource: Map<String, List<PatchMetadata>> =
             loaded.perSource.associate { src ->
-                src.sourceId to src.patches.map { it.toMetadata() }
+                src.sourceId to MultiSourceLoader.metadataOf(src)
             }
+        // Patches compare by identity, so the union holds every source's patches in turn.
+        val unionPatches = loaded.perSource.flatMap { patchesBySource.getValue(it.sourceId) }
 
         Result(
             resolved = resolved,
@@ -209,7 +210,9 @@ object EnabledSourcesLoader {
             PatchSourceType.LOCAL -> PatchResolver.resolveLocal(source.filePath, excludedMppPatterns)
             PatchSourceType.DEFAULT,
             PatchSourceType.GITHUB,
-            PatchSourceType.GITLAB -> {
+            PatchSourceType.GITLAB,
+            PatchSourceType.CODEBERG,
+            PatchSourceType.JSON -> {
                 if (repo == null) {
                     PatchResolver.ResolutionResult(error = PatchResolver.Error.NoRepository(source.name))
                 } else {
@@ -244,6 +247,7 @@ object EnabledSourcesLoader {
             resolvedVersion = resolvedVersion,
             latestAvailableVersion = latestAvailableVersion,
             releasedAtMillis = releasedAtMillis,
+            pageUrl = pageUrl,
             isOffline = isOffline,
             channel = channel,
             signingKey = signingKey,
@@ -361,6 +365,7 @@ data class SourceDetails(
     val isPinned: Boolean,
     val fileName: String?,
     val releasedAtMillis: Long? = null,
+    val pageUrl: String? = null,
 )
 
 fun EnabledSourcesLoader.Result?.sourceDetailsMap(): Map<String, SourceDetails> {
@@ -384,6 +389,7 @@ fun EnabledSourcesLoader.Result?.sourceDetailsMap(): Map<String, SourceDetails> 
             isPinned = r.isPinned,
             fileName = file.name,
             releasedAtMillis = r.releasedAtMillis,
+            pageUrl = r.pageUrl,
         )
     }.toMap()
 }

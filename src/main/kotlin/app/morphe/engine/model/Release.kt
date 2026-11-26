@@ -32,6 +32,7 @@ data class Release(
     val body: String? = null,
     /** Key the bundles of the source are signed with, see [app.morphe.patcher.patch.PatchBundleSignature]. */
     val publicKey: String? = null,
+    val pageUrl: String? = null,
 ) {
 
     /** True if flagged as a prerelease or if the tag contains dev, alpha, or beta. */

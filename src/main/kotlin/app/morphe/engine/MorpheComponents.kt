@@ -12,21 +12,12 @@ object MorpheComponents {
 
     /** Version of morphe-patcher on the classpath. */
     val patcherVersion: String? by lazy {
-        readVersionProperty("/app/morphe/patcher/version.properties", "version")
-    }
-
-    /** Version of morphe-library on the classpath. */
-    val libraryVersion: String? by lazy {
-        readVersionProperty("/app/morphe/library/version.properties", "version")
-            ?: readVersionProperty("/app/morphe/cli/components.properties", "libraryVersion")
-    }
-
-    private fun readVersionProperty(resourcePath: String, key: String): String? =
         runCatching {
             MorpheComponents::class.java
-                .getResourceAsStream(resourcePath)
-                ?.use { Properties().apply { load(it) }.getProperty(key) }
+                .getResourceAsStream("/app/morphe/patcher/version.properties")
+                ?.use { Properties().apply { load(it) }.getProperty("version") }
                 ?.trim()
                 ?.takeUnless { it.isEmpty() || it.startsWith($$"${") }
         }.getOrNull()
+    }
 }

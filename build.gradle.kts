@@ -1,5 +1,4 @@
 import app.morphe.tasks.GenerateBootstrapConstantsTask
-import app.morphe.tasks.WriteMorpheComponentsTask
 import com.mikepenz.aboutlibraries.plugin.DuplicateMode
 import com.mikepenz.aboutlibraries.plugin.DuplicateRule
 import proguard.gradle.ProGuardTask
@@ -59,9 +58,6 @@ val bootstrapDependencies = configurations.create("bootstrapDependencies") {
 dependencies {
     api(libs.morphe.patcher)
     implementation(libs.arsclib)
-    implementation(libs.morphe.library) {
-        exclude(group = "app.morphe", module = "jadb")
-    }
     implementation(libs.picocli)
     implementation(libs.bundles.compose.desktop)
     implementation(libs.compose.components.resources)
@@ -136,25 +132,10 @@ tasks {
         }
     }
 
-    // Write the *resolved* morphe library version (not the catalog pin). Patcher ships
-    // its own version.properties.
-    val writeMorpheComponents = register<WriteMorpheComponentsTask>("writeMorpheComponents") {
-        description = "Writes the resolved morphe-library version to components.properties"
-        libraryVersion.set(provider {
-            configurations.named("runtimeClasspath").get().incoming.resolutionResult.allComponents
-                .mapNotNull { it.moduleVersion }
-                .firstOrNull { it.group == "app.morphe" && it.name.startsWith("morphe-library") }
-                ?.version
-                ?: "unknown"
-        })
-        outputFile.set(layout.buildDirectory.file("generated/morphe-components/app/morphe/cli/components.properties"))
-    }
-
     processResources {
         // Make sure the licenses are generated before the resources are processed
-        dependsOn("exportLibraryDefinitions", writeMorpheComponents)
+        dependsOn("exportLibraryDefinitions")
         from(layout.buildDirectory.file("generated/aboutLibraries/aboutlibraries.json"))
-        from(layout.buildDirectory.dir("generated/morphe-components"))
 
         // Inject project version into version.properties
         filesMatching("app/morphe/cli/version.properties") {

@@ -204,7 +204,8 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="home_dialog_uninstall_button">Desinstalar</string>
     <string name="home_dialog_continue_anyway">Continuar de todos modos</string>
     <string name="home_dialog_forget_title">¿Olvidar %1$s?</string>
-    <string name="home_dialog_forget_message">Esto elimina %1$s del historial de aplicaciones parcheadas. No afecta a ningún archivo: si vuelves a parchear la aplicación, volverá a aparecer</string>
+    <string name="home_dialog_forget_message">Esto elimina %1$s del historial de aplicaciones parcheadas. El APK parcheado permanece en el disco; volver a parchear la aplicación lo añade de nuevo</string>
+    <string name="home_dialog_also_delete_original">También eliminar su APK original guardado</string>
     <string name="home_dialog_uninstall_title">¿Desinstalar %1$s?</string>
     <string name="home_dialog_uninstall_message">Esto elimina %1$s del dispositivo conectado. El APK parcheado en disco y tu historial se conservan, a menos que elijas lo contrario abajo</string>
     <string name="home_dialog_uninstall_also_forget">Eliminar también de Tus aplicaciones</string>
@@ -573,6 +574,7 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="source_card_updates_manual">Manual (reemplazar archivo)</string>
     <string name="source_card_loads_newest">El .mpp más reciente en la carpeta</string>
     <string name="source_card_loads_pr">Compilación de la solicitud de extracción más reciente</string>
+    <string name="source_card_loads_json">Desde el manifiesto JSON</string>
     <string name="source_card_disabled">Esta fuente está desactivada. Actívala para cargar parches</string>
     <string name="source_card_disabled_tag">Desactivado</string>
     <string name="source_card_last_enabled">Al menos una fuente debe permanecer activada</string>
@@ -586,6 +588,7 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="source_card_show_in_folder">Mostrar en carpeta</string>
     <string name="source_card_more_description">Más acciones</string>
     <string name="source_card_browse_patches">Explorar parches</string>
+    <string name="source_card_report_issue">Informar de un problema</string>
     <string name="source_card_priority">Prioridad %1$d</string>
     <string name="source_card_open_link">Abrir %1$s en el navegador</string>
     <string name="source_card_enable_description">Activar %1$s</string>
@@ -635,6 +638,8 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="patch_source_dialog_kind_local">Local</string>
     <string name="patch_source_dialog_valid_github">Repositorio de GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Repositorio de GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Repositorio de Codeberg</string>
+    <string name="patch_source_dialog_valid_json">Paquete de parches JSON</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s en %2$s. Siempre utiliza la última compilación de este PR</string>
     <string name="patch_source_dialog_builtin_note">Esta es la fuente de parches integrada. Su nombre y ubicación no se pueden cambiar. Cambia entre la versión estable y la pre-lanzamiento en su tarjeta</string>
     <!-- Signing Key Trust Dialog -->
@@ -648,17 +653,19 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="patch_source_dialog_local_file_label">Archivo local</string>
     <string name="patch_source_dialog_name_label">Nombre</string>
     <string name="patch_source_dialog_name_placeholder">Mis parches personalizados</string>
-    <string name="patch_source_dialog_repo_url_label">URL del repositorio</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo o gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Acepta enlaces de GitHub, GitLab o morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL de origen</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo o example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Acepta enlaces de GitHub, GitLab, Codeberg, URL .json o morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">El nombre es obligatorio</string>
-    <string name="patch_source_dialog_error_invalid_url">Introduce una URL válida de GitHub o GitLab</string>
+    <string name="patch_source_dialog_error_invalid_url">Introduce una URL válida de GitHub, GitLab, Codeberg o .json</string>
     <string name="patch_source_dialog_error_invalid_file">Selecciona un archivo .mpp válido</string>
     <string name="patch_source_dialog_add_button">Añadir</string>
     <string name="patch_source_dialog_edit_title">Editar fuente</string>
     <string name="patch_source_dialog_type_github_repo">Repositorio de GitHub</string>
     <string name="patch_source_dialog_type_github_pr">Pull request de GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">Repositorio de GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Repositorio de Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">Paquete de parches JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">Archivo .mpp o carpeta</string>
     <string name="patch_source_dialog_mpp_label">Archivo .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">Ruta al .mpp o carpeta</string>
@@ -812,6 +819,17 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="settings_output_folder_default">Carpeta del APK (predeterminada)</string>
     <string name="settings_output_folder_picker_title">Seleccionar carpeta de salida</string>
     <string name="settings_output_folder_not_found">Carpeta no encontrada, se creará en el próximo parcheo</string>
+    <string name="settings_section_original_apks">APKs originales</string>
+    <string name="settings_original_apks_mode_label">Mantener APK originales</string>
+    <string name="settings_original_apks_mode_copy">Copiar</string>
+    <string name="settings_original_apks_mode_move">Mover</string>
+    <string name="settings_original_apks_mode_desc_copy">Copia el APK original de cada aplicación después del parcheo, para que pueda volver a parchearse más tarde. Solo se conserva la última versión de cada aplicación</string>
+    <string name="settings_original_apks_mode_desc_move">Mueve el APK original de cada aplicación después del parcheo, eliminándolo de donde lo seleccionaste. Solo se conserva la última versión de cada aplicación</string>
+    <string name="settings_original_apks_mode_desc_off">No se conservan los APKs originales. Para volver a parchear, es necesario que el APK seleccionado siga estando ahí</string>
+    <string name="settings_original_apks_kept_title">APK originales conservados</string>
+    <string name="settings_original_apks_open_button">Abrir carpeta</string>
+    <string name="settings_original_apks_confirm_title">¿Eliminar los APK originales guardados?</string>
+    <string name="settings_original_apks_confirm_message">Esto eliminará cada APK original que Morphe haya guardado. Para volver a parchear una aplicación se necesitará su APK de nuevo</string>
     <string name="settings_toggle_auto_start_adb_label">Iniciar ADB automáticamente</string>
     <string name="settings_toggle_auto_start_adb_desc">Inicia el servicio de ADB al arrancar para supervisar los dispositivos conectados. Si está desactivado, Morphe nunca inicia el servidor y las funciones de instalación/envío quedan deshabilitadas</string>
     <string name="settings_section_storage">Almacenamiento &amp; caché</string>
@@ -906,7 +924,7 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="settings_github_pat_label">Token de acceso personal</string>
     <!-- App Info Dialog -->
     <string name="about_component">Escritorio</string>
-    <string name="about_version_patcher_library">Parcheador v%1$s · Librería v%2$s</string>
+    <string name="about_version_patcher">Parcheador v%1$s</string>
     <string name="about_update_available">Actualización disponible: %1$s</string>
     <string name="about_up_to_date">Actualizado</string>
     <string name="about_links">Enlaces oficiales</string>

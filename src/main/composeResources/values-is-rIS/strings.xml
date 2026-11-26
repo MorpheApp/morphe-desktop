@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">Fjarlægja</string>
     <string name="home_dialog_continue_anyway">Halda samt áfram</string>
     <string name="home_dialog_forget_title">Gleyma %1$s?</string>
-    <string name="home_dialog_forget_message">Þetta fjarlægir %1$s úr plástraða-forritasögu þinni. Það snertir engar skrár - að plástra forritið aftur bætir því við aftur</string>
+    <string name="home_dialog_forget_message">Þetta fjarlægir %1$s úr sögulegu yfirliti yfir breyttar forrit. Breytt APK skráin varðveist á disknum og ef forritinu er breytt aftur bætist hún aftur til</string>
+    <string name="home_dialog_also_delete_original">Eyða einnig upprunalegri APK skrá</string>
     <string name="home_dialog_uninstall_title">Fjarlægja %1$s?</string>
     <string name="home_dialog_uninstall_message">Þetta fjarlægir %1$s af tengda tækinu. Plástraða APK á diski og saga þín eru geymd nema þú veljir annað hér að neðan</string>
     <string name="home_dialog_uninstall_also_forget">Fjarlægja einnig úr „Forritin þín“</string>
@@ -567,6 +568,7 @@
     <string name="source_card_updates_manual">Handvirkt (skipta skrá)</string>
     <string name="source_card_loads_newest">Nýjasta .mpp skrá í möppu</string>
     <string name="source_card_loads_pr">Nýjasta pull request uppbygging</string>
+    <string name="source_card_loads_json">Úr JSON-skrá</string>
     <string name="source_card_disabled">Þessi uppspretta er afsett. Virkja hana til að hlaða plástra</string>
     <string name="source_card_disabled_tag">Óvirkt</string>
     <string name="source_card_last_enabled">Að minnsta kosti ein uppspretta verður að vera virk</string>
@@ -580,6 +582,7 @@
     <string name="source_card_show_in_folder">Sýna í möppu</string>
     <string name="source_card_more_description">Fleiri aðgerðir</string>
     <string name="source_card_browse_patches">Skoða plástra</string>
+    <string name="source_card_report_issue">Tilkynna vandamál</string>
     <string name="source_card_priority">Forgangsröð %1$d</string>
     <string name="source_card_open_link">Opna %1$s í vafra</string>
     <string name="source_card_enable_description">Virkja %1$s</string>
@@ -629,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Staðbundið</string>
     <string name="patch_source_dialog_valid_github">GitHub gefing</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab gefing</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg-geymsla</string>
+    <string name="patch_source_dialog_valid_json">JSON-bótapakki</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s á %2$s. Notar alltaf nýjasta build úr þessari PR</string>
     <string name="patch_source_dialog_builtin_note">Þetta er innbyggð uppspretta fyrir patch. Nafnið og staðsetningin geta ekki verið breytt. Skiptu á milli stöðugrar útgáfu og pre-release á kortinu</string>
     <!-- Signing Key Trust Dialog -->
@@ -642,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Staðvær skrá</string>
     <string name="patch_source_dialog_name_label">Nafn</string>
     <string name="patch_source_dialog_name_placeholder">Mín sérsniðnu plástrar</string>
-    <string name="patch_source_dialog_repo_url_label">Slóð geymslusafns</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo eða gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Samþykkir GitHub, GitLab eða morphe.software/add-source tengil</string>
+    <string name="patch_source_dialog_repo_url_label">Vefslóð heimildar</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/eigandi/geymsla eða example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Tekur við GitHub, GitLab, Codeberg, .json URL eða morphe.software/add-source tengli</string>
     <string name="patch_source_dialog_error_name_required">Nafn er nauðsynlegt</string>
-    <string name="patch_source_dialog_error_invalid_url">Sláðu inn gilda GitHub eða GitLab slóð</string>
+    <string name="patch_source_dialog_error_invalid_url">Sláðu inn gildt GitHub, GitLab, Codeberg eða .json URL</string>
     <string name="patch_source_dialog_error_invalid_file">Veldu gilda .mpp skrá</string>
     <string name="patch_source_dialog_add_button">Bæta við</string>
     <string name="patch_source_dialog_edit_title">Breyta heimild</string>
     <string name="patch_source_dialog_type_github_repo">GitHub geymslusafn</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab geymslusafn</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg-geymsla</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON-bótapakki</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp skrá eða mappa</string>
     <string name="patch_source_dialog_mpp_label">.mpp skrá</string>
     <string name="patch_source_dialog_path_placeholder_dev">Slóð að .mpp eða möppu</string>
@@ -806,6 +813,17 @@
     <string name="settings_output_folder_default">APK-mappa (sjálfgefið)</string>
     <string name="settings_output_folder_picker_title">Veldu úttaksmöppu</string>
     <string name="settings_output_folder_not_found">Mappa fannst ekki, verður búin til við næstu plástrun</string>
+    <string name="settings_section_original_apks">Upprunalegar APK skrár</string>
+    <string name="settings_original_apks_mode_label">Geyma upprunalegum APK-skráum</string>
+    <string name="settings_original_apks_mode_copy">Afrita</string>
+    <string name="settings_original_apks_mode_move">Færa</string>
+    <string name="settings_original_apks_mode_desc_copy">Gerir afrit af upprunalegri APK-skrá hverrar forrits eftir lagningu, svo hægt sé að lagga hana aftur síðar. Aðeins nýjasta útgáfan af hverju forriti er geymd</string>
+    <string name="settings_original_apks_mode_desc_move">Færir upprunalega APK-skráu hverrar forrits eftir lagningu og fjarlegir hana þaðan og þú valdir hana. Aðeins nýjasta útgáfan af hverju forriti er geymd</string>
+    <string name="settings_original_apks_mode_desc_off">Upprunalegar APK-skrár eru ekki geymdar. Til að lagga aftur þarf APK-skrána sem þú valdir að vera enn til stað</string>
+    <string name="settings_original_apks_kept_title">Geymdar upprunalegar APK-skrár</string>
+    <string name="settings_original_apks_open_button">Opna möppu</string>
+    <string name="settings_original_apks_confirm_title">Eyða vistuðum uppruna APK-um?</string>
+    <string name="settings_original_apks_confirm_message">Þetta mun eyða öllum uppruna APK-um sem Morphe hefur geymt. Til að endurpatcha app verður þörf á APK-inu aftur</string>
     <string name="settings_toggle_auto_start_adb_label">Ræsa ADB sjálfkrafa</string>
     <string name="settings_toggle_auto_start_adb_desc">Ræstu ADB-þjóninn við ræsingu svo tengd tæki séu vöktuð. Þegar slökkt er, ræsir Morphe aldrei þjóninn og uppsetningar/sendingaraðgerðir eru óvirkar</string>
     <string name="settings_section_storage">Geymsla &amp; skyndiminni</string>
@@ -900,7 +918,7 @@
     <string name="settings_github_pat_label">Persónulegt aðgangstákn</string>
     <!-- App Info Dialog -->
     <string name="about_component">Skálborð</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Bókasafn v%2$s</string>
+    <string name="about_version_patcher">Patcher v%1$s</string>
     <string name="about_update_available">Uppfærsla í boði: %1$s</string>
     <string name="about_up_to_date">Uppfært</string>
     <string name="about_links">Opinber tenglar</string>

@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">Απεγκατάσταση</string>
     <string name="home_dialog_continue_anyway">Συνέχιση ούτως ή άλλως</string>
     <string name="home_dialog_forget_title">Αφαίρεση του %1$s;</string>
-    <string name="home_dialog_forget_message">Αυτό αφαιρεί το %1$s από το ιστορικό εφαρμογών με patch. Δεν επηρεάζει κανένα αρχείο - το νέο patch στην εφαρμογή θα το προσθέσει ξανά</string>
+    <string name="home_dialog_forget_message">Αυτό αφαιρεί το %1$s από το ιστορικό των τροποποιημένων εφαρμογών σας. Το τροποποιημένο APK παραμένει στον δίσκο, η επανατροποποίηση της εφαρμογής το προσθέτει ξανά</string>
+    <string name="home_dialog_also_delete_original">Διαγραφή επίσης του αρχικού APK που διατηρήθηκε</string>
     <string name="home_dialog_uninstall_title">Απεγκατάσταση του %1$s;</string>
     <string name="home_dialog_uninstall_message">Αυτό αφαιρεί το %1$s από τη συνδεδεμένη συσκευή. Το APK με patch στον δίσκο και το ιστορικό σας διατηρούνται εκτός αν επιλέξετε διαφορετικά παρακάτω</string>
     <string name="home_dialog_uninstall_also_forget">Επίσης αφαίρεση από τις Εφαρμογές μου</string>
@@ -567,6 +568,7 @@
     <string name="source_card_updates_manual">Χειροκίνητα (αντικατάσταση αρχείου)</string>
     <string name="source_card_loads_newest">Νεότερο .mpp στον φάκελο</string>
     <string name="source_card_loads_pr">Τελευταία έκδοση pull request</string>
+    <string name="source_card_loads_json">Από το φόρο JSON</string>
     <string name="source_card_disabled">Αυτή η πηγή είναι απενεργοποιημένη. Ενεργοποιήστε την για να φορτώσετε διορθώσεις</string>
     <string name="source_card_disabled_tag">Απενεργοποιημένο</string>
     <string name="source_card_last_enabled">Τουλάχιστον μία πηγή πρέπει να παραμείνει ενεργοποιημένη</string>
@@ -580,6 +582,7 @@
     <string name="source_card_show_in_folder">Εμφάνιση στον φάκελο</string>
     <string name="source_card_more_description">Περισσότερες ενέργειες</string>
     <string name="source_card_browse_patches">Περιήγηση σε τροποποιήσεις</string>
+    <string name="source_card_report_issue">Αναφορά προβλήματος</string>
     <string name="source_card_priority">Προτεραιότητα %1$d</string>
     <string name="source_card_open_link">Άνοιγμα του %1$s σε πρόγραμμα περιήγησης</string>
     <string name="source_card_enable_description">Ενεργοποίηση %1$s</string>
@@ -629,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Τοπική</string>
     <string name="patch_source_dialog_valid_github">Αποθετήριο GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Αποθετήριο GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Αποθετήριο Codeberg</string>
+    <string name="patch_source_dialog_valid_json">Πακέτο patch JSON</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s στο %2$s. Χρησιμοποιεί πάντα το τελευταίο build από αυτό το PR</string>
     <string name="patch_source_dialog_builtin_note">Αυτή είναι η ενσωματωμένη πηγή τροποποιήσεων. Το όνομά της και η τοποθεσία της δεν μπορούν να αλλάξουν. Αλλάξτε μεταξύ σταθερής έκδοσης και προ-έκδοσης στην κάρτα της</string>
     <!-- Signing Key Trust Dialog -->
@@ -642,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Τοπικό αρχείο</string>
     <string name="patch_source_dialog_name_label">Όνομα</string>
     <string name="patch_source_dialog_name_placeholder">Τα προσαρμοσμένα patches μου</string>
-    <string name="patch_source_dialog_repo_url_label">URL αποθετηρίου</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo ή gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Δέχεται GitHub, GitLab ή σύνδεσμο morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL Πηγής</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo ή example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Δέχεται GitHub, GitLab, Codeberg, URL .json ή σύνδεσμο morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Το όνομα είναι υποχρεωτικό</string>
-    <string name="patch_source_dialog_error_invalid_url">Εισάγετε ένα έγκυρο URL GitHub ή GitLab</string>
+    <string name="patch_source_dialog_error_invalid_url">Εισαγάγετε ένα έγκυρο URL GitHub, GitLab, Codeberg ή .json</string>
     <string name="patch_source_dialog_error_invalid_file">Επιλέξτε ένα έγκυρο αρχείο .mpp</string>
     <string name="patch_source_dialog_add_button">Προσθήκη</string>
     <string name="patch_source_dialog_edit_title">Επεξεργασία πηγής</string>
     <string name="patch_source_dialog_type_github_repo">Αποθετήριο GitHub</string>
     <string name="patch_source_dialog_type_github_pr">Αίτημα έλξης GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">Αποθετήριο GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Αποθετήριο Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">Πακέτο Patch JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp αρχείο ή φάκελος</string>
     <string name="patch_source_dialog_mpp_label">.mpp αρχείο</string>
     <string name="patch_source_dialog_path_placeholder_dev">Διαδρομή προς .mpp ή φάκελο</string>
@@ -806,6 +813,17 @@
     <string name="settings_output_folder_default">Ο φάκελος του APK (προεπιλογή)</string>
     <string name="settings_output_folder_picker_title">Επιλογή φακέλου εξόδου</string>
     <string name="settings_output_folder_not_found">Ο φάκελος δεν βρέθηκε, θα δημιουργηθεί στο επόμενο patch</string>
+    <string name="settings_section_original_apks">Αρχικά αρχεία APK</string>
+    <string name="settings_original_apks_mode_label">Διατήρηση αρχικών APK</string>
+    <string name="settings_original_apks_mode_copy">Αντιγραφή</string>
+    <string name="settings_original_apks_mode_move">Μετακίνηση</string>
+    <string name="settings_original_apks_mode_desc_copy">Αντιγράφει το αρχικό APK κάθε εφαρμογής μετά το patching, ώστε να μπορεί να γίνει ξανά patching αργότερα. Διατηρείται μόνο η τελευταία έκδοση κάθε εφαρμογής</string>
+    <string name="settings_original_apks_mode_desc_move">Μεταφέρει το αρχικό APK κάθε εφαρμογής μετά το patching, αφαιρώντας το από το σημείο όπου το επιλέξατε. Διατηρείται μόνο η τελευταία έκδοση κάθε εφαρμογής</string>
+    <string name="settings_original_apks_mode_desc_off">Τα αρχικά APK δεν διατηρούνται. Για να γίνει ξανά patching, απαιτείται το APK που επιλέξατε να παραμείνει εκεί</string>
+    <string name="settings_original_apks_kept_title">Διατήρησε τα αρχικά APK</string>
+    <string name="settings_original_apks_open_button">Άνοιγμα φακέλου</string>
+    <string name="settings_original_apks_confirm_title">Διαγραφή των διατηρημένων αρχικών APK;</string>
+    <string name="settings_original_apks_confirm_message">Αυτό θα διαγράψει κάθε αρχικό APK που έχει διατηρήσει το Morphe. Για τη νέα εφαρμογή ενός patch σε μια εφαρμογή θα χρειαστεί ξανά το APK της</string>
     <string name="settings_toggle_auto_start_adb_label">Αυτόματη εκκίνηση ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Εκκινεί τον δαίμονα ADB κατά την εκκίνηση ώστε να παρακολουθούνται οι συνδεδεμένες συσκευές. Όταν είναι απενεργοποιημένο, το Morphe δεν ξεκινά ποτέ τον διακομιστή και οι δυνατότητες εγκατάστασης/προώθησης είναι απενεργοποιημένες</string>
     <string name="settings_section_storage">Αποθηκευτικός χώρος &amp; προσωρινή μνήμη</string>
@@ -900,7 +918,7 @@
     <string name="settings_github_pat_label">Προσωπικός κωδικός πρόσβασης</string>
     <!-- App Info Dialog -->
     <string name="about_component">Επιτραπέζιος</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Βιβλιοθήκη v%2$s</string>
+    <string name="about_version_patcher">Patcher έκδοση %1$s</string>
     <string name="about_update_available">Διαθέσιμη ενημέρωση: %1$s</string>
     <string name="about_up_to_date">Ενημερωμένο</string>
     <string name="about_links">Επίσημοι σύνδεσμοι</string>

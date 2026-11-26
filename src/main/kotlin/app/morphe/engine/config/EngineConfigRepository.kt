@@ -6,9 +6,13 @@
 package app.morphe.engine.config
 
 import app.morphe.engine.MorpheData
+import app.morphe.engine.SaveOriginalApk
 import app.morphe.engine.util.Logger
 import app.morphe.engine.util.PortablePaths
 import java.io.File
+import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -105,6 +109,9 @@ open class EngineConfigRepository(
     suspend fun setAutoCleanupTempFiles(enabled: Boolean) =
         saveConfig { it.copy(autoCleanupTempFiles = enabled) }
 
+    suspend fun setSaveOriginalApkMode(mode: SaveOriginalApk?) =
+        saveConfig { it.copy(saveOriginalApks = mode != null, moveOriginalApks = mode == SaveOriginalApk.MOVE) }
+
     suspend fun setAutoStartAdb(enabled: Boolean) =
         saveConfig { it.copy(autoStartAdb = enabled) }
 
@@ -140,19 +147,33 @@ open class EngineConfigRepository(
     }
 }
 
+/** GUI and engine settings share one file, so all their read-merge-writes go through this one lock. */
+private val configFileLock = Any()
+
 internal fun mergeAndSaveJsonObject(
     configFile: File,
     json: Json,
     newEntries: JsonObject,
 ) {
-    val existingObj = if (configFile.exists()) {
-        runCatching { json.parseToJsonElement(configFile.readText()).jsonObject }.getOrDefault(JsonObject(emptyMap()))
-    } else JsonObject(emptyMap())
+    synchronized(configFileLock) {
+        val existingObj = if (configFile.exists()) {
+            runCatching { json.parseToJsonElement(configFile.readText()).jsonObject }.getOrDefault(JsonObject(emptyMap()))
+        } else JsonObject(emptyMap())
 
-    val mergedMap = existingObj.toMutableMap()
-    newEntries.forEach { (k, v) -> mergedMap[k] = v }
-    val mergedJson = json.encodeToString(JsonObject.serializer(), JsonObject(mergedMap))
+        val mergedMap = existingObj.toMutableMap()
+        newEntries.forEach { (k, v) -> mergedMap[k] = v }
+        val mergedJson = json.encodeToString(JsonObject.serializer(), JsonObject(mergedMap))
 
-    configFile.parentFile?.mkdirs()
-    configFile.writeText(mergedJson)
+        configFile.parentFile?.mkdirs()
+        // Write to a temporary file before moving so readers never see a half-written file.
+        val tmp = File(configFile.parentFile, "${configFile.name}.tmp")
+        tmp.writeText(mergedJson)
+        try {
+            Files.move(tmp.toPath(), configFile.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE)
+        } catch (_: IOException) {
+            // ATOMIC_MOVE is unsupported here, or (on Windows) a reader has the file open; write in place under the lock.
+            tmp.delete()
+            configFile.writeText(mergedJson)
+        }
+    }
 }

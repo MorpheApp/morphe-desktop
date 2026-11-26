@@ -20,10 +20,19 @@ data class PatchesBundle(
     val description: String? = null,
     /** Key the bundles of the source are signed with, see [app.morphe.patcher.patch.PatchBundleSignature]. */
     @SerialName("public_key") val publicKey: String? = null,
+    @SerialName("page_url") val pageUrl: String? = null,
 ) {
     /** Converts this bundle metadata into a [Release]. */
     fun toRelease(prerelease: Boolean): Release {
-        val assetName = downloadUrl.substringAfterLast('/').ifBlank { "patches-$version.mpp" }
+        val cleanPath = downloadUrl.substringBefore('?').substringBefore('#')
+        val rawName = cleanPath.substringAfterLast('/')
+            .replace(Regex("""[<>:"/\\|?*]"""), "_")
+            .trim()
+        val assetName = when {
+            rawName.endsWith(".mpp", ignoreCase = true) -> rawName
+            rawName.isNotBlank() -> "$rawName.mpp"
+            else -> "patches-${version.removePrefix("v").removePrefix("V")}.mpp"
+        }
         return Release(
             tagName = if (version.startsWith("v", ignoreCase = true)) version else "v$version",
             isPrerelease = prerelease,
@@ -31,6 +40,7 @@ data class PatchesBundle(
             body = description,
             assets = listOf(ReleaseAsset(name = assetName, downloadUrl = downloadUrl)),
             publicKey = publicKey,
+            pageUrl = pageUrl,
         )
     }
 }

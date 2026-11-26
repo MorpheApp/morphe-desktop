@@ -321,9 +321,8 @@ private fun VersionCard(
                 )
                 Text(
                     text = stringResource(
-                        Res.string.about_version_patcher_library,
+                        Res.string.about_version_patcher,
                         MorpheComponents.patcherVersion ?: unknownVer,
-                        MorpheComponents.libraryVersion ?: unknownVer,
                     ),
                     style = MorpheTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,

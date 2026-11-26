@@ -7,9 +7,13 @@ package app.morphe.engine.util
 
 import app.morphe.engine.apk.AndroidArchitectures
 import app.morphe.engine.apk.ApkInspector
+import app.morphe.engine.config.EngineConfig
+import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.patcher.profile.DexMetadata
 import java.io.File
 import java.net.InetSocketAddress
 import java.net.Socket
+import java.nio.file.Files
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -361,15 +365,23 @@ class AdbManager {
             installerPackage
         }
 
+        val dexMetadata = dexMetadataFile(adb, targetDevice.id, apkFile)
+
         // Retries install without '-i' if the device rejects unknown installer packages.
-        fun attemptInstall(withInstaller: Boolean): Result<Unit> {
-            val command = mutableListOf(adb, "-s", targetDevice.id, "install", "-r")
+        fun runInstall(withInstaller: Boolean, metadata: File?): Result<Unit> {
+            // A session pairs the dex metadata with the APK of the same name, which plain install cannot send
+            val command = if (metadata != null) {
+                mutableListOf(adb, "-s", targetDevice.id, "install-multiple", "--no-incremental", "-r")
+            } else {
+                mutableListOf(adb, "-s", targetDevice.id, "install", "-r")
+            }
             if (allowDowngrade) command.add("-d") // Allow downgrade
             if (withInstaller && !effectiveInstaller.isNullOrBlank()) {
                 command.add("-i") // Record installer source (blocks Play auto-update)
                 command.add(effectiveInstaller)
             }
             command.add(apkPath)
+            metadata?.let { command.add(it.absolutePath) }
 
             Logger.info("Running: ${command.joinToString(" ")}")
 
@@ -409,17 +421,34 @@ class AdbManager {
             }
         }
 
+        // The dex metadata only spares the app running uncompiled, so an install that fails with it, as on a
+        // system that requires fs-verity on it or with an adb too old for its options, goes on without it
+        var sendDexMetadata = dexMetadata != null
+        fun attemptInstall(withInstaller: Boolean): Result<Unit> {
+            if (sendDexMetadata) {
+                val result = runInstall(withInstaller, dexMetadata)
+                if ((result.exceptionOrNull() as? AdbException)?.errorCode != AdbErrorCode.INSTALL_GENERIC) return result
+                Logger.info("Install with dex metadata failed; retrying without it")
+                sendDexMetadata = false
+            }
+            return runInstall(withInstaller, metadata = null)
+        }
+
         val withInstaller = !effectiveInstaller.isNullOrBlank()
-        val first = attemptInstall(withInstaller = withInstaller)
-        val finalResult = if (
-            first.isFailure &&
-            withInstaller &&
-            (first.exceptionOrNull() as? AdbException)?.errorCode == AdbErrorCode.INSTALL_GENERIC
-        ) {
-            Logger.info("Install with '-i $effectiveInstaller' failed; retrying without installer attribution")
-            attemptInstall(withInstaller = false)
-        } else {
-            first
+        val finalResult = try {
+            val first = attemptInstall(withInstaller = withInstaller)
+            if (
+                first.isFailure &&
+                withInstaller &&
+                (first.exceptionOrNull() as? AdbException)?.errorCode == AdbErrorCode.INSTALL_GENERIC
+            ) {
+                Logger.info("Install with '-i $effectiveInstaller' failed; retrying without installer attribution")
+                attemptInstall(withInstaller = false)
+            } else {
+                first
+            }
+        } finally {
+            dexMetadata?.parentFile?.deleteRecursively()
         }
         finalResult.onFailure { e ->
             if (e is AdbException && e.cause == null) {
@@ -559,17 +588,19 @@ class AdbManager {
             val bootScript = "/data/adb/service.d/mount_morphe_$packageName.sh"
             val mountScriptContent = buildMountScript(packageName, basePath, stockPath)
 
+            // The app is compiled again before it starts, see recompileShell
             val installCommands = $$"""
+                stock="$$stockPath"; base="$$basePath";
                 mkdir -p /data/adb/morphe &&
                 mkdir -p /data/adb/service.d &&
-                mv "$$remoteTmp" "$$basePath" &&
-                chmod 644 "$$basePath" &&
-                chown system:system "$$basePath" &&
-                chcon u:object_r:apk_data_file:s0 "$$basePath" &&
-                umount -l "$$stockPath" 2>/dev/null;
-                for pid in $(pidof zygote zygote64 2>/dev/null); do nsenter -t $pid -m umount -l "$$stockPath" 2>/dev/null; done;
-                mount -o bind "$$basePath" "$$stockPath" &&
-                for pid in $(pidof zygote zygote64 2>/dev/null); do nsenter -t $pid -m mount -o bind "$$basePath" "$$stockPath" 2>/dev/null; done;
+                mv "$$remoteTmp" "$base" &&
+                chmod 644 "$base" &&
+                chown system:system "$base" &&
+                chcon u:object_r:apk_data_file:s0 "$base" ||
+                { rm -f "$$remoteTmp"; echo "Could not move the patched APK into place"; exit 1; };
+                $$unmountAllLayersShell
+                $$bindMountShell
+                $${recompileShell(packageName)}
                 am force-stop "$$packageName" &&
                 am start -S "$$packageName"
             """.trimIndent().replace("\n", " ")
@@ -588,12 +619,6 @@ class AdbManager {
             }
 
             deployBootScript(adb, targetDevice.id, bootScript, mountScriptContent)
-
-            val verifyCmd = "grep -F '$basePath' /proc/mounts || grep -F '$stockPath' /proc/mounts"
-            val verifyResult = executeSuCommand(adb, targetDevice.id, verifyCmd)
-            if (verifyResult.isFailure || verifyResult.getOrNull().isNullOrBlank()) {
-                Logger.warn("Active mount not found in /proc/mounts on ${targetDevice.id}")
-            }
 
             Logger.info("Mounted $packageName on ${targetDevice.id}")
             Result.success(Unit)
@@ -638,19 +663,20 @@ class AdbManager {
             val bootScript = "/data/adb/service.d/mount_morphe_$packageName.sh"
 
             val unmountStock = if (!stockPath.isNullOrBlank()) {
-                $$"""umount -l "$$stockPath" 2>/dev/null; for pid in $(pidof zygote zygote64 2>/dev/null); do nsenter -t $pid -m umount -l "$$stockPath" 2>/dev/null; done; """
+                "stock=\"$stockPath\"; $unmountAllLayersShell"
             } else {
                 ""
             }
 
             val unmountCmds = $$"""
                 $$unmountStock
-                grep -F '$$packageName' /proc/mounts 2>/dev/null | cut -d ' ' -f 2 | while read -r m; do
+                grep -F "$$packageName" /proc/mounts 2>/dev/null | cut -d " " -f 2 | while read -r m; do
                     [ -n "$m" ] && umount -l "$m" 2>/dev/null;
-                    for pid in $(pidof zygote zygote64 2>/dev/null); do [ -n "$m" ] && nsenter -t $pid -m umount -l "$m" 2>/dev/null; done;
+                    for pid in $(pidof zygote zygote64 2>/dev/null); do [ -n "$m" ] && nsenter -t $pid -m -- umount -l "$m" 2>/dev/null; done;
                 done;
-                rm -f '$$basePath' '$$bootScript' &&
-                am force-stop '$$packageName'
+                rm -f "$$basePath" "$$bootScript" &&
+                am force-stop "$$packageName";
+                $${recompileShell(packageName)}
             """.trimIndent().replace("\n", " ")
 
             val result = executeSuCommand(adb, targetDevice.id, unmountCmds)
@@ -735,37 +761,64 @@ class AdbManager {
         )
     }
 
+    /**
+     * Lazily unmounts all mounts on `$stock` in `self` and every `zygote` namespace, since zygote can
+     * hold stale mounts that `self` doesn't see (or that would hide a new mount underneath).
+     * `--` is required because toybox `nsenter` otherwise parses `umount`'s `-l` flag as its own.
+     */
+    private val unmountAllLayersShell = $$"""
+        for ns in self $(pidof zygote zygote64 2>/dev/null); do
+            n=0;
+            while [ $n -lt 10 ] && grep -qsF " $stock " /proc/$ns/mountinfo; do
+                if [ $ns = self ]; then umount -l "$stock"; else nsenter -t $ns -m -- umount -l "$stock"; fi;
+                n=$((n + 1));
+            done;
+            grep -qsF " $stock " /proc/$ns/mountinfo && { echo "Could not remove old mounts from $stock"; exit 1; };
+        done;
+    """.trimIndent()
+
+    /**
+     * Shell that compiles [packageName] again as a fresh install would. Code compiled for the APK that was
+     * under the stock path before no longer matches it, so ART would run the app uncompiled until the device
+     * next compiles apps while idle. A failure leaves the app running from its APK, so it is not checked.
+     */
+    private fun recompileShell(packageName: String) = "pm compile --reset \"$packageName\" >/dev/null 2>&1;"
+
+    /** Shell that bind-mounts `$base` over `$stock` and fails unless every zygote then sees `$base`. */
+    private val bindMountShell = $$"""
+        mount -o bind "$base" "$stock" || { echo "Bind mount over $stock failed"; exit 1; };
+        for z in $(pidof zygote zygote64 2>/dev/null); do
+            [ "$(stat -L -c %d:%i /proc/$z/root$stock)" = "$(stat -c %d:%i "$base")" ] ||
+                nsenter -t $z -m -- mount -o bind "$base" "$stock";
+            [ "$(stat -L -c %d:%i /proc/$z/root$stock)" = "$(stat -c %d:%i "$base")" ] ||
+                { echo "Zygote $z still sees the old APK at $stock"; exit 1; };
+        done;
+    """.trimIndent()
+
     private fun buildMountScript(packageName: String, basePath: String, fallbackStockPath: String): String =
-        $$"""
-        #!/system/bin/sh
-        until [ "$( getprop sys.boot_completed )" = 1 ]; do sleep 3; done
-        until [ -d "/sdcard/Android" ]; do sleep 1; done
+        listOf(
+            $$"""
+            #!/system/bin/sh
+            until [ "$( getprop sys.boot_completed )" = 1 ]; do sleep 3; done
+            until [ -d "/sdcard/Android" ]; do sleep 1; done
 
-        base_path="$$basePath"
-        stock_path=$( pm path $$packageName | grep base | head -n 1 | sed 's/package://g' | tr -d '\r' )
-        [ -z "$stock_path" ] && stock_path=$( pm path $$packageName | head -n 1 | sed 's/package://g' | tr -d '\r' )
-        [ -z "$stock_path" ] && stock_path=$( pm path --user 0 $$packageName | head -n 1 | sed 's/package://g' | tr -d '\r' )
-        [ -z "$stock_path" ] && stock_path="$$fallbackStockPath"
+            base="$$basePath"
+            stock=$( pm path $$packageName | grep base | head -n 1 | sed 's/package://g' | tr -d '\r' )
+            [ -z "$stock" ] && stock=$( pm path $$packageName | head -n 1 | sed 's/package://g' | tr -d '\r' )
+            [ -z "$stock" ] && stock=$( pm path --user 0 $$packageName | head -n 1 | sed 's/package://g' | tr -d '\r' )
+            [ -z "$stock" ] && stock="$$fallbackStockPath"
 
-        if [ -z "$stock_path" ] || [ ! -f "$base_path" ]; then
-            exit 1
-        fi
+            if [ -z "$stock" ] || [ ! -f "$base" ]; then
+                exit 1
+            fi
 
-        chcon u:object_r:apk_data_file:s0 "$base_path"
+            chcon u:object_r:apk_data_file:s0 "$base"
 
-        umount -l "$stock_path" 2>/dev/null
-        for pid in $(pidof zygote zygote64 2>/dev/null); do
-            nsenter -t $pid -m umount -l "$stock_path" 2>/dev/null
-        done
-
-        mount -o bind "$base_path" "$stock_path"
-
-        for pid in $(pidof zygote zygote64 2>/dev/null); do
-            nsenter -t $pid -m mount -o bind "$base_path" "$stock_path" 2>/dev/null
-        done
-
-        am force-stop "$$packageName"
-        """.trimIndent()
+            """.trimIndent(),
+            unmountAllLayersShell,
+            bindMountShell,
+            "am force-stop \"$packageName\"",
+        ).joinToString("\n")
 
     private suspend fun deployBootScript(
         adb: String,
@@ -784,7 +837,7 @@ class AdbManager {
                 executeSuCommand(
                     adb,
                     deviceId,
-                    "mkdir -p /data/adb/service.d && mv '$remoteTmp' '$remoteScriptPath' && chmod 755 '$remoteScriptPath'",
+                    "mkdir -p /data/adb/service.d && mv \"$remoteTmp\" \"$remoteScriptPath\" && chmod 755 \"$remoteScriptPath\"",
                 )
             }
         } catch (e: CancellationException) {
@@ -796,6 +849,10 @@ class AdbManager {
         }
     }
 
+    /**
+     * Runs [command] as root. It goes inside the single quotes of `su -c`, so it quotes with double quotes
+     * only: a single quote in it would end the argument, and the device shell would expand the rest itself.
+     */
     private suspend fun executeSuCommand(
         adb: String,
         deviceId: String,
@@ -1017,6 +1074,24 @@ class AdbManager {
         Result.success(LinkHandlingResult(patchedChanged = true, stockChanged = stockChanged))
     }
 
+    /**
+     * After [record]'s patched app was installed on [deviceId], routes its web links to it when
+     * [config] turns that on, also taking them from the stock app when [config] says to.
+     */
+    suspend fun routeLinksAfterInstall(
+        deviceId: String,
+        record: PatchedAppRecord,
+        config: EngineConfig,
+    ) {
+        if (!config.autoRouteLinksAfterInstall) return
+        setLinkHandling(
+            deviceId = deviceId,
+            patchedPackage = record.installedPackageName,
+            stockPackage = if (config.disableStockLinksAfterInstall) record.packageName else null,
+            enable = true,
+        )
+    }
+
     /** Runs a sequence of ADB shell commands, stopping on first failure. */
     private suspend fun runShellCommands(
         adb: String,
@@ -1205,24 +1280,35 @@ class AdbManager {
             }
     }
 
-    /** Reads product model property from device. */
-    private fun getDeviceName(adbPath: String, deviceId: String): String? {
-        return try {
-            val process = ProcessBuilder(adbPath, "-s", deviceId, "shell", "getprop", "ro.product.model")
-                .redirectErrorStream(true)
-                .start()
-            val result = process.inputStream.bufferedReader().readText().trim()
-            process.waitFor()
-            if (process.exitValue() == 0 && result.isNotBlank()) result else null
-        } catch (_: Exception) {
+    /**
+     * Writes the dex metadata of [apk] for [deviceId] to a temporary directory, under the name adb pairs
+     * with the APK, or returns null if there is none. With it the device compiles the app with its baseline
+     * profile at install, instead of running it uncompiled until it next compiles apps while idle.
+     */
+    private fun dexMetadataFile(adbPath: String, deviceId: String, apk: File): File? {
+        val sdk = getDeviceProperty(adbPath, deviceId, "ro.build.version.sdk")?.toIntOrNull() ?: return null
+        val metadata = try {
+            DexMetadata.of(apk, sdk)
+        } catch (e: Exception) {
+            Logger.warn("No dex metadata for ${apk.name}", e)
             null
-        }
+        } ?: return null
+        val directory = Files.createTempDirectory("morphe-dex-metadata").toFile()
+        return directory.resolve("${apk.nameWithoutExtension}.dm").apply { writeBytes(metadata) }
     }
 
+    /** Reads product model property from device. */
+    private fun getDeviceName(adbPath: String, deviceId: String) =
+        getDeviceProperty(adbPath, deviceId, "ro.product.model")
+
     /** Reads CPU ABI property from device. */
-    private fun getDeviceArchitecture(adbPath: String, deviceId: String): String? {
+    private fun getDeviceArchitecture(adbPath: String, deviceId: String) =
+        getDeviceProperty(adbPath, deviceId, "ro.product.cpu.abi")
+
+    /** Reads the system property [name] from the device, or null if it is not set or cannot be read. */
+    private fun getDeviceProperty(adbPath: String, deviceId: String, name: String): String? {
         return try {
-            val process = ProcessBuilder(adbPath, "-s", deviceId, "shell", "getprop", "ro.product.cpu.abi")
+            val process = ProcessBuilder(adbPath, "-s", deviceId, "shell", "getprop", name)
                 .redirectErrorStream(true)
                 .start()
             val result = process.inputStream.bufferedReader().readText().trim()

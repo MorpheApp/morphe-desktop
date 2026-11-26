@@ -5,8 +5,10 @@
 
 package app.morphe.engine.options
 
+import app.morphe.engine.patches.LoadedBundle
 import app.morphe.engine.patches.isCompatibleWith
 import app.morphe.engine.util.FileChecksum
+import app.morphe.engine.util.Logger
 import app.morphe.patcher.patch.Patch
 import java.io.File
 import java.time.Instant
@@ -293,5 +295,60 @@ fun updateOptionsFileFromSnapshots(file: File, snapshots: List<PatchBundle>) {
         val updated = snapshot.mergeWith(existing)
         updatedBundles = updatedBundles.withUpdatedBundle(updated)
     }
+    writePatchBundles(file, updatedBundles)
+}
+
+/**
+ * Merges [bundles] into [file] as one entry per `.mpp`, preserving existing user settings.
+ * With [packageName], only patches compatible with that package are written.
+ */
+fun updateOptionsFileFromBundles(
+    file: File,
+    bundles: List<LoadedBundle>,
+    packageName: String? = null,
+) {
+    val existingBundles = if (file.exists()) {
+        try {
+            readPatchBundles(file)
+        } catch (_: Exception) {
+            Logger.warn("Could not parse existing '${file.name}' (invalid JSON), creating fresh.")
+            emptyList()
+        }
+    } else emptyList()
+
+    var updatedBundles = existingBundles
+    bundles.forEach { lb ->
+        val filtered = lb.patches.filter { patch ->
+            packageName == null || patch.isCompatibleWith(
+                packageName = packageName,
+                includeExperimental = true,
+                includeUniversalPatches = true,
+            )
+        }.toSet()
+
+        val existingBundle = updatedBundles.findMatchingBundle(setOf(lb.sourceFile))
+        val updatedBundle = filtered.mergeWithBundle(
+            existing = existingBundle,
+            sourceFiles = setOf(lb.sourceFile),
+        )
+        updatedBundles = updatedBundles.withUpdatedBundle(updatedBundle)
+
+        if (existingBundle != null) {
+            val existingNames = existingBundle.patches.keys.map { it.lowercase() }.toSet()
+            val newNames = updatedBundle.patches.keys.map { it.lowercase() }.toSet()
+            val added = newNames - existingNames
+            val removed = existingNames - newNames
+            val kept = newNames.intersect(existingNames)
+
+            Logger.info(
+                "Updated bundle for ${lb.sourceFile.name}: ${kept.size} preserved, ${added.size} added, ${removed.size} removed"
+            )
+        } else {
+            Logger.info(
+                "Created new bundle for ${lb.sourceFile.name} with ${updatedBundle.patches.size} patches"
+            )
+        }
+    }
+
     writePatchBundles(file, updatedBundles)
 }

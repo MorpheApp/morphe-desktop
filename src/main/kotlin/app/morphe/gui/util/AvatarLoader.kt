@@ -8,6 +8,9 @@ package app.morphe.gui.util
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.toComposeImageBitmap
 import app.morphe.engine.MorpheData
+import app.morphe.engine.patches.CodeHost
+import app.morphe.engine.patches.RemotePatchSourceFactory
+import app.morphe.engine.patches.SourceUrl
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
 import io.ktor.client.HttpClient
@@ -15,7 +18,6 @@ import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsBytes
 import io.ktor.http.isSuccess
 import java.io.File
-import java.net.URI
 import java.security.MessageDigest
 import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.CancellationException
@@ -35,34 +37,30 @@ object AvatarLoader {
     /** Returns the avatar for [url] if it is already in memory, without any disk or network access. */
     fun cachedAvatar(url: String): ImageBitmap? = memoryCache[url]
 
-    /** Resolves avatar URL for a given patch source. */
-    fun resolveAvatarUrl(source: PatchSource): String? {
-        val endpoint = source.url?.trim()?.takeIf { it.isNotEmpty() } ?: return null
-        return when (source.type) {
-            PatchSourceType.GITHUB -> extractGitHubOwner(endpoint)?.let { "https://github.com/$it.png" }
-            PatchSourceType.GITLAB -> extractGitLabOwner(endpoint)?.let { "https://unavatar.io/gitlab/$it" }
-            else -> null
+    /** Resolves ordered avatar candidates (custom bundle `.png` first, then host owner avatar) for [source]. */
+    fun resolveAvatarUrls(source: PatchSource): List<String> {
+        if (source.type == PatchSourceType.LOCAL) return emptyList()
+        val endpoint = source.url?.trim()?.takeIf { it.isNotEmpty() }
+            ?: if (source.type == PatchSourceType.DEFAULT) {
+                "https://${CodeHost.GITHUB.host}/${RemotePatchSourceFactory.DEFAULT_REPO_PATH}"
+            } else {
+                return emptyList()
+            }
+        val ownerUrl = SourceUrl.parse(endpoint)?.ownerAvatarUrl
+        return if (source.type == PatchSourceType.JSON) {
+            listOfNotNull(SourceUrl.bundleAvatarUrl(endpoint), ownerUrl).distinct()
+        } else {
+            listOfNotNull(ownerUrl)
         }
     }
 
-    /** Extracts the repository owner/organization from GitHub endpoints. */
-    fun extractGitHubOwner(endpoint: String): String? = runCatching {
-        val uri = URI(endpoint)
-        val host = uri.host?.lowercase() ?: return null
-        val segments = uri.path?.trim('/')?.split('/')?.filter { it.isNotBlank() } ?: return null
-        when (host) {
-            "github.com", "raw.githubusercontent.com" -> segments.firstOrNull()
-            else -> null
+    /** Loads the first available avatar bitmap from [urls], returning null if all candidates fail. */
+    suspend fun loadFirstAvatar(urls: List<String>, httpClient: HttpClient): ImageBitmap? {
+        for (url in urls) {
+            loadAvatar(url, httpClient)?.let { return it }
         }
-    }.getOrNull()
-
-    /** Extracts the namespace/owner from GitLab endpoints. */
-    fun extractGitLabOwner(endpoint: String): String? = runCatching {
-        val uri = URI(endpoint)
-        val host = uri.host?.lowercase() ?: return null
-        val segments = uri.path?.trim('/')?.split('/')?.filter { it.isNotBlank() } ?: return null
-        if (host == "gitlab.com" && segments.isNotEmpty()) segments.first() else null
-    }.getOrNull()
+        return null
+    }
 
     /**
      * Loads remote avatar image from memory, disk cache, or network.

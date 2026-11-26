@@ -198,7 +198,8 @@
     <string name="home_dialog_uninstall_button">Paqij bike</string>
     <string name="home_dialog_continue_anyway">Wusa jî bidome</string>
     <string name="home_dialog_forget_title">%1$s ji bîr bike?</string>
-    <string name="home_dialog_forget_message">Ev %1$s ji dîroka aplikasyona patched a we dijêre. Dest nade ser tu pelan - patchkirina aplikasyonê dîsa lê zêde dike</string>
+    <string name="home_dialog_forget_message">Ev %1$s ji dîroka app-ên patched a we dijide. APK ya patched li ser dîskê dimîne, patchinga appê dîsa wê zêde dike</string>
+    <string name="home_dialog_also_delete_original">Her wiha APK ya orîjînal a wê ya hatî parastin jî jê bibe</string>
     <string name="home_dialog_uninstall_title">%1$s paqij bike?</string>
     <string name="home_dialog_uninstall_message">Ev %1$s ji amûrê girêdayî radike. APKya patched li ser dîskê û dîroka we tên parastin, heta ku hûn li jêr tişteke din hilbijêrin</string>
     <string name="home_dialog_uninstall_also_forget">Herwiha ji Appên Te rake</string>
@@ -567,6 +568,7 @@
     <string name="source_card_updates_manual">Destûrî (guherîne pel)</string>
     <string name="source_card_loads_newest">.mpp'ê herî nû di folderekê de</string>
     <string name="source_card_loads_pr">Avakirina dawî ya pull request</string>
+    <string name="source_card_loads_json">Ji manifesta JSON</string>
     <string name="source_card_disabled">Ev çavkanî hat girtin. Ji bo barkirina patchan wê veke</string>
     <string name="source_card_disabled_tag">Neçalak kirin</string>
     <string name="source_card_last_enabled">Divê herî kêm çavkaniyek vekirî be</string>
@@ -580,6 +582,7 @@
     <string name="source_card_show_in_folder">Di folderekê de nîşan bide</string>
     <string name="source_card_more_description">Çalakiyên din</string>
     <string name="source_card_browse_patches">Patchan bigere</string>
+    <string name="source_card_report_issue">Pirsgirêkekê rapor bike</string>
     <string name="source_card_priority">Priorite %1$d</string>
     <string name="source_card_open_link">%1$s di gerokê de veke</string>
     <string name="source_card_enable_description">%1$s çalak bike</string>
@@ -629,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Herêmî</string>
     <string name="patch_source_dialog_valid_github">Kodepanê GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Kodepanê GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Depoya Codeberg</string>
+    <string name="patch_source_dialog_valid_json">Paketa patch-ê JSON</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s li ser %2$s. Her tim build-a herî dawî ya ji vê PR-ê bikar tîne</string>
     <string name="patch_source_dialog_builtin_note">Ev çavkaniya patch-a avakirî ye. Nav û cihê wê nayê guhertin. Li ser karta wê di navbera stable û pre-release de guhertinê bike</string>
     <!-- Signing Key Trust Dialog -->
@@ -642,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Fayla lokal</string>
     <string name="patch_source_dialog_name_label">Nav</string>
     <string name="patch_source_dialog_name_placeholder">Patchên min ên taybet</string>
-    <string name="patch_source_dialog_repo_url_label">URL-ya depoyê</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/xwedî/repo an gitlab.com/xwedî/repo</string>
-    <string name="patch_source_dialog_repo_hint">Linkên GitHub, GitLab, an morphe.software/add-source qebûl dike</string>
+    <string name="patch_source_dialog_repo_url_label">URL-yê çavkaniyê</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo an example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">GitHub, GitLab, Codeberg, URL-yê .json, an girêdana morphe.software/add-source qebûldike</string>
     <string name="patch_source_dialog_error_name_required">Nav pêwîst e</string>
-    <string name="patch_source_dialog_error_invalid_url">URLekî GitHub an GitLab ê rast binivîse</string>
+    <string name="patch_source_dialog_error_invalid_url">URL-yekî rast ê GitHub, GitLab, Codeberg, an .json binivîse</string>
     <string name="patch_source_dialog_error_invalid_file">Peleke .mpp ya rast hilbijêre</string>
     <string name="patch_source_dialog_add_button">Zêde bike</string>
     <string name="patch_source_dialog_edit_title">Çavkaniyê biguherîne</string>
     <string name="patch_source_dialog_type_github_repo">Depoya GitHub</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">Depoya GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Depoya Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">Paketa Patch-ê JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">pela .mpp an folderek</string>
     <string name="patch_source_dialog_mpp_label">pela .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">Rêya .mpp an folderekî</string>
@@ -806,6 +813,17 @@
     <string name="settings_output_folder_default">Foldera APKyê (default)</string>
     <string name="settings_output_folder_picker_title">Foldera derketinê hilbijêre</string>
     <string name="settings_output_folder_not_found">Peldank nehat dîtin, dê di patcha pêş de were çêkirin</string>
+    <string name="settings_section_original_apks">APKyên orîjînal</string>
+    <string name="settings_original_apks_mode_label">APK-yên orîjînal biparêze</string>
+    <string name="settings_original_apks_mode_copy">Kopî bike</string>
+    <string name="settings_original_apks_mode_move">Bişopîne</string>
+    <string name="settings_original_apks_mode_desc_copy">Piştî patching-ê, APK-ya orîjînal a her app-ekê kopî dike, da ku paşê dîsa patching lê were kirin. Tenê versiyona herî dawî ya her app-ekî tê parastin</string>
+    <string name="settings_original_apks_mode_desc_move">Piştî patching-ê, APK-ya orîjînal a her app-ekê bişopîne û ji cihê ku te hilbijartiye rakirîne. Tenê versiyona herî dawî ya her app-ekî tê parastin</string>
+    <string name="settings_original_apks_mode_desc_off">APK-yên orîjînal nayên parastin. Ji bo dîsa patching-ê, divê APK-ya ku te hilbijartibe hîn jî li wir be</string>
+    <string name="settings_original_apks_kept_title">APK-yên orîjînal yên hatine parastin</string>
+    <string name="settings_original_apks_open_button">Peldankê veke</string>
+    <string name="settings_original_apks_confirm_title">APKyên orîjînal ên hatine parastin jê bibin?</string>
+    <string name="settings_original_apks_confirm_message">Ev dê her APKya orîjînal ku Morphe parastiye jê bibin. Ji bo dubare patchkirina aplikasyonekê, dê dîsa hewcedariya wê bi APKya wê be</string>
     <string name="settings_toggle_auto_start_adb_label">ADB bixweber dest pê bike</string>
     <string name="settings_toggle_auto_start_adb_desc">Daemonê ADB di demê destpêkirinê de bîne da ku amûrên girêdayî bên şopandin. Gava vekirî be, Morphe qet serverê destpênake, û taybetmendiyên sazkirinê/şandina daneyan hatine ragirtin</string>
     <string name="settings_section_storage">Depo &amp; cache</string>
@@ -900,7 +918,7 @@
     <string name="settings_github_pat_label">Tokenê Vegava yê Keskeş</string>
     <!-- App Info Dialog -->
     <string name="about_component">Desktop</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Library v%2$s</string>
+    <string name="about_version_patcher">Patcher v%1$s</string>
     <string name="about_update_available">Nûvekirin heye: %1$s</string>
     <string name="about_up_to_date">Heta roja îro nûye</string>
     <string name="about_links">Girêdanên fermî</string>

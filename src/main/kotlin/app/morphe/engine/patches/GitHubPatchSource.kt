@@ -5,7 +5,6 @@
 
 package app.morphe.engine.patches
 
-import app.morphe.engine.model.PatchesBundle
 import app.morphe.engine.model.Release
 import app.morphe.engine.model.ReleaseAsset
 import app.morphe.engine.network.HttpService
@@ -20,11 +19,14 @@ import kotlinx.coroutines.withContext
 open class GitHubPatchSource(
     protected val http: HttpService,
     override val repoPath: String,
+    apiBase: String = API_BASE,
+    private val rawBase: String = RAW_BASE,
 ) : RemotePatchSource {
 
     override val provider = PatchProvider.GITHUB
+    override val supportsPrerelease: Boolean = true
 
-    private val releasesEndpoint = "$API_BASE/repos/$repoPath/releases"
+    private val releasesEndpoint = "$apiBase/repos/$repoPath/releases"
 
     @Suppress("UastIncorrectHttpHeaderInspection")
     override suspend fun listReleases(): Result<List<Release>> = withContext(Dispatchers.IO) {
@@ -44,37 +46,17 @@ open class GitHubPatchSource(
         }
     }
 
-    override suspend fun fetchLatestFromManifest(prerelease: Boolean): Result<Release> = withContext(Dispatchers.IO) {
-        val branch = if (prerelease) "dev" else "main"
-        try {
-            val url = "$RAW_BASE/$repoPath/$branch/patches-bundle.json"
-            Logger.info("GitHub: fetching patches-bundle.json from $url")
-            val bundle: PatchesBundle = http.request(url)
-            Logger.info("GitHub: bundle ($branch) → v${bundle.version} @ ${bundle.downloadUrl}")
-            Result.success(bundle.toRelease(prerelease))
-        } catch (e: Exception) {
-            val reason = (e as? HttpService.HttpException)?.status?.toString() ?: (e.message ?: "unknown error")
-            Logger.info("GitHub: no usable patches-bundle.json ($branch) for $repoPath ($reason); falling back to releases API")
-            Result.failure(e)
-        }
+    override suspend fun fetchLatestFromManifest(prerelease: Boolean): Result<Release> {
+        val branch = if (prerelease) BRANCH_DEV else BRANCH_STABLE
+        val url = "$rawBase/$repoPath/$branch/$DEFAULT_BUNDLE_FILE"
+        return http.fetchManifestRelease("GitHub", url, repoPath, branch, prerelease)
     }
 
     override suspend fun downloadAsset(
         asset: ReleaseAsset,
         targetFile: File,
         onProgress: ((bytesRead: Long, contentLength: Long?) -> Unit)?,
-    ): Result<File> = withContext(Dispatchers.IO) {
-        try {
-            Logger.info("GitHub: downloading ${asset.name} from ${asset.downloadUrl}")
-            val file = http.downloadToFile(asset.downloadUrl, targetFile, onProgress) {
-                headers { append(HttpHeaders.Accept, "application/octet-stream") }
-            }
-            Logger.info("GitHub: wrote ${file.length()} bytes to ${file.absolutePath}")
-            Result.success(file)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
+    ): Result<File> = http.downloadPatchAsset("GitHub", asset, targetFile, onProgress)
 
     companion object {
         private const val API_BASE = "https://api.github.com"

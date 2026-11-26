@@ -6,8 +6,12 @@
 package app.morphe.gui.data.repository
 
 import app.morphe.engine.network.HttpService
+import app.morphe.engine.patches.BRANCH_DEV
+import app.morphe.engine.patches.BRANCH_STABLE
+import app.morphe.engine.patches.CodeHost
 import app.morphe.engine.patches.PatchProvider
 import app.morphe.engine.patches.RemotePatchSourceFactory
+import app.morphe.engine.patches.SourceUrl
 import app.morphe.engine.util.Logger
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
@@ -52,8 +56,8 @@ class ChangelogRepository(
 
     suspend fun desktopEntries(prerelease: Boolean): List<ChangelogEntry>? =
         withContext(Dispatchers.IO) {
-            val branch = if (prerelease) "dev" else "main"
-            val url = "$GITHUB_RAW_BASE/MorpheApp/morphe-desktop/refs/heads/$branch/$CHANGELOG_FILE"
+            val branch = if (prerelease) BRANCH_DEV else BRANCH_STABLE
+            val url = "https://${CodeHost.GITHUB.rawHost}/MorpheApp/morphe-desktop/refs/heads/$branch/$CHANGELOG_FILE"
             mutex.withLock {
                 cache[url]?.let { return@withContext it }
                 val rawMarkdown = try {
@@ -82,19 +86,20 @@ class ChangelogRepository(
         if (source.type == PatchSourceType.LOCAL) return null
         val url = source.url?.takeIf { it.isNotBlank() } ?: return null
         val parsed = RemotePatchSourceFactory.parse(url) ?: return null
-        val branch = if (prerelease) "dev" else "main"
+        val branch = if (prerelease) BRANCH_DEV else BRANCH_STABLE
         return when (parsed.provider) {
-            PatchProvider.GITHUB ->
-                "$GITHUB_RAW_BASE/${parsed.repoPath}/$branch/$CHANGELOG_FILE"
-            PatchProvider.GITLAB ->
-                "$GITLAB_BASE/${parsed.repoPath}/-/raw/$branch/$CHANGELOG_FILE"
+            PatchProvider.GITHUB, PatchProvider.GITLAB, PatchProvider.CODEBERG ->
+                SourceUrl.parse(parsed.canonicalUrl)?.rawFileUrl(branch, CHANGELOG_FILE)
+            PatchProvider.JSON -> {
+                val src = SourceUrl.parse(parsed.canonicalUrl) ?: return null
+                val targetBranch = if (parsed.supportsPrerelease) branch else (src.branch ?: BRANCH_STABLE)
+                src.rawFileUrl(targetBranch, CHANGELOG_FILE)
+            }
             PatchProvider.GITHUB_PR -> null
         }
     }
 
     private companion object {
-        const val GITHUB_RAW_BASE = "https://raw.githubusercontent.com"
-        const val GITLAB_BASE = "https://gitlab.com"
         const val CHANGELOG_FILE = "CHANGELOG.md"
     }
 }

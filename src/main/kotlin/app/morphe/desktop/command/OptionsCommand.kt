@@ -5,16 +5,9 @@
 
 package app.morphe.desktop.command
 
-import app.morphe.engine.options.PatchBundle
-import app.morphe.engine.options.findMatchingBundle
-import app.morphe.engine.options.mergeWithBundle
-import app.morphe.engine.options.readPatchBundles
-import app.morphe.engine.options.withUpdatedBundle
-import app.morphe.engine.options.writePatchBundles
-import app.morphe.engine.patches.LoadedBundle
+import app.morphe.engine.options.updateOptionsFileFromBundles
 import app.morphe.engine.patches.PatchBundleLoader
 import app.morphe.engine.patches.PatchResolver
-import app.morphe.engine.patches.isCompatibleWith
 import app.morphe.engine.util.Logger
 import java.io.File
 import java.util.concurrent.Callable
@@ -39,7 +32,7 @@ internal object OptionsCommand : Callable<Int> {
 
     @Option(
         names = ["-p", "--patches"],
-        description = ["Path to a MPP file or a GitHub repo url such as https://github.com/MorpheApp/morphe-patches"],
+        description = ["Path to a .mpp file, directory, GitHub/GitLab/Codeberg repo URL, or .json bundle URL such as https://github.com/MorpheApp/morphe-patches"],
         required = true,
     )
     @Suppress("unused")
@@ -87,60 +80,11 @@ internal object OptionsCommand : Callable<Int> {
 
             // Load each bundle separately so we produce one JSON entry per .mpp
             // matches the shape PatchCommand expects when reading --options-file.
-            val loadedBundles: List<LoadedBundle> = PatchBundleLoader.loadEach(patchesFiles)
-
-            // Read existing bundles list if the file already exists.
-            val existingBundles: List<PatchBundle> = if (outputFile.exists())
-            {
-                try {
-                    readPatchBundles(outputFile)
-                } catch (_: Exception) {
-                    Logger.warn(
-                        "Could not parse existing '${outputFile.name}' (invalid JSON), creating fresh."
-                    )
-                    emptyList()
-                }
-            } else emptyList()
-
-            // For each bundle: apply optional package filter, find its matching JSON
-            // entry (by source filename), merge, splice updated entry back into the running list.
-            var updatedBundles = existingBundles
-            val pkg = packageName
-            loadedBundles.forEach { lb ->
-                val filtered = lb.patches.filter { patch ->
-                    pkg == null || patch.isCompatibleWith(
-                        packageName = pkg,
-                        includeExperimental = true,
-                        includeUniversalPatches = true,
-                    )
-                }.toSet()
-
-                val existingBundle = updatedBundles.findMatchingBundle(setOf(lb.sourceFile))
-                val updatedBundle = filtered.mergeWithBundle(
-                    existing = existingBundle,
-                    sourceFiles = setOf(lb.sourceFile),
-                )
-                updatedBundles = updatedBundles.withUpdatedBundle(updatedBundle)
-
-                // Per-bundle log line so users can see what changed for each .mpp
-                if (existingBundle != null) {
-                    val existingNames = existingBundle.patches.keys.map { it.lowercase() }.toSet()
-                    val newNames = updatedBundle.patches.keys.map { it.lowercase() }.toSet()
-                    val added = newNames - existingNames
-                    val removed = existingNames - newNames
-                    val kept = newNames.intersect(existingNames)
-
-                    Logger.info(
-                        "Updated bundle for ${lb.sourceFile.name}: ${kept.size} preserved, ${added.size} added, ${removed.size} removed"
-                    )
-                } else {
-                    Logger.info(
-                        "Created new bundle for ${lb.sourceFile.name} with ${updatedBundle.patches.size} patches"
-                    )
-                }
-            }
-
-            writePatchBundles(outputFile, updatedBundles)
+            updateOptionsFileFromBundles(
+                file = outputFile,
+                bundles = PatchBundleLoader.loadEach(patchesFiles),
+                packageName = packageName,
+            )
 
             Logger.info("Options file saved to ${outputFile.path}")
 

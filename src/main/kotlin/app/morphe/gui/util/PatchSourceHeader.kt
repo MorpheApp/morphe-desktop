@@ -8,6 +8,7 @@ package app.morphe.gui.util
 import androidx.compose.runtime.staticCompositionLocalOf
 import app.morphe.engine.patches.PatchProvider
 import app.morphe.engine.patches.RemotePatchSourceFactory
+import app.morphe.engine.patches.SourceUrl
 import app.morphe.engine.util.PatchSourceHeaders
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
@@ -48,9 +49,11 @@ fun PatchSource.patchSourceEntry(): String {
             ?: "unknown")
     } else {
         val parsed = url?.let(RemotePatchSourceFactory::parse)
+        val sourceUrl = (parsed?.canonicalUrl ?: url)?.let(SourceUrl::parse)
         when {
-            parsed?.provider == PatchProvider.GITLAB -> "gitlab=${parsed.repoPath}"
-            parsed != null -> "github=${parsed.repoPath}"
+            sourceUrl?.repositoryKey != null -> sourceUrl.repositoryKey!!
+            parsed?.provider == PatchProvider.JSON && sourceUrl != null ->
+                "url=" + (listOf(sourceUrl.host) + sourceUrl.segments).joinToString("/")
             type == PatchSourceType.DEFAULT -> "github=${RemotePatchSourceFactory.DEFAULT_REPO_PATH}"
             else -> "url=unknown"
         }

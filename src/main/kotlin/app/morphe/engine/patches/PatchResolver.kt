@@ -43,6 +43,7 @@ object PatchResolver {
         val resolvedVersion: String? = null,
         val latestAvailableVersion: String? = null,
         val releasedAtMillis: Long? = null,
+        val pageUrl: String? = null,
         val isOffline: Boolean = false,
         val channel: Channel = Channel.UNKNOWN,
         val error: Error? = null,
@@ -119,7 +120,7 @@ object PatchResolver {
             latestDevTag = prRelease.tagName
         } else {
             val primary = if (usePreRelease) repo.getLatestDevRelease(forceRefresh = forceRefresh) else repo.getLatestStableRelease(forceRefresh = forceRefresh)
-            val fallback = if (primary.getOrNull() == null) {
+            val fallback = if (primary.getOrNull() == null && repo.remoteSource.supportsPrerelease) {
                 if (usePreRelease) repo.getLatestStableRelease(forceRefresh = forceRefresh) else repo.getLatestDevRelease(forceRefresh = forceRefresh)
             } else null
 
@@ -171,6 +172,7 @@ object PatchResolver {
                 if (release.isDevRelease()) latestDevTag else latestStableTag
             },
             releasedAtMillis = release.publishedMillis(),
+            pageUrl = release.pageUrl,
             isOffline = false,
             channel = channel,
         )
@@ -211,7 +213,7 @@ object PatchResolver {
         val repo = PatchRepository(source)
         val res = resolveRemote(
             repo = repo,
-            usePreRelease = prerelease,
+            usePreRelease = prerelease || parsed.defaultPreRelease,
             pinnedTag = parsed.pinnedTag,
             strictPin = parsed.pinnedTag != null,
         )

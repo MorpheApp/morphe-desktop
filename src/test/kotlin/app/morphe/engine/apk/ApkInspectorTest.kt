@@ -57,6 +57,30 @@ class ApkInspectorTest {
         assertEquals("TikTok", ApkInspector.inspect(bundle)?.applicationLabel)
     }
 
+    @Test
+    fun `detects architectures from split names in bundle`() {
+        val manifest = AndroidManifestBlock().apply {
+            packageName = "com.example.splits"
+            refresh()
+        }
+        val baseApk = zipBytes(listOf(AndroidManifestBlock.FILE_NAME to manifest.bytes))
+        fun bundle(name: String, vararg splits: String) =
+            writeZip(name, listOf("base.apk" to baseApk) + splits.map { it to zipBytes(emptyList()) })
+
+        assertEquals(
+            setOf("arm64-v8a", "x86_64"),
+            ApkInspector.inspect(bundle("apkm.apkm", "split_config.arm64_v8a.apk", "split_config.x86_64.apk"))?.architectures,
+        )
+        assertEquals(
+            setOf("x86"),
+            ApkInspector.inspect(bundle("xapk.xapk", "config.x86.apk"))?.architectures,
+        )
+        assertEquals(
+            setOf("armeabi-v7a", "x86_64"),
+            ApkInspector.inspect(bundle("apks.apks", "splits/base-armeabi_v7a.apk", "splits/base-x86_64.apk"))?.architectures,
+        )
+    }
+
     /** Returns manifest and resources table bytes where the label is `@string/app_name` = [label]. */
     private fun referencedLabel(packageName: String, label: String): Pair<ByteArray, ByteArray> {
         val table = TableBlock()
