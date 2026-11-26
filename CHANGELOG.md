@@ -1,3 +1,29 @@
+# [2.4.0](https://github.com/MorpheApp/morphe-desktop/compare/v2.3.0...v2.4.0) (2026-11-26)
+
+
+### Bug Fixes
+
+* Correct Strip libs and output naming ([7a59d00](https://github.com/MorpheApp/morphe-desktop/commit/7a59d0060050a2e1fdc816046544b73ce036354c))
+* Hide language subtext when it matches the title ([b5c5ae8](https://github.com/MorpheApp/morphe-desktop/commit/b5c5ae89f657ceed8ad6ad620f0f5383621a2d32))
+* Prevent concurrent writes from corrupting config ([6e0fb6c](https://github.com/MorpheApp/morphe-desktop/commit/6e0fb6c6afb7a0098132e97b41b479c9b4831ce4))
+* Show update badge only when relevant patches are available ([#455](https://github.com/MorpheApp/morphe-desktop/issues/455)) ([4c9a3b8](https://github.com/MorpheApp/morphe-desktop/commit/4c9a3b8f972bf7ac22418258776b25e6f3146508))
+* Stop root mount from keeping the old patched APK ([97be3df](https://github.com/MorpheApp/morphe-desktop/commit/97be3df70f3d90ea6304d09f6494024fbe58e419))
+* Support fractional scaling on X11 and XWayland ([#446](https://github.com/MorpheApp/morphe-desktop/issues/446)) ([edfe717](https://github.com/MorpheApp/morphe-desktop/commit/edfe717d39456e26ffb6e2cd0a18fca2b2b73e8c))
+* Unmount root mounted apps with the whole command ([#460](https://github.com/MorpheApp/morphe-desktop/issues/460)) ([547f1f5](https://github.com/MorpheApp/morphe-desktop/commit/547f1f52558b85f850b2890b5760de01e8e5f40b))
+* Update Patcher and ARSCLib dependency ([683899a](https://github.com/MorpheApp/morphe-desktop/commit/683899a9f2bcb531a3998de8ee3396dd6237f720))
+
+
+### Features
+
+* Add Codeberg and JSON patch source support ([b37c7b1](https://github.com/MorpheApp/morphe-desktop/commit/b37c7b1e3c8743147b51884b80eeca5236c7ec90))
+* Add option to keep original APKs for repatching ([#445](https://github.com/MorpheApp/morphe-desktop/issues/445)) ([4c8659b](https://github.com/MorpheApp/morphe-desktop/commit/4c8659b25f9320993c4a405a20dda49399c76cc6))
+* Install patched apps compiled with their baseline profile ([#459](https://github.com/MorpheApp/morphe-desktop/issues/459)) ([5950617](https://github.com/MorpheApp/morphe-desktop/commit/5950617dfff3f286821c068c9d9d416612291b42))
+
+
+### Performance Improvements
+
+* Speed up startup and loading of apps and patch options ([#454](https://github.com/MorpheApp/morphe-desktop/issues/454)) ([9683a7d](https://github.com/MorpheApp/morphe-desktop/commit/9683a7d82fb5b1c9dc010d2228f213bddf7b1481))
+
 # [2.4.0-dev.5](https://github.com/MorpheApp/morphe-desktop/compare/v2.4.0-dev.4...v2.4.0-dev.5) (2026-11-26)
 
 
