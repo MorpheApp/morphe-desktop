@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Manual (substituir ficheiro)</string>
     <string name="source_card_loads_newest">O .mpp mais recente na pasta</string>
     <string name="source_card_loads_pr">Build do pull request mais recente</string>
+    <string name="source_card_loads_json">Do manifesto JSON</string>
     <string name="source_card_disabled">Esta fonte está desativada. Ative-a para carregar patches</string>
     <string name="source_card_disabled_tag">Desativado</string>
     <string name="source_card_last_enabled">Pelo menos uma fonte deve permanecer ativada</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Mostrar na pasta</string>
     <string name="source_card_more_description">Mais ações</string>
     <string name="source_card_browse_patches">Navegar por patches</string>
+    <string name="source_card_report_issue">Comunicar um problema</string>
     <string name="source_card_priority">Prioridade %1$d</string>
     <string name="source_card_open_link">Abrir %1$s no navegador</string>
     <string name="source_card_enable_description">Ativar %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Local</string>
     <string name="patch_source_dialog_valid_github">Repositório GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Repositório GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Repositório Codeberg</string>
+    <string name="patch_source_dialog_valid_json">Pacote de patches JSON</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s em %2$s. Sempre usa a build mais recente deste PR</string>
     <string name="patch_source_dialog_builtin_note">Esta é a fonte de patch integrada. Seu nome e localização não podem ser alterados. Alterne entre estável e pré-lançamento em seu cartão</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Ficheiro local</string>
     <string name="patch_source_dialog_name_label">Nome</string>
     <string name="patch_source_dialog_name_placeholder">Meus Patches Personalizados</string>
-    <string name="patch_source_dialog_repo_url_label">URL do repositório</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo ou gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Aceita um link do GitHub, GitLab ou morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL da fonte</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo ou example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Aceita GitHub, GitLab, Codeberg, URL .json ou link morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">O nome é obrigatório</string>
-    <string name="patch_source_dialog_error_invalid_url">Introduza um URL válido do GitHub ou GitLab</string>
+    <string name="patch_source_dialog_error_invalid_url">Insira uma URL válida do GitHub, GitLab, Codeberg ou .json</string>
     <string name="patch_source_dialog_error_invalid_file">Selecionar um ficheiro .mpp válido</string>
     <string name="patch_source_dialog_add_button">Adicionar</string>
     <string name="patch_source_dialog_edit_title">Editar fonte</string>
     <string name="patch_source_dialog_type_github_repo">Repositório do GitHub</string>
     <string name="patch_source_dialog_type_github_pr">Pull Request do GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">Repositório do GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Repositório Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">Pacote de Patches JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">Ficheiro (.mpp) ou pasta</string>
     <string name="patch_source_dialog_mpp_label">Arquivo (.mpp)</string>
     <string name="patch_source_dialog_path_placeholder_dev">Caminho para .mpp ou pasta</string>

@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Manuale (sostituisci file)</string>
     <string name="source_card_loads_newest">Il file .mpp più recente nella cartella</string>
     <string name="source_card_loads_pr">Ultima build della pull request</string>
+    <string name="source_card_loads_json">Da manifesto JSON</string>
     <string name="source_card_disabled">Questa sorgente è disabilitata. Abilitala per caricare le patch</string>
     <string name="source_card_disabled_tag">Disattivato</string>
     <string name="source_card_last_enabled">Almeno una sorgente deve rimanere abilitata</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Mostra nella cartella</string>
     <string name="source_card_more_description">Altre azioni</string>
     <string name="source_card_browse_patches">Sfoglia patch</string>
+    <string name="source_card_report_issue">Segnala un problema</string>
     <string name="source_card_priority">Priorità %1$d</string>
     <string name="source_card_open_link">Apri %1$s nel browser</string>
     <string name="source_card_enable_description">Abilita %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Locale</string>
     <string name="patch_source_dialog_valid_github">Repository GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Repository GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Repository Codeberg</string>
+    <string name="patch_source_dialog_valid_json">Pacchetto patch JSON</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s su %2$s. Utilizza sempre l'ultima build di questa PR</string>
     <string name="patch_source_dialog_builtin_note">Questa è la sorgente patch integrata. Il suo nome e la sua posizione non possono essere modificati. Passa tra stabile e pre-release sulla relativa scheda</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">File locale</string>
     <string name="patch_source_dialog_name_label">Nome</string>
     <string name="patch_source_dialog_name_placeholder">Le mie patch personalizzate</string>
-    <string name="patch_source_dialog_repo_url_label">URL repository</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo o gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Accetta un link GitHub, GitLab o morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL della fonte</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo o example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Accetta GitHub, GitLab, Codeberg, URL .json o link morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Il nome è obbligatorio</string>
-    <string name="patch_source_dialog_error_invalid_url">Inserisci un URL GitHub o GitLab valido</string>
+    <string name="patch_source_dialog_error_invalid_url">Inserisci un URL valido di GitHub, GitLab, Codeberg o .json</string>
     <string name="patch_source_dialog_error_invalid_file">Seleziona un file .mpp valido</string>
     <string name="patch_source_dialog_add_button">Aggiungi</string>
     <string name="patch_source_dialog_edit_title">Modifica sorgente</string>
     <string name="patch_source_dialog_type_github_repo">Repository GitHub</string>
     <string name="patch_source_dialog_type_github_pr">Pull request GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">Repository GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Repository Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">Pacchetto patch JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp file o cartella</string>
     <string name="patch_source_dialog_mpp_label">.mpp file</string>
     <string name="patch_source_dialog_path_placeholder_dev">Percorso del .mpp o della cartella</string>

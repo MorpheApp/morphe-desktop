@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Thủ công (thay thế tệp)</string>
     <string name="source_card_loads_newest">Tệp .mpp mới nhất trong thư mục</string>
     <string name="source_card_loads_pr">Bản build pull request mới nhất</string>
+    <string name="source_card_loads_json">Từ manifest JSON</string>
     <string name="source_card_disabled">Nguồn này đã bị vô hiệu hóa. Hãy bật nó để tải các bản vá</string>
     <string name="source_card_disabled_tag">Đang tắt</string>
     <string name="source_card_last_enabled">Phải có ít nhất một nguồn được bật</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Hiển thị trong thư mục</string>
     <string name="source_card_more_description">Thêm tác vụ</string>
     <string name="source_card_browse_patches">Duyệt các bản vá</string>
+    <string name="source_card_report_issue">Báo cáo sự cố</string>
     <string name="source_card_priority">Độ ưu tiên %1$d</string>
     <string name="source_card_open_link">Mở %1$s trong trình duyệt</string>
     <string name="source_card_enable_description">Bật %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Cục bộ</string>
     <string name="patch_source_dialog_valid_github">Kho lưu trữ GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Kho lưu trữ GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Kho lưu trữ Codeberg</string>
+    <string name="patch_source_dialog_valid_json">Gói vá JSON</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s trên %2$s. Luôn sử dụng bản build mới nhất từ PR này</string>
     <string name="patch_source_dialog_builtin_note">Đây là nguồn bản vá tích hợp sẵn. Tên và vị trí của nó không thể thay đổi. Chuyển đổi giữa bản ổn định và tiền phát hành trên thẻ của nó</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Tệp cục bộ</string>
     <string name="patch_source_dialog_name_label">Tên</string>
     <string name="patch_source_dialog_name_placeholder">Bản vá tùy chỉnh của tôi</string>
-    <string name="patch_source_dialog_repo_url_label">URL kho lưu trữ</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo hoặc gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Chấp nhận liên kết GitHub, GitLab hoặc morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL nguồn</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo hoặc example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Chấp nhận GitHub, GitLab, Codeberg, URL .json, hoặc liên kết morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Bắt buộc nhập tên</string>
-    <string name="patch_source_dialog_error_invalid_url">Nhập URL GitHub hoặc GitLab hợp lệ</string>
+    <string name="patch_source_dialog_error_invalid_url">Nhập URL GitHub, GitLab, Codeberg hoặc .json hợp lệ</string>
     <string name="patch_source_dialog_error_invalid_file">Chọn tệp .mpp hợp lệ</string>
     <string name="patch_source_dialog_add_button">Thêm</string>
     <string name="patch_source_dialog_edit_title">Chỉnh sửa nguồn</string>
     <string name="patch_source_dialog_type_github_repo">Kho GitHub</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">Kho GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Kho lưu trữ Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">Gói vá JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">Tệp .mpp hoặc thư mục</string>
     <string name="patch_source_dialog_mpp_label">Tệp .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">Đường dẫn đến tệp .mpp hoặc thư mục</string>

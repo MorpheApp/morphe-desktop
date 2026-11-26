@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Уручную (замяніць файл)</string>
     <string name="source_card_loads_newest">Найсвежае .mpp у папцы</string>
     <string name="source_card_loads_pr">Апошняя зборка pull-запыту</string>
+    <string name="source_card_loads_json">З JSON-маніфесту</string>
     <string name="source_card_disabled">Гэты крыніца адключана. Уключыце яе, каб загрузіць патчы</string>
     <string name="source_card_disabled_tag">Адключана</string>
     <string name="source_card_last_enabled">Прынаймені адна крыніца павінна заставацца ўключанай</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Паказаць у папцы</string>
     <string name="source_card_more_description">Больш дзеянняў</string>
     <string name="source_card_browse_patches">Прагляд патчаў</string>
+    <string name="source_card_report_issue">Паведаміць пра праблему</string>
     <string name="source_card_priority">Прыярытэт %1$d</string>
     <string name="source_card_open_link">Адкрыць %1$s у браўзеры</string>
     <string name="source_card_enable_description">Уключаць %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Лакальны</string>
     <string name="patch_source_dialog_valid_github">Рэпазіторый GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Рэпазіторый GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Рэпазіторый Codeberg</string>
+    <string name="patch_source_dialog_valid_json">JSON-пакет патчаў</string>
     <string name="patch_source_dialog_valid_pr">Pull-запыт #%1$s на %2$s. Заўсёды выкарыстоўваюцца найсвежае зборкі з гэтага PR</string>
     <string name="patch_source_dialog_builtin_note">Гэта ўбудаванае крыніца патчаў. Яе назву і месцазнаходжанне нельга змяніць. Пераключайцеся паміж стабільнай і падгатовочнай версіямі на яе картцы</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Локальны файл</string>
     <string name="patch_source_dialog_name_label">Назва</string>
     <string name="patch_source_dialog_name_placeholder">Мае ўласныя патчы</string>
-    <string name="patch_source_dialog_repo_url_label">URL рэпазіторыя</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo або gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Прымае спасылкі GitHub, GitLab або morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL крыніцы</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo або example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Прыймае GitHub, GitLab, Codeberg, .json URL або спасылку morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Назва абавязковая</string>
-    <string name="patch_source_dialog_error_invalid_url">Увядзіце правільны URL GitHub або GitLab</string>
+    <string name="patch_source_dialog_error_invalid_url">Увядзіце сапраўдны URL GitHub, GitLab, Codeberg або .json</string>
     <string name="patch_source_dialog_error_invalid_file">Выберыце правільны файл .mpp</string>
     <string name="patch_source_dialog_add_button">Дадаць</string>
     <string name="patch_source_dialog_edit_title">Рэдагаваць крыніцу</string>
     <string name="patch_source_dialog_type_github_repo">Рэпазіторый GitHub</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">Рэпазіторый GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Рэпазіторый Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON-пакет патчаў</string>
     <string name="patch_source_dialog_mpp_or_folder_label">файл .mpp або папка</string>
     <string name="patch_source_dialog_mpp_label">Файл .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">Шлях да .mpp або папкі</string>

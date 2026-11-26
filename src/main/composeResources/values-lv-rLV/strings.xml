@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Manuāli (aizstāt failu)</string>
     <string name="source_card_loads_newest">Jaunākais .mpp mapnē</string>
     <string name="source_card_loads_pr">Jaunākā pull request builda</string>
+    <string name="source_card_loads_json">No JSON manifestā</string>
     <string name="source_card_disabled">Šis avots ir deaktivēts. Aktivizējiet to, lai ielādētu patchiem</string>
     <string name="source_card_disabled_tag">Atspējots</string>
     <string name="source_card_last_enabled">Vismaz vienam avotam jāpaliek aktivizētam</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Rādīt mapē</string>
     <string name="source_card_more_description">Vairāk darbību</string>
     <string name="source_card_browse_patches">Apskatīt lāpījumus</string>
+    <string name="source_card_report_issue">Ziņot par problēmu</string>
     <string name="source_card_priority">Prioritāte %1$d</string>
     <string name="source_card_open_link">Atvērt %1$s pārlūkprogrammā</string>
     <string name="source_card_enable_description">Ienable %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Lokāls</string>
     <string name="patch_source_dialog_valid_github">GitHub repozitorijs</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab repozitorijs</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg repozitorijs</string>
+    <string name="patch_source_dialog_valid_json">JSON lāpījumu pakotne</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s %2$s. Vienmēr izmanto jaunāko buildu no šī PR</string>
     <string name="patch_source_dialog_builtin_note">Šis ir iebūvēts plāstumu avots. Tuvē nosaukums un atrašanās vieta nav maināmi. Pārslēdzieties starp stabilu un pirmizlaida versiju tā kartē</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Lokāls fails</string>
     <string name="patch_source_dialog_name_label">Nosaukums</string>
     <string name="patch_source_dialog_name_placeholder">Mani pielagotie patchi</string>
-    <string name="patch_source_dialog_repo_url_label">Repozitorija URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo vai gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Pieņem GitHub, GitLab vai morphe.software/add-source saites</string>
+    <string name="patch_source_dialog_repo_url_label">Avota URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo vai example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Pieņem GitHub, GitLab, Codeberg, .json URL vai morphe.software/add-source saiti</string>
     <string name="patch_source_dialog_error_name_required">Nosaukums ir obligāts</string>
-    <string name="patch_source_dialog_error_invalid_url">Ievadiet derīgu GitHub vai GitLab URL adresi</string>
+    <string name="patch_source_dialog_error_invalid_url">Ievadiet derīgu GitHub, GitLab, Codeberg vai .json URL</string>
     <string name="patch_source_dialog_error_invalid_file">Atlasiet derīgu .mpp failu</string>
     <string name="patch_source_dialog_add_button">Pievienot</string>
     <string name="patch_source_dialog_edit_title">Rediģēt avotu</string>
     <string name="patch_source_dialog_type_github_repo">GitHub repozitorijs</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab repozitorijs</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg repozitorijs</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON lāpījumu pakotne</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp fails vai mappa</string>
     <string name="patch_source_dialog_mpp_label">.mpp fails</string>
     <string name="patch_source_dialog_path_placeholder_dev">Ceļš uz .mpp failu vai mappi</string>

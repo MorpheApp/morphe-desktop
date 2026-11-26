@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Қолмен (файлды ауыстыру)</string>
     <string name="source_card_loads_newest">Папкадағы ең жаңа .mpp</string>
     <string name="source_card_loads_pr">Соңғы pull request құрылымы</string>
+    <string name="source_card_loads_json">JSON манифестинен</string>
     <string name="source_card_disabled">Бұл дереккөз өшірілген. Патчтарды жүктеу үшін оны қосыңыз</string>
     <string name="source_card_disabled_tag">Өшірілген</string>
     <string name="source_card_last_enabled">Кемінде бір дереккөз қосылған болуы керек</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Папкада көрсету</string>
     <string name="source_card_more_description">Көбірек әрекеттер</string>
     <string name="source_card_browse_patches">Патчтарды қарау</string>
+    <string name="source_card_report_issue">Мәселені хабарлау</string>
     <string name="source_card_priority">Басымдық %1$d</string>
     <string name="source_card_open_link">%1$s сілтемесін браузерде ашу</string>
     <string name="source_card_enable_description">%1$s қосу</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Жергілікті</string>
     <string name="patch_source_dialog_valid_github">GitHub репозиторийі</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab репозиторийі</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg репозиторийі</string>
+    <string name="patch_source_dialog_valid_json">JSON патч жинағы</string>
     <string name="patch_source_dialog_valid_pr">%2$s сайтындағы %1$s # пул сұранысы. Әрқашан осы PR-дың соңғы нұсқасын қолданады</string>
     <string name="patch_source_dialog_builtin_note">Бұл — кіріктірілген патч дереккөзі. Оның атауы мен орналасқан жерін өзгерту мүмкін емес. Оның карточкасында тұрақты және алдын ала шығарылатын нұсқалардың арасында ауысыруға болады</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Жергілікті файл</string>
     <string name="patch_source_dialog_name_label">Аты</string>
     <string name="patch_source_dialog_name_placeholder">Менің жеке патчтарым</string>
-    <string name="patch_source_dialog_repo_url_label">Репозиторий URL-мекенжайы</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo немесе gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">GitHub, GitLab немесе morphe.software/add-source сілтемелері қолдайды</string>
+    <string name="patch_source_dialog_repo_url_label">Дереккөз URL-мекенжайы</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo немесе example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">GitHub, GitLab, Codeberg, .json URL немесе morphe.software/add-source сілтемесі қолданылады</string>
     <string name="patch_source_dialog_error_name_required">Атын көрсету қажет</string>
-    <string name="patch_source_dialog_error_invalid_url">GitHub немесе GitLab-тің дұрыс URL-мекенжайын енгізіңіз</string>
+    <string name="patch_source_dialog_error_invalid_url">Дұрыс GitHub, GitLab, Codeberg немесе .json URL-мекенжайын енгізіңіз</string>
     <string name="patch_source_dialog_error_invalid_file">Дұрыс .mpp файлын таңдаңыз</string>
     <string name="patch_source_dialog_add_button">Қосу</string>
     <string name="patch_source_dialog_edit_title">Дереккөзді өңдеу</string>
     <string name="patch_source_dialog_type_github_repo">GitHub репозиторийі</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab репозиторийі</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg репозиторийі</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON патч жинағы</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp файлы немесе папка</string>
     <string name="patch_source_dialog_mpp_label">.mpp файлы</string>
     <string name="patch_source_dialog_path_placeholder_dev">.mpp немесе папкаға жол</string>

@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Kézi (fájlcserép)</string>
     <string name="source_card_loads_newest">Legfrissebb .mpp a mappában</string>
     <string name="source_card_loads_pr">Legutóbbi pull request build</string>
+    <string name="source_card_loads_json">JSON manifesztumból</string>
     <string name="source_card_disabled">Ez a forrás ki van kapcsolva. Kapcsolja be a javítások betöltéséhez</string>
     <string name="source_card_disabled_tag">Kikapcsolva</string>
     <string name="source_card_last_enabled">Legalább egy forrásnak aktívnak kell maradnia</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Megjelenítés a mappában</string>
     <string name="source_card_more_description">További műveletek</string>
     <string name="source_card_browse_patches">Javítások böngészése</string>
+    <string name="source_card_report_issue">Hiba jelentése</string>
     <string name="source_card_priority">Prioritás: %1$d</string>
     <string name="source_card_open_link">%1$s megnyitása a böngészőben</string>
     <string name="source_card_enable_description">%1$s engedélyezése</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Helyi</string>
     <string name="patch_source_dialog_valid_github">GitHub repository</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab repository</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg tárhely</string>
+    <string name="patch_source_dialog_valid_json">JSON módosítócsomag</string>
     <string name="patch_source_dialog_valid_pr">%1$s számú Pull request a %2$s oldalán. Mindig ennek a PR-nak a legfrissebb buildjét használja</string>
     <string name="patch_source_dialog_builtin_note">Ez a beépített patch forrás. A neve és a helye nem módosítható. A kártyáján válthat a stabil és a pre-release verziók között</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Helyi fájl</string>
     <string name="patch_source_dialog_name_label">Név</string>
     <string name="patch_source_dialog_name_placeholder">Saját egyéni javítások</string>
-    <string name="patch_source_dialog_repo_url_label">Repository URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo vagy gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">GitHub-, GitLab- vagy morphe.software/add-source hivatkozást fogad el</string>
+    <string name="patch_source_dialog_repo_url_label">Forrás URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/tulajdonos/tárhely vagy example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Elfogadja GitHub, GitLab, Codeberg, .json URL vagy morphe.software/add-source linkeket</string>
     <string name="patch_source_dialog_error_name_required">A név megadása kötelező</string>
-    <string name="patch_source_dialog_error_invalid_url">Adj meg egy érvényes GitHub- vagy GitLab-URL-t</string>
+    <string name="patch_source_dialog_error_invalid_url">Adj meg egy érvényes GitHub, GitLab, Codeberg vagy .json URL-t</string>
     <string name="patch_source_dialog_error_invalid_file">Válassz egy érvényes .mpp fájlt</string>
     <string name="patch_source_dialog_add_button">Hozzáadás</string>
     <string name="patch_source_dialog_edit_title">Forrás szerkesztése</string>
     <string name="patch_source_dialog_type_github_repo">GitHub-tároló</string>
     <string name="patch_source_dialog_type_github_pr">GitHub pull request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab-tároló</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg Tárhely</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON Patchcsomag</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp fájl vagy mappa</string>
     <string name="patch_source_dialog_mpp_label">.mpp fájl</string>
     <string name="patch_source_dialog_path_placeholder_dev">A .mpp vagy mappa elérési útja</string>

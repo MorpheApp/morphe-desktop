@@ -572,6 +572,7 @@
     <string name="source_card_updates_manual">Ръчно (замяна на файл)</string>
     <string name="source_card_loads_newest">Най-нов .mpp в папката</string>
     <string name="source_card_loads_pr">Последна изграждане на pull request</string>
+    <string name="source_card_loads_json">От JSON манифест</string>
     <string name="source_card_disabled">Този източник е изключен. Активирайте го, за да заредите пачове</string>
     <string name="source_card_disabled_tag">Изключено</string>
     <string name="source_card_last_enabled">Поне един източник трябва да остане активиран</string>
@@ -585,6 +586,7 @@
     <string name="source_card_show_in_folder">Показване в папката</string>
     <string name="source_card_more_description">Още действия</string>
     <string name="source_card_browse_patches">Преглед на пачове</string>
+    <string name="source_card_report_issue">Съобщи за проблем</string>
     <string name="source_card_priority">Приоритет %1$d</string>
     <string name="source_card_open_link">Отваряне на %1$s в браузър</string>
     <string name="source_card_enable_description">Разрешаване на %1$s</string>
@@ -634,6 +636,8 @@
     <string name="patch_source_dialog_kind_local">Локален</string>
     <string name="patch_source_dialog_valid_github">GitHub хранилище</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab хранилище</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg хранилище</string>
+    <string name="patch_source_dialog_valid_json">JSON пакет с кръпки</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s в %2$s. Винаги използва последната версия от този PR</string>
     <string name="patch_source_dialog_builtin_note">Това е вграденият източник на пачове. Неговото име и местоположение не могат да бъдат променени. Превключвайте между стабилна и предварителна версия от неговата карта</string>
     <!-- Signing Key Trust Dialog -->
@@ -647,17 +651,19 @@
     <string name="patch_source_dialog_local_file_label">Локален файл</string>
     <string name="patch_source_dialog_name_label">Име</string>
     <string name="patch_source_dialog_name_placeholder">Моите персонализирани кръпки</string>
-    <string name="patch_source_dialog_repo_url_label">URL на хранилището</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo или gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Приема GitHub, GitLab или morphe.software/add-source връзка</string>
+    <string name="patch_source_dialog_repo_url_label">URL на източника</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo или example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Приема GitHub, GitLab, Codeberg, .json URL или връзка към morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Името е задължително</string>
-    <string name="patch_source_dialog_error_invalid_url">Въведете валиден GitHub или GitLab URL</string>
+    <string name="patch_source_dialog_error_invalid_url">Въведете валиден GitHub, GitLab, Codeberg или .json URL</string>
     <string name="patch_source_dialog_error_invalid_file">Изберете валиден .mpp файл</string>
     <string name="patch_source_dialog_add_button">Добавяне</string>
     <string name="patch_source_dialog_edit_title">Редактиране на източник</string>
     <string name="patch_source_dialog_type_github_repo">GitHub хранилище</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab хранилище</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg хранилище</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON пакет с кръпки</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp файл или папка</string>
     <string name="patch_source_dialog_mpp_label">.mpp файл</string>
     <string name="patch_source_dialog_path_placeholder_dev">Път до .mpp или папка</string>

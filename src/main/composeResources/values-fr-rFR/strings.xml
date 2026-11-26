@@ -570,6 +570,7 @@
     <string name="source_card_updates_manual">Manuel (remplacer le fichier)</string>
     <string name="source_card_loads_newest">Le .mpp le plus récent du dossier</string>
     <string name="source_card_loads_pr">Dernière build de la pull request</string>
+    <string name="source_card_loads_json">Depuis le manifeste JSON</string>
     <string name="source_card_disabled">Cette source est désactivée. Activez-la pour charger les patchs</string>
     <string name="source_card_disabled_tag">Désactivée</string>
     <string name="source_card_last_enabled">Au moins une source doit rester activée</string>
@@ -583,6 +584,7 @@
     <string name="source_card_show_in_folder">Afficher dans le dossier</string>
     <string name="source_card_more_description">Plus d'actions</string>
     <string name="source_card_browse_patches">Parcourir les patchs</string>
+    <string name="source_card_report_issue">Signaler un problème</string>
     <string name="source_card_priority">Priorité %1$d</string>
     <string name="source_card_open_link">Ouvrir %1$s dans le navigateur</string>
     <string name="source_card_enable_description">Activer %1$s</string>
@@ -632,6 +634,8 @@
     <string name="patch_source_dialog_kind_local">Locale</string>
     <string name="patch_source_dialog_valid_github">Dépôt GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Dépôt GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Dépôt Codeberg</string>
+    <string name="patch_source_dialog_valid_json">Bundle de patch JSON</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s sur %2$s. Utilise toujours le dernier build de cette PR</string>
     <string name="patch_source_dialog_builtin_note">Il s'agit de la source de patchs intégrée. Son nom et son emplacement ne peuvent pas être modifiés. Basculez entre les versions stables et les préversions sur sa carte</string>
     <!-- Signing Key Trust Dialog -->
@@ -645,17 +649,19 @@
     <string name="patch_source_dialog_local_file_label">Fichier local</string>
     <string name="patch_source_dialog_name_label">Nom</string>
     <string name="patch_source_dialog_name_placeholder">Mes Patchs Personnalisés</string>
-    <string name="patch_source_dialog_repo_url_label">URL du dépôt</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/propriétaire/dépôt ou gitlab.com/propriétaire/dépôt</string>
-    <string name="patch_source_dialog_repo_hint">Accepte les liens GitHub, GitLab ou morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL de la source</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/propriétaire/dépôt ou example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Accepte les liens GitHub, GitLab, Codeberg, URL .json ou morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Le nom est nécessaire</string>
-    <string name="patch_source_dialog_error_invalid_url">Entrez une URL GitHub ou GitLab valide</string>
+    <string name="patch_source_dialog_error_invalid_url">Saisissez une URL GitHub, GitLab, Codeberg ou .json valide</string>
     <string name="patch_source_dialog_error_invalid_file">Sélectionnez un fichier .mpp valide</string>
     <string name="patch_source_dialog_add_button">Ajouter</string>
     <string name="patch_source_dialog_edit_title">Modifier la source</string>
     <string name="patch_source_dialog_type_github_repo">Dépôt GitHub</string>
     <string name="patch_source_dialog_type_github_pr">Pull Request GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">Dépôt GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Dépôt Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">Bundle de patch JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">Fichier ou dossier .mpp</string>
     <string name="patch_source_dialog_mpp_label">Fichier .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">Chemin vers le .mpp ou le dossier</string>

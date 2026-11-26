@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Гар аргаар (файлыг солих)</string>
     <string name="source_card_loads_newest">Хавтас дахь хамгийн сүүлийн .mpp файл</string>
     <string name="source_card_loads_pr">Pull request-ийн хамгийн сүүлийн build</string>
+    <string name="source_card_loads_json">JSON манифестээс</string>
     <string name="source_card_disabled">Энэ эх сурвалж идэвхгүй байна. Патч ачаалахын тулд үүнийг идэвхжүүлнэ үү</string>
     <string name="source_card_disabled_tag">Идэвхгүй</string>
     <string name="source_card_last_enabled">Наад зах нь нэг эх сурвалж идэвхтэй байх ёстой</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Хавтсанд харуулах</string>
     <string name="source_card_more_description">Нэмэлт үйлдлүүд</string>
     <string name="source_card_browse_patches">Засваруудыг үзэх</string>
+    <string name="source_card_report_issue">Асуудлыг мэдэгдэх</string>
     <string name="source_card_priority">Чухалшил %1$d</string>
     <string name="source_card_open_link">%1$s-ийг хөтөч дээр нээх</string>
     <string name="source_card_enable_description">%1$s-ийг идэвхжүүлэх</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Дотоод</string>
     <string name="patch_source_dialog_valid_github">GitHub репозитори</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab репозитори</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg репозиториум</string>
+    <string name="patch_source_dialog_valid_json">JSON патчийн багц</string>
     <string name="patch_source_dialog_valid_pr">%2$s дээрх %1$s дугаартай pull request. Энэхүү PR-ийн хамгийн сүүлийн билдийг үргэлж ашиглана</string>
     <string name="patch_source_dialog_builtin_note">Энэ бол суурилуулсан патчийн эх сурвалж юм. Үүний нэр болон байршлыг өөрчилж болохгүй. Түүний карт дээр тогтвортой болон урьдчилсан хувилбарын хооронд шилжинэ</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Локал файл</string>
     <string name="patch_source_dialog_name_label">Нэр</string>
     <string name="patch_source_dialog_name_placeholder">Миний өөрийн патчууд</string>
-    <string name="patch_source_dialog_repo_url_label">Репозиторийн URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo эсвэл gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">GitHub, GitLab эсвэл morphe.software/add-source холбоосыг дэмждэг</string>
+    <string name="patch_source_dialog_repo_url_label">Эх сурвалжийн URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo эсвэл example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">GitHub, GitLab, Codeberg, .json URL эсвэл morphe.software/add-source холбоосыг хүлээн авна</string>
     <string name="patch_source_dialog_error_name_required">Нэр заавал шаардлагатай</string>
-    <string name="patch_source_dialog_error_invalid_url">GitHub эсвэл GitLab-ийн зөв URL оруулна уу</string>
+    <string name="patch_source_dialog_error_invalid_url">GitHub, GitLab, Codeberg эсвэл .json-ийн зөв URL оруулна уу</string>
     <string name="patch_source_dialog_error_invalid_file">Зөв .mpp файлыг сонгоно уу</string>
     <string name="patch_source_dialog_add_button">Нэмэх</string>
     <string name="patch_source_dialog_edit_title">Эх сурвалжийг засах</string>
     <string name="patch_source_dialog_type_github_repo">GitHub репозитори</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab репозитори</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg Репозиториум</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON Патчийн Багц</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp файл эсвэл хавтас</string>
     <string name="patch_source_dialog_mpp_label">.mpp файл</string>
     <string name="patch_source_dialog_path_placeholder_dev">.mpp эсвэл хавтасны зам</string>

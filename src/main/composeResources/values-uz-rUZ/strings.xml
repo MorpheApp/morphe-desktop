@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Qo'lda (faylni almashtirish)</string>
     <string name="source_card_loads_newest">Papkadagi eng yangi .mpp</string>
     <string name="source_card_loads_pr">Eng oxirgi pull request build</string>
+    <string name="source_card_loads_json">JSON manifestidan</string>
     <string name="source_card_disabled">Ushbu manba o'chirilgan. Patchlarni yuklash uchun uni yoqing</string>
     <string name="source_card_disabled_tag">O'chirilgan</string>
     <string name="source_card_last_enabled">Kamida bitta manba yoqilgan bo'lishi kerak</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Papkada ko'rsatish</string>
     <string name="source_card_more_description">Boshqa harakatlar</string>
     <string name="source_card_browse_patches">Patchlarni ko'rish</string>
+    <string name="source_card_report_issue">Muammoni xabar qilish</string>
     <string name="source_card_priority">Prioritet %1$d</string>
     <string name="source_card_open_link">%1$s ni brauzerda ochish</string>
     <string name="source_card_enable_description">%1$s ni yoqish</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Lokal</string>
     <string name="patch_source_dialog_valid_github">GitHub repozitoriyasi</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab repozitoriyasi</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg repozitariysi</string>
+    <string name="patch_source_dialog_valid_json">JSON patch paketi</string>
     <string name="patch_source_dialog_valid_pr">%2$s-dagi %1$s-sonli Pull request. Har doim ushbu PR-ning eng so'nggi build-idan foydalanadi</string>
     <string name="patch_source_dialog_builtin_note">Bu ichki patch manbai. Uning nomi va joylashuvini o'zgartirib bo'lmaydi. Uning kartasida barqaror va pre-release versiyalari o'rtasida almashing</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Mahalliy fayl</string>
     <string name="patch_source_dialog_name_label">Nomi</string>
     <string name="patch_source_dialog_name_placeholder">Mening maxsus patchlarim</string>
-    <string name="patch_source_dialog_repo_url_label">Repozitoriya URL manzili</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo yoki gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">GitHub, GitLab yoki morphe.software/add-source havolalarini qabul qiladi</string>
+    <string name="patch_source_dialog_repo_url_label">Manba URL manzili</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/egasi/repo yoki example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">GitHub, GitLab, Codeberg, .json URL yoki morphe.software/add-source havolasini qabul qiladi</string>
     <string name="patch_source_dialog_error_name_required">Ism kiritilishi shart</string>
-    <string name="patch_source_dialog_error_invalid_url">Haqiqiy GitHub yoki GitLab URL manzilini kiriting</string>
+    <string name="patch_source_dialog_error_invalid_url">To'g'ri GitHub, GitLab, Codeberg yoki .json URL manzilini kiriting</string>
     <string name="patch_source_dialog_error_invalid_file">Haqiqiy .mpp faylini tanlang</string>
     <string name="patch_source_dialog_add_button">Qo‘shish</string>
     <string name="patch_source_dialog_edit_title">Manbani tahrirlash</string>
     <string name="patch_source_dialog_type_github_repo">GitHub Repozitoriyasi</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab Repozitoriyasi</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg Repozitariysi</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON Patch Paketi</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp fayli yoki papkasi</string>
     <string name="patch_source_dialog_mpp_label">.mpp fayli</string>
     <string name="patch_source_dialog_path_placeholder_dev">.mpp fayli yoki papkaga yo'l</string>

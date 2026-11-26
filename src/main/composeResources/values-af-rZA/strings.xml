@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Handmatig (vervang lêer)</string>
     <string name="source_card_loads_newest">Nuutste .mpp in gids</string>
     <string name="source_card_loads_pr">Laaste pull-versoek bou</string>
+    <string name="source_card_loads_json">Van JSON-manifest</string>
     <string name="source_card_disabled">Hierdie bron is gedeaktiveer. Aktiveer dit om kolle te laai</string>
     <string name="source_card_disabled_tag">Uitgeskakel</string>
     <string name="source_card_last_enabled">Ten minste een bron moet geaktiveer bly</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Wys in gids</string>
     <string name="source_card_more_description">Meer aksies</string>
     <string name="source_card_browse_patches">Blaai deur regstellings</string>
+    <string name="source_card_report_issue">Rapporteer 'n probleem</string>
     <string name="source_card_priority">Prioriteit %1$d</string>
     <string name="source_card_open_link">Maak %1$s in blaaier oop</string>
     <string name="source_card_enable_description">Aktiveer %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Plaaslik</string>
     <string name="patch_source_dialog_valid_github">GitHub-repositorium</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab-repositorium</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg-repo</string>
+    <string name="patch_source_dialog_valid_json">JSON-patch-bundel</string>
     <string name="patch_source_dialog_valid_pr">Trekversoek #%1$s op %2$s. Gebruik altyd die nuutste bou vanaf hierdie PR</string>
     <string name="patch_source_dialog_builtin_note">Dit is die ingeboude pleisterbron. Die naam en ligging daarvan kan nie verander word nie. Wissel tussen stabiel en voorlopige vrystelling op die kaart daarvan</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Lokale lêer</string>
     <string name="patch_source_dialog_name_label">Naam</string>
     <string name="patch_source_dialog_name_placeholder">My pasgemaakte patches</string>
-    <string name="patch_source_dialog_repo_url_label">Bewaarplek-URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo of gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Aanvaar GitHub-, GitLab- of morphe.software/add-source-skakel</string>
+    <string name="patch_source_dialog_repo_url_label">Oorsprong URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo of voorbeeld.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Aanvaar GitHub, GitLab, Codeberg, .json-URL, of morphe.software/add-source skakel</string>
     <string name="patch_source_dialog_error_name_required">Naam is verpligtend</string>
-    <string name="patch_source_dialog_error_invalid_url">Voer 'n geldige GitHub- of GitLab-URL in</string>
+    <string name="patch_source_dialog_error_invalid_url">Voer 'n geldige GitHub-, GitLab-, Codeberg- of .json-URL in</string>
     <string name="patch_source_dialog_error_invalid_file">Kies 'n geldige .mpp-lêer</string>
     <string name="patch_source_dialog_add_button">Voeg by</string>
     <string name="patch_source_dialog_edit_title">Wysig bron</string>
     <string name="patch_source_dialog_type_github_repo">GitHub-bewaarplek</string>
     <string name="patch_source_dialog_type_github_pr">GitHub-trekversoek</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab-bewaarplek</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg-repo</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON-patch-bundel</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp-lêer of vouer</string>
     <string name="patch_source_dialog_mpp_label">.mpp-lêer</string>
     <string name="patch_source_dialog_path_placeholder_dev">Pad na .mpp of vouer</string>

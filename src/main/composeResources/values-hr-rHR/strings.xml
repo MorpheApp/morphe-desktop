@@ -574,6 +574,7 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="source_card_updates_manual">Ručno (zamijeni datoteku)</string>
     <string name="source_card_loads_newest">Najnoviji .mpp u mapi</string>
     <string name="source_card_loads_pr">Najnovija izgradnja pull zahtjeva</string>
+    <string name="source_card_loads_json">Iz JSON manifesta</string>
     <string name="source_card_disabled">Ovaj izvor je onemogućen. Omogućite ga za učitavanje zakrpa</string>
     <string name="source_card_disabled_tag">Onemogućeno</string>
     <string name="source_card_last_enabled">Barem jedan izvor mora ostati omogućen</string>
@@ -587,6 +588,7 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="source_card_show_in_folder">Prikaži u mapi</string>
     <string name="source_card_more_description">Više radnji</string>
     <string name="source_card_browse_patches">Pregledaj patcheve</string>
+    <string name="source_card_report_issue">Prijavite problem</string>
     <string name="source_card_priority">Prioritet %1$d</string>
     <string name="source_card_open_link">Otvori %1$s u pregledniku</string>
     <string name="source_card_enable_description">Omogući %1$s</string>
@@ -636,6 +638,8 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="patch_source_dialog_kind_local">Lokalno</string>
     <string name="patch_source_dialog_valid_github">GitHub repozitorij</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab repozitorij</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg repozitorij</string>
+    <string name="patch_source_dialog_valid_json">JSON paket zakrpa</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s na %2$s. Uvijek koristi najnoviji build iz ovog PR-a</string>
     <string name="patch_source_dialog_builtin_note">Ovo je ugrađeni izvor patcheva. Njegovo ime i lokacija se ne mogu promijeniti. Prebacujte između stabilne verzije i pre-release verzije na njegovoj kartici</string>
     <!-- Signing Key Trust Dialog -->
@@ -649,17 +653,19 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="patch_source_dialog_local_file_label">Lokalna datoteka</string>
     <string name="patch_source_dialog_name_label">Naziv</string>
     <string name="patch_source_dialog_name_placeholder">Moje prilagođene zakrpe</string>
-    <string name="patch_source_dialog_repo_url_label">URL repozitorija</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo ili gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Prihvaća GitHub, GitLab ili poveznicu morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">Izvor poveznice</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/vlasnik/repo ili example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Prihvaća GitHub, GitLab, Codeberg, .json URL ili morphe.software/add-source poveznicu</string>
     <string name="patch_source_dialog_error_name_required">Naziv je obvezan</string>
-    <string name="patch_source_dialog_error_invalid_url">Unesi važeći GitHub ili GitLab URL</string>
+    <string name="patch_source_dialog_error_invalid_url">Unesite valjan GitHub, GitLab, Codeberg ili .json URL</string>
     <string name="patch_source_dialog_error_invalid_file">Odaberi važeću .mpp datoteku</string>
     <string name="patch_source_dialog_add_button">Dodaj</string>
     <string name="patch_source_dialog_edit_title">Uredi izvor</string>
     <string name="patch_source_dialog_type_github_repo">GitHub repozitorij</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab repozitorij</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg repozitorij</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON paket zakrpa</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp datoteka ili mapa</string>
     <string name="patch_source_dialog_mpp_label">.mpp datoteka</string>
     <string name="patch_source_dialog_path_placeholder_dev">Putanja do .mpp datoteke ili mape</string>

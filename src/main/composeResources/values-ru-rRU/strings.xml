@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Вручную (заменить файл)</string>
     <string name="source_card_loads_newest">Новейший .mpp в папке</string>
     <string name="source_card_loads_pr">Последняя сборка pull-запроса</string>
+    <string name="source_card_loads_json">Из JSON-манифеста</string>
     <string name="source_card_disabled">Этот источник отключен. Включите его, чтобы загружать патчи</string>
     <string name="source_card_disabled_tag">Выключено</string>
     <string name="source_card_last_enabled">Хотя бы один источник должен оставаться включенным</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Показать в папке</string>
     <string name="source_card_more_description">Дополнительные действия</string>
     <string name="source_card_browse_patches">Просмотреть патчи</string>
+    <string name="source_card_report_issue">Сообщить о проблеме</string>
     <string name="source_card_priority">Приоритет %1$d</string>
     <string name="source_card_open_link">Открыть %1$s в браузере</string>
     <string name="source_card_enable_description">Включить %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Локальный</string>
     <string name="patch_source_dialog_valid_github">Репозиторий GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Репозиторий GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Репозиторий Codeberg</string>
+    <string name="patch_source_dialog_valid_json">JSON-пакет патчей</string>
     <string name="patch_source_dialog_valid_pr">Pull-запрос #%1$s в %2$s. Всегда используются последние сборки из этого PR</string>
     <string name="patch_source_dialog_builtin_note">Это встроенный источник патчей. Его имя и расположение нельзя изменить. Переключайтесь между стабильной и предварительной версиями на его карточке</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Локальный файл</string>
     <string name="patch_source_dialog_name_label">Имя</string>
     <string name="patch_source_dialog_name_placeholder">Мои пользовательские патчи</string>
-    <string name="patch_source_dialog_repo_url_label">URL репозитория</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo или gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Принимает GitHub, GitLab или ссылку morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL источника</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo или example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Поддерживаются GitHub, GitLab, Codeberg, URL .json или ссылка morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Имя обязательно</string>
-    <string name="patch_source_dialog_error_invalid_url">Введите действительный URL GitHub или GitLab</string>
+    <string name="patch_source_dialog_error_invalid_url">Введите корректный URL GitHub, GitLab, Codeberg или .json</string>
     <string name="patch_source_dialog_error_invalid_file">Выберите действительный файл .mpp</string>
     <string name="patch_source_dialog_add_button">Добавить</string>
     <string name="patch_source_dialog_edit_title">Редактировать источник</string>
     <string name="patch_source_dialog_type_github_repo">Репозиторий GitHub</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">Репозиторий GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Репозиторий Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON-пакет патчей</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp-файл или папка</string>
     <string name="patch_source_dialog_mpp_label">.mpp-файл</string>
     <string name="patch_source_dialog_path_placeholder_dev">Путь к .mpp или папке</string>

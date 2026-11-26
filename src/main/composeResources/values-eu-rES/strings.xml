@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Eskuz (fitxategia ordezkatzea)</string>
     <string name="source_card_loads_newest">Karpetako .mpp berriena</string>
     <string name="source_card_loads_pr">Azken pull request build-a</string>
+    <string name="source_card_loads_json">JSON manifestuetik</string>
     <string name="source_card_disabled">Iturri hau desaktibatuta dago. Aktibatuko azalduzu patch-ak kargatzeko</string>
     <string name="source_card_disabled_tag">Desgaituta</string>
     <string name="source_card_last_enabled">Gutxienez iturri bat aktibatuta egiteko</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Erutsi karpetan</string>
     <string name="source_card_more_description">Ekintza gehiago</string>
     <string name="source_card_browse_patches">Arakatu patch-ak</string>
+    <string name="source_card_report_issue">Eman arazo baten berri</string>
     <string name="source_card_priority">Prioritatea %1$d</string>
     <string name="source_card_open_link">Ireki %1$s nabigatzailean</string>
     <string name="source_card_enable_description">Gaitu %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Lokala</string>
     <string name="patch_source_dialog_valid_github">GitHub biltegia</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab biltegia</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg repositorioa</string>
+    <string name="patch_source_dialog_valid_json">JSON patch bundle bat</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s %2$s-ean. PR honetako azken build-a beti erabiltzen du</string>
     <string name="patch_source_dialog_builtin_note">Hau da txantxegiteko iturri integratua. Bere izena eta kokapena ezin dira alda tu. Stable eta pre-release arteen aldatu bere txartelko botoiaren bidez</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Fitxategi lokala</string>
     <string name="patch_source_dialog_name_label">Izena</string>
     <string name="patch_source_dialog_name_placeholder">Nire Patch Pertsonalizatuak</string>
-    <string name="patch_source_dialog_repo_url_label">Biltegi URLa</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/jabea/biltegia edo gitlab.com/jabea/biltegia</string>
-    <string name="patch_source_dialog_repo_hint">GitHub, GitLab edo morphe.software/add-source estekak onartzen ditu</string>
+    <string name="patch_source_dialog_repo_url_label">Iturri URL-a</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/abari/repo edo example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">GitHub, GitLab, Codeberg, .json URL edo morphe.software/add-source esteka onartzen ditu</string>
     <string name="patch_source_dialog_error_name_required">Izena beharrezkoa da</string>
-    <string name="patch_source_dialog_error_invalid_url">Sartu GitHub edo GitLab URL bali bat</string>
+    <string name="patch_source_dialog_error_invalid_url">Sartu GitHub, GitLab, Codeberg edo .json URL balidazio bat</string>
     <string name="patch_source_dialog_error_invalid_file">Aukeratu .mpp fitxategi bali bat</string>
     <string name="patch_source_dialog_add_button">Gehitu</string>
     <string name="patch_source_dialog_edit_title">Iturburua editatu</string>
     <string name="patch_source_dialog_type_github_repo">GitHub biltegia</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab Biltegia</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg Repositorioa</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON Patch Bundlea</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp fitxategia edo karpeta</string>
     <string name="patch_source_dialog_mpp_label">.mpp fitxategia</string>
     <string name="patch_source_dialog_path_placeholder_dev">Bidea .mpp edo karpetara</string>

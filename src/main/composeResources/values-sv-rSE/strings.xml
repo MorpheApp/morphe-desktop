@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Manuell (ersätt fil)</string>
     <string name="source_card_loads_newest">Nyaste .mpp i mappen</string>
     <string name="source_card_loads_pr">Senaste pull request-build</string>
+    <string name="source_card_loads_json">Från JSON-manifest</string>
     <string name="source_card_disabled">Den här källan är inaktiverad. Aktivera den för att ladda tillägg</string>
     <string name="source_card_disabled_tag">Inaktiverad</string>
     <string name="source_card_last_enabled">Minst en källa måste förbli aktiverad</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Visa i mapp</string>
     <string name="source_card_more_description">Fler åtgärder</string>
     <string name="source_card_browse_patches">Bläddra bland patchar</string>
+    <string name="source_card_report_issue">Rapportera ett problem</string>
     <string name="source_card_priority">Prioritet %1$d</string>
     <string name="source_card_open_link">Öppna %1$s i webbläsare</string>
     <string name="source_card_enable_description">Aktivera %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Lokal</string>
     <string name="patch_source_dialog_valid_github">GitHub-arkiv</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab-arkiv</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg-förråd</string>
+    <string name="patch_source_dialog_valid_json">JSON-patchpaket</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s på %2$s. Använder alltid den senaste builden från denna PR</string>
     <string name="patch_source_dialog_builtin_note">Detta är den inbyggda patch-källan. Dess namn och plats kan inte ändras. Växla mellan stabil och förhandsversion på dess kort</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Lokal fil</string>
     <string name="patch_source_dialog_name_label">Namn</string>
     <string name="patch_source_dialog_name_placeholder">Mina anpassade patchar</string>
-    <string name="patch_source_dialog_repo_url_label">Arkiv-URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo eller gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Accepterar GitHub-, GitLab- eller morphe.software/add-source-länk</string>
+    <string name="patch_source_dialog_repo_url_label">Källadress</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/ägare/förråd eller example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Accepterar GitHub, GitLab, Codeberg, .json-URL eller morphe.software/add-source-länk</string>
     <string name="patch_source_dialog_error_name_required">Namn krävs</string>
-    <string name="patch_source_dialog_error_invalid_url">Ange en giltig GitHub- eller GitLab-URL</string>
+    <string name="patch_source_dialog_error_invalid_url">Ange en giltig GitHub-, GitLab-, Codeberg- eller .json-URL</string>
     <string name="patch_source_dialog_error_invalid_file">Välj en giltig .mpp-fil</string>
     <string name="patch_source_dialog_add_button">Lägg till</string>
     <string name="patch_source_dialog_edit_title">Redigera källa</string>
     <string name="patch_source_dialog_type_github_repo">GitHub-arkiv</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab-arkiv</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg-förråd</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON-patchpaket</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp-fil eller mapp</string>
     <string name="patch_source_dialog_mpp_label">.mpp-fil</string>
     <string name="patch_source_dialog_path_placeholder_dev">Sökväg till .mpp eller mapp</string>

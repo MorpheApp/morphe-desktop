@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Ručne (nahradiť súbor)</string>
     <string name="source_card_loads_newest">Najnovší .mpp v priečinku</string>
     <string name="source_card_loads_pr">Najnovšia build pull requestu</string>
+    <string name="source_card_loads_json">Z JSON manifestu</string>
     <string name="source_card_disabled">Tento zdroj je deaktivovaný. Aktivujte ho na načítanie záplat</string>
     <string name="source_card_disabled_tag">Vypnutý</string>
     <string name="source_card_last_enabled">Aspon jeden zdroj musí zostať aktivovaný</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Zobraziť v priečinku</string>
     <string name="source_card_more_description">Ďalšie akcie</string>
     <string name="source_card_browse_patches">Prehliadať záplaty</string>
+    <string name="source_card_report_issue">Nahlásiť problém</string>
     <string name="source_card_priority">Priorita %1$d</string>
     <string name="source_card_open_link">Otvoriť %1$s v prehliadači</string>
     <string name="source_card_enable_description">Povoliť %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Lokálne</string>
     <string name="patch_source_dialog_valid_github">Repozitárium GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Repozitárium GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Repozitár Codeberg</string>
+    <string name="patch_source_dialog_valid_json">JSON balík záplát</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s na %2$s. Vždy používa najnovšiu verziu z tohto PR</string>
     <string name="patch_source_dialog_builtin_note">Toto je vstavaný zdroj záplat. Jeho názov a poloha sa nedajú zmeniť. Prepínajte medzi stabilnou a preduvydanou verziou na jeho karte</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Lokálny súbor</string>
     <string name="patch_source_dialog_name_label">Názov</string>
     <string name="patch_source_dialog_name_placeholder">Moje vlastné záplaty</string>
-    <string name="patch_source_dialog_repo_url_label">URL úložiska</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo alebo gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Akceptuje odkaz GitHub, GitLab alebo morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL zdroja</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/vlastník/repo alebo example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Akceptuje GitHub, GitLab, Codeberg, .json URL alebo odkaz morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Názov je povinný</string>
-    <string name="patch_source_dialog_error_invalid_url">Zadajte platnú adresu URL GitHub alebo GitLab</string>
+    <string name="patch_source_dialog_error_invalid_url">Zadajte platnú URL adresu GitHub, GitLab, Codeberg alebo .json</string>
     <string name="patch_source_dialog_error_invalid_file">Vyberte platný súbor .mpp</string>
     <string name="patch_source_dialog_add_button">Pridať</string>
     <string name="patch_source_dialog_edit_title">Upraviť zdroj</string>
     <string name="patch_source_dialog_type_github_repo">GitHub úložisko</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab úložisko</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Repozitár Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON balík záplát</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp súbor alebo priečinok</string>
     <string name="patch_source_dialog_mpp_label">.mpp súbor</string>
     <string name="patch_source_dialog_path_placeholder_dev">Cesta k .mpp alebo priečinku</string>

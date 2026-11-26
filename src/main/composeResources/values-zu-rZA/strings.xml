@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Ngomsindo (shintsha ifayela)</string>
     <string name="source_card_loads_newest">I-.mpp entsha efolder</string>
     <string name="source_card_loads_pr">Ukwakha kwamanani okugcina okugcina okusezingeni</string>
+    <string name="source_card_loads_json">Kusuka ku-JSON manifest</string>
     <string name="source_card_disabled">Lo mthombo uxishwe. Uvule ukuze ulayishe ama-patches</string>
     <string name="source_card_disabled_tag">Kukhubaziwe</string>
     <string name="source_card_last_enabled">Okukodwa komthombo kumele kuhleleke ukuba kuvulekile</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Khombisa efolda</string>
     <string name="source_card_more_description">Izinye izenzo</string>
     <string name="source_card_browse_patches">Bheka ama-patches</string>
+    <string name="source_card_report_issue">Bika inkinga</string>
     <string name="source_card_priority">Okubalulekile %1$d</string>
     <string name="source_card_open_link">Vula u-%1$s ku-browser</string>
     <string name="source_card_enable_description">Vula u-%1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Indawo</string>
     <string name="patch_source_dialog_valid_github">I-GitHub repository</string>
     <string name="patch_source_dialog_valid_gitlab">I-GitLab Repository</string>
+    <string name="patch_source_dialog_valid_codeberg">I-repository lakaCodeberg</string>
+    <string name="patch_source_dialog_valid_json">I-bundle le-patch le-JSON</string>
     <string name="patch_source_dialog_valid_pr">Isicelo sokudonsa #%1$s ku %2$s. Soloko sisebenzisa ukwakha kwakamuva kule PR</string>
     <string name="patch_source_dialog_builtin_note">Lona wumthombo we-patch owakhelwe phakathi. Igama lawo nendawo yawo ngeke kushintshwe. Shintsha phakathi kwe-stable ne-pre-release ekhadini layo</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Ifayela lendawo</string>
     <string name="patch_source_dialog_name_label">Igama</string>
     <string name="patch_source_dialog_name_placeholder">Ama-Custom Patches Ami</string>
-    <string name="patch_source_dialog_repo_url_label">I-URL ye-Repository</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo noma gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Yamukela i-GitHub, i-GitLab, noma i-link ye-morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">I-URL lomthombo</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo noma example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Yamukela i-GitHub, i-GitLab, i-Codeberg, i-URL ye-.json, noma i-link ye-morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Igama lidingeka</string>
-    <string name="patch_source_dialog_error_invalid_url">Faka i-URL ye-GitHub noma i-GitLab esemthethweni</string>
+    <string name="patch_source_dialog_error_invalid_url">Faka i-URL efanele ye-GitHub, i-GitLab, i-Codeberg, noma i-.json</string>
     <string name="patch_source_dialog_error_invalid_file">Khetha ifayela le-.mpp elisemthethweni</string>
     <string name="patch_source_dialog_add_button">Yengeza</string>
     <string name="patch_source_dialog_edit_title">Hlela umthombo</string>
     <string name="patch_source_dialog_type_github_repo">I-GitHub Repository</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">I-GitLab Repository</string>
+    <string name="patch_source_dialog_type_codeberg_repo">I-Repository lakaCodeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">I-Bundle le-Patch le-JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">ifayela noma ifolda le-.mpp</string>
     <string name="patch_source_dialog_mpp_label">ifayela le-.mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">Indlela eya ku-.mpp noma ifolda</string>

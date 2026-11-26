@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Manual (înlocuire fișier)</string>
     <string name="source_card_loads_newest">Cel mai nou .mpp din folder</string>
     <string name="source_card_loads_pr">Ultima build a pull request-ului</string>
+    <string name="source_card_loads_json">Din manifestul JSON</string>
     <string name="source_card_disabled">Această sursă este dezactivată. Activeaz-o pentru a încărca patch-urile</string>
     <string name="source_card_disabled_tag">Dezactivat</string>
     <string name="source_card_last_enabled">Cel puțin o sursă trebuie să rămână activată</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Afișare în folder</string>
     <string name="source_card_more_description">Mai multe acțiuni</string>
     <string name="source_card_browse_patches">Parcurge patch-urile</string>
+    <string name="source_card_report_issue">Raportează o problemă</string>
     <string name="source_card_priority">Prioritate %1$d</string>
     <string name="source_card_open_link">Deschide %1$s în browser</string>
     <string name="source_card_enable_description">Activează %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Local</string>
     <string name="patch_source_dialog_valid_github">Repository GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Repository GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Repository Codeberg</string>
+    <string name="patch_source_dialog_valid_json">Pachet de patch-uri JSON</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s pe %2$s. Folosește întotdeauna cea mai recentă versiune compilată din acest PR</string>
     <string name="patch_source_dialog_builtin_note">Aceasta este sursa de patch integrată. Numele și locația sa nu pot fi modificate. Comută între versiunea stabilă și cea pre-release pe cardul acesteia</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Fișier local</string>
     <string name="patch_source_dialog_name_label">Nume</string>
     <string name="patch_source_dialog_name_placeholder">Patch-urile mele personalizate</string>
-    <string name="patch_source_dialog_repo_url_label">URL depozit</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo sau gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Acceptă link GitHub, GitLab sau morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL sursă</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/proprietar/repo sau example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Acceptă GitHub, GitLab, Codeberg, URL .json sau link morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Numele este obligatoriu</string>
-    <string name="patch_source_dialog_error_invalid_url">Introduceți un URL valid GitHub sau GitLab</string>
+    <string name="patch_source_dialog_error_invalid_url">Introduceți un URL valid de GitHub, GitLab, Codeberg sau .json</string>
     <string name="patch_source_dialog_error_invalid_file">Selectați un fișier .mpp valid</string>
     <string name="patch_source_dialog_add_button">Adaugă</string>
     <string name="patch_source_dialog_edit_title">Editează sursa</string>
     <string name="patch_source_dialog_type_github_repo">Depozit GitHub</string>
     <string name="patch_source_dialog_type_github_pr">Pull request GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">Depozit GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Repository Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">Pachet de patch-uri JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">Fișier .mpp sau dosar</string>
     <string name="patch_source_dialog_mpp_label">Fișier .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">Cale către .mpp sau dosar</string>

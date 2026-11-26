@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Mwongozo (badilisha faili)</string>
     <string name="source_card_loads_newest">.mpp mpya zaidi kwenye folda</string>
     <string name="source_card_loads_pr">Build ya hivi karibuni ya pull request</string>
+    <string name="source_card_loads_json">Kutoka kwa manifest ya JSON</string>
     <string name="source_card_disabled">Chanzo hiki kimezimwa. Kiwashe ili kupakia patch</string>
     <string name="source_card_disabled_tag">Imezimwa</string>
     <string name="source_card_last_enabled">Angalau chanzo kimoja lazima kibaki kimewashwa</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Onyesha kwenye folda</string>
     <string name="source_card_more_description">Hatua zaidi</string>
     <string name="source_card_browse_patches">Tafuta patches</string>
+    <string name="source_card_report_issue">Ripoti tatizo</string>
     <string name="source_card_priority">Kipaumbele %1$d</string>
     <string name="source_card_open_link">Fungua %1$s kwenye kivinjari</string>
     <string name="source_card_enable_description">Washa %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Ya ndani</string>
     <string name="patch_source_dialog_valid_github">Repository ya GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Repository ya GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Hifadhi ya Codeberg</string>
+    <string name="patch_source_dialog_valid_json">Kifurushi cha patch cha JSON</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s kwenye %2$s. Daima hutumia build ya hivi punde kutoka kwenye PR hii</string>
     <string name="patch_source_dialog_builtin_note">Hii ni chanzo cha patch kilichojengwa ndani. Jina na mahali pake haviwezi kubadilishwa. Badilisha kati ya stable na pre-release kwenye kadi yake</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Faili ya ndani</string>
     <string name="patch_source_dialog_name_label">Jina</string>
     <string name="patch_source_dialog_name_placeholder">Patch Zangu Maalum</string>
-    <string name="patch_source_dialog_repo_url_label">URL ya Repository</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo au gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Inakubali GitHub, GitLab, au kiungo cha morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL ya Chanzo</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo au example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Inakubali GitHub, GitLab, Codeberg, URL ya .json, au kiungo cha morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Jina linahitajika</string>
-    <string name="patch_source_dialog_error_invalid_url">Ingiza URL halali ya GitHub au GitLab</string>
+    <string name="patch_source_dialog_error_invalid_url">Ingiza URL halali ya GitHub, GitLab, Codeberg, au .json</string>
     <string name="patch_source_dialog_error_invalid_file">Chagua faili halali ya .mpp</string>
     <string name="patch_source_dialog_add_button">Ongeza</string>
     <string name="patch_source_dialog_edit_title">Hariri chanzo</string>
     <string name="patch_source_dialog_type_github_repo">Hifadhi ya GitHub</string>
     <string name="patch_source_dialog_type_github_pr">Ombi la Mabadiliko la GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">Hifadhi ya GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Hifadhi ya Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">Kifurushi cha Patch cha JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">faili au folda ya .mpp</string>
     <string name="patch_source_dialog_mpp_label">faili ya .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">Njia ya .mpp au folda</string>

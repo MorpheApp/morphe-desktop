@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Manual (substitueix el fitxer)</string>
     <string name="source_card_loads_newest">El .mpp més recent de la carpeta</string>
     <string name="source_card_loads_pr">L'última compilació de la sol·licitud de pull</string>
+    <string name="source_card_loads_json">Des del manifest JSON</string>
     <string name="source_card_disabled">Aquesta font està deshabilitada. Habilita-la per carregar patxes</string>
     <string name="source_card_disabled_tag">Desactivat</string>
     <string name="source_card_last_enabled">Almenys una font ha de romandre habilitada</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Mostrar a la carpeta</string>
     <string name="source_card_more_description">Més accions</string>
     <string name="source_card_browse_patches">Navegar per les patxes</string>
+    <string name="source_card_report_issue">Informa't d'un problema</string>
     <string name="source_card_priority">Prioritat %1$d</string>
     <string name="source_card_open_link">Obrir %1$s al navegador</string>
     <string name="source_card_enable_description">Activar %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Local</string>
     <string name="patch_source_dialog_valid_github">Repositori de GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Repositori de GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Repositori de Codeberg</string>
+    <string name="patch_source_dialog_valid_json">Conjunt de pedaços JSON</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s a %2$s. Sempre utilitza la versió més recent d'aquesta PR</string>
     <string name="patch_source_dialog_builtin_note">Aquesta és la font de patch integrada. El seu nom i la seva ubicació no es poden canviar. Canvia entre l'estable i la pre-versió a la seva targeta</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Arxiu local</string>
     <string name="patch_source_dialog_name_label">Nom</string>
     <string name="patch_source_dialog_name_placeholder">Els meus pegats personalitzats</string>
-    <string name="patch_source_dialog_repo_url_label">URL del repositori</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo o gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Accepta enllaços de GitHub, GitLab o morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL de la font</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/propietari/repo o example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Accepta GitHub, GitLab, Codeberg, URL .json, o l'enllaç morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">El nom és obligatori</string>
-    <string name="patch_source_dialog_error_invalid_url">Introdueix una URL de GitHub o GitLab vàlida</string>
+    <string name="patch_source_dialog_error_invalid_url">Introduïu una URL vàlida de GitHub, GitLab, Codeberg o .json</string>
     <string name="patch_source_dialog_error_invalid_file">Selecciona un arxiu .mpp vàlid</string>
     <string name="patch_source_dialog_add_button">Afegir</string>
     <string name="patch_source_dialog_edit_title">Edita la font</string>
     <string name="patch_source_dialog_type_github_repo">Repositori de GitHub</string>
     <string name="patch_source_dialog_type_github_pr">Sol·licitud d'extracció de GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">Repositori de GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Repositori de Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">Conjunt de pedaços JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">arxiu .mpp o carpeta</string>
     <string name="patch_source_dialog_mpp_label">fitxer .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">Ruta al .mpp o a la carpeta</string>

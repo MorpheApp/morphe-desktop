@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Lámhleabhar (comhad a athsholáthar)</string>
     <string name="source_card_loads_newest">An comhad .mpp is déanaí san fhillteán</string>
     <string name="source_card_loads_pr">Tógáil an iarratais tarraingthe is déanaí</string>
+    <string name="source_card_loads_json">Ó léasgrán JSON</string>
     <string name="source_card_disabled">Tá an fhoinse seo díchumasaithe. Cumasaigh í chun paistí a luchtú</string>
     <string name="source_card_disabled_tag">Díchumasaithe</string>
     <string name="source_card_last_enabled">Caithfidh foinse amháin ar a laghad fanacht cumasaithe</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Taispeáin i bhfillteán</string>
     <string name="source_card_more_description">Tuilleadh gníomhartha</string>
     <string name="source_card_browse_patches">Brabhsáil paistí</string>
+    <string name="source_card_report_issue">Tuairiscigh fadhb</string>
     <string name="source_card_priority">Tosaíocht %1$d</string>
     <string name="source_card_open_link">Oscail %1$s sa bhrabhsálaí</string>
     <string name="source_card_enable_description">Cumasaigh %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Áitiúil</string>
     <string name="patch_source_dialog_valid_github">Stór GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Stór GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Repostóir Codeberg</string>
+    <string name="patch_source_dialog_valid_json">Pacáiste beartáin JSON</string>
     <string name="patch_source_dialog_valid_pr">Iarraidh tharraingthe #%1$s ar %2$s. Úsáidtear an leagan tógála is déanaí ón iarraidh tharraingthe seo i gcónaí</string>
     <string name="patch_source_dialog_builtin_note">Seo an fhoinse paiste ionsuite. Ní féidir a hainm ná a suíomh a athrú. Athraigh idir an leagan cobhsaí agus an leagan réamheisiúna ar a cárta</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Comhad áitiúil</string>
     <string name="patch_source_dialog_name_label">Ainm</string>
     <string name="patch_source_dialog_name_placeholder">Mo Phaistí Saincheaptha</string>
-    <string name="patch_source_dialog_repo_url_label">URL an stóir</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo nó gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Glacann sé le nasc chuig GitHub, GitLab nó morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL Foinse</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo nó example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Glacann sé le GitHub, GitLab, Codeberg, URL .json, nó nasc morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Tá ainm ag teastáil</string>
-    <string name="patch_source_dialog_error_invalid_url">Cuir isteach URL bailí GitHub nó GitLab</string>
+    <string name="patch_source_dialog_error_invalid_url">Cuir URL GitHub, GitLab, Codeberg, nó .json bailí isteach</string>
     <string name="patch_source_dialog_error_invalid_file">Roghnaigh comhad .mpp bailí</string>
     <string name="patch_source_dialog_add_button">Cuir leis</string>
     <string name="patch_source_dialog_edit_title">Cuir foinse in eagar</string>
     <string name="patch_source_dialog_type_github_repo">Stór GitHub</string>
     <string name="patch_source_dialog_type_github_pr">Iarratas Tarraingthe GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">Stór GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Repostóir Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">Pacáiste Beartáin JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp comhad nó fillteán</string>
     <string name="patch_source_dialog_mpp_label">.mpp comhad</string>
     <string name="patch_source_dialog_path_placeholder_dev">Cosán chuig .mpp nó fillteán</string>

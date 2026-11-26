@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">手動 (替換檔案)</string>
     <string name="source_card_loads_newest">資料夾中最新的 .mpp</string>
     <string name="source_card_loads_pr">最新的拉取請求構建</string>
+    <string name="source_card_loads_json">來自 JSON 資訊清單</string>
     <string name="source_card_disabled">此來源已停用。請啟用它以載入修補</string>
     <string name="source_card_disabled_tag">已停用</string>
     <string name="source_card_last_enabled">必須至少保留一個啟用的來源</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">在資料夾中顯示</string>
     <string name="source_card_more_description">更多操作</string>
     <string name="source_card_browse_patches">瀏覽修補程式</string>
+    <string name="source_card_report_issue">回報問題</string>
     <string name="source_card_priority">優先級 %1$d</string>
     <string name="source_card_open_link">在瀏覽器中開啟 %1$s</string>
     <string name="source_card_enable_description">啟用 %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">本機</string>
     <string name="patch_source_dialog_valid_github">GitHub 儲存庫</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab 儲存庫</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg 儲存庫</string>
+    <string name="patch_source_dialog_valid_json">JSON 修補包</string>
     <string name="patch_source_dialog_valid_pr">%2$s 上的 Pull request #%1$s。始終使用此 PR 的最新構建版本</string>
     <string name="patch_source_dialog_builtin_note">這是內建的修補來源。其名稱和位置無法更改。可以在其卡片上切換穩定版本和預發行版本</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">本機檔案</string>
     <string name="patch_source_dialog_name_label">名稱</string>
     <string name="patch_source_dialog_name_placeholder">我的自訂修補</string>
-    <string name="patch_source_dialog_repo_url_label">儲存庫 URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo 或 gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">接受 GitHub、GitLab 或 morphe.software/add-source 連結</string>
+    <string name="patch_source_dialog_repo_url_label">來源 URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo 或 example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">接受 GitHub、GitLab、Codeberg、.json URL 或 morphe.software/add-source 連結</string>
     <string name="patch_source_dialog_error_name_required">必須填寫名稱</string>
-    <string name="patch_source_dialog_error_invalid_url">請輸入有效的 GitHub 或 GitLab URL</string>
+    <string name="patch_source_dialog_error_invalid_url">請輸入有效的 GitHub、GitLab、Codeberg 或 .json URL</string>
     <string name="patch_source_dialog_error_invalid_file">請選取有效的 .mpp 檔案</string>
     <string name="patch_source_dialog_add_button">新增</string>
     <string name="patch_source_dialog_edit_title">編輯來源</string>
     <string name="patch_source_dialog_type_github_repo">GitHub 存放庫</string>
     <string name="patch_source_dialog_type_github_pr">GitHub 拉取請求</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab 存放庫</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg 儲存庫</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON 修補包</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp 檔案或資料夾</string>
     <string name="patch_source_dialog_mpp_label">.mpp 檔案</string>
     <string name="patch_source_dialog_path_placeholder_dev">.mpp 或資料夾的路徑</string>

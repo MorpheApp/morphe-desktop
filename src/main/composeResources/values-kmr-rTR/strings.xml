@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Destûrî (guherîne pel)</string>
     <string name="source_card_loads_newest">.mpp'ê herî nû di folderekê de</string>
     <string name="source_card_loads_pr">Avakirina dawî ya pull request</string>
+    <string name="source_card_loads_json">Ji manifesta JSON</string>
     <string name="source_card_disabled">Ev çavkanî hat girtin. Ji bo barkirina patchan wê veke</string>
     <string name="source_card_disabled_tag">Neçalak kirin</string>
     <string name="source_card_last_enabled">Divê herî kêm çavkaniyek vekirî be</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Di folderekê de nîşan bide</string>
     <string name="source_card_more_description">Çalakiyên din</string>
     <string name="source_card_browse_patches">Patchan bigere</string>
+    <string name="source_card_report_issue">Pirsgirêkekê rapor bike</string>
     <string name="source_card_priority">Priorite %1$d</string>
     <string name="source_card_open_link">%1$s di gerokê de veke</string>
     <string name="source_card_enable_description">%1$s çalak bike</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Herêmî</string>
     <string name="patch_source_dialog_valid_github">Kodepanê GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Kodepanê GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Depoya Codeberg</string>
+    <string name="patch_source_dialog_valid_json">Paketa patch-ê JSON</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s li ser %2$s. Her tim build-a herî dawî ya ji vê PR-ê bikar tîne</string>
     <string name="patch_source_dialog_builtin_note">Ev çavkaniya patch-a avakirî ye. Nav û cihê wê nayê guhertin. Li ser karta wê di navbera stable û pre-release de guhertinê bike</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Fayla lokal</string>
     <string name="patch_source_dialog_name_label">Nav</string>
     <string name="patch_source_dialog_name_placeholder">Patchên min ên taybet</string>
-    <string name="patch_source_dialog_repo_url_label">URL-ya depoyê</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/xwedî/repo an gitlab.com/xwedî/repo</string>
-    <string name="patch_source_dialog_repo_hint">Linkên GitHub, GitLab, an morphe.software/add-source qebûl dike</string>
+    <string name="patch_source_dialog_repo_url_label">URL-yê çavkaniyê</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo an example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">GitHub, GitLab, Codeberg, URL-yê .json, an girêdana morphe.software/add-source qebûldike</string>
     <string name="patch_source_dialog_error_name_required">Nav pêwîst e</string>
-    <string name="patch_source_dialog_error_invalid_url">URLekî GitHub an GitLab ê rast binivîse</string>
+    <string name="patch_source_dialog_error_invalid_url">URL-yekî rast ê GitHub, GitLab, Codeberg, an .json binivîse</string>
     <string name="patch_source_dialog_error_invalid_file">Peleke .mpp ya rast hilbijêre</string>
     <string name="patch_source_dialog_add_button">Zêde bike</string>
     <string name="patch_source_dialog_edit_title">Çavkaniyê biguherîne</string>
     <string name="patch_source_dialog_type_github_repo">Depoya GitHub</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">Depoya GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Depoya Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">Paketa Patch-ê JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">pela .mpp an folderek</string>
     <string name="patch_source_dialog_mpp_label">pela .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">Rêya .mpp an folderekî</string>

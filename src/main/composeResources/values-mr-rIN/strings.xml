@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">मॅन्युअल (फाइल बदला)</string>
     <string name="source_card_loads_newest">फोल्डरमधील नवीनतम् .mpp</string>
     <string name="source_card_loads_pr">नवीनतम् पुल रिक्वेस्ट बिल्ड</string>
+    <string name="source_card_loads_json">JSON मॅन्युफॅस्टमधून</string>
     <string name="source_card_disabled">हे स्त्रोत अक्षम आहे. पॅचेस लोड करण्यासाठी ते सक्षम करा</string>
     <string name="source_card_disabled_tag">बंद केले आहे</string>
     <string name="source_card_last_enabled">किमान एक स्रोत सक्षम ठेवणे आवश्यक आहे</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">फोल्डरमध्ये दाखवा</string>
     <string name="source_card_more_description">अधिक कृती</string>
     <string name="source_card_browse_patches">पॅचेस ब्राउझ करा</string>
+    <string name="source_card_report_issue">समस्या नोंदवा</string>
     <string name="source_card_priority">प्राधान्य %1$d</string>
     <string name="source_card_open_link">%1$s ब्राउझरमध्ये उघडा</string>
     <string name="source_card_enable_description">%1$s सक्षम करा</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">याच फोनमधील</string>
     <string name="patch_source_dialog_valid_github">GitHub रिपॉझिटरी</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab रिपॉझिटरी</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg रिपॉझिटरी</string>
+    <string name="patch_source_dialog_valid_json">JSON पॅच बंडल</string>
     <string name="patch_source_dialog_valid_pr">%2$s वरील पुल रिक्वेस्ट #%1$s. नेहमी या PR मधील नवीनतम बिल्ड वापरते</string>
     <string name="patch_source_dialog_builtin_note">हा अंगभूत पॅच स्रोत आहे. याचे नाव आणि स्थान बदलता येणार नाही. त्याच्या कार्डवर स्टेबल आणि प्री-रिलीज दरम्यान स्विच करा</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">स्थानिक फाइल</string>
     <string name="patch_source_dialog_name_label">नाव</string>
     <string name="patch_source_dialog_name_placeholder">माझे सानुकूल पॅचेस</string>
-    <string name="patch_source_dialog_repo_url_label">रिपॉझिटरी URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo किंवा gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">GitHub, GitLab, किंवा morphe.software/add-source लिंक स्वीकारते</string>
+    <string name="patch_source_dialog_repo_url_label">मुळाची लिंक</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo किंवा example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">GitHub, GitLab, Codeberg, .json URL, किंवा morphe.software/add-source लिंक स्वीकारले जाते</string>
     <string name="patch_source_dialog_error_name_required">नाव आवश्यक आहे</string>
-    <string name="patch_source_dialog_error_invalid_url">वैध GitHub किंवा GitLab URL प्रविष्ट करा</string>
+    <string name="patch_source_dialog_error_invalid_url">कृपया वैध GitHub, GitLab, Codeberg, किंवा .json URL प्रविष्ट करा</string>
     <string name="patch_source_dialog_error_invalid_file">वैध .mpp फाईल निवडा</string>
     <string name="patch_source_dialog_add_button">जोडा</string>
     <string name="patch_source_dialog_edit_title">स्रोत संपादित करा</string>
     <string name="patch_source_dialog_type_github_repo">GitHub रिपॉझिटरी</string>
     <string name="patch_source_dialog_type_github_pr">GitHub पुल रिक्वेस्ट</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab रिपॉझिटरी</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg रिपॉझिटरी</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON पॅच बंडल</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp फाइल किंवा फोल्डर</string>
     <string name="patch_source_dialog_mpp_label">.mpp फाइल</string>
     <string name="patch_source_dialog_path_placeholder_dev">.mpp किंवा फोल्डरचा पाथ</string>

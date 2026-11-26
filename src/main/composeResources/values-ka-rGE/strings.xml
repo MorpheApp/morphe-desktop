@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">მექანიკური (ფაილის ჩანაცვლება)</string>
     <string name="source_card_loads_newest">უახლესი .mpp საქაღალდეში</string>
     <string name="source_card_loads_pr">Pull request-ის ბოლო ბილდი</string>
+    <string name="source_card_loads_json">JSON მანიფესტიდან一项</string>
     <string name="source_card_disabled">ეს წყარო გათიშულია. ჩართეთ პატჩების ჩატვირთვისთვის</string>
     <string name="source_card_disabled_tag">გამორთულია</string>
     <string name="source_card_last_enabled">მინიმუმ ერთი წყარო უნდა დარჩეს ჩართული</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">ჩვენება საქაღალდეში</string>
     <string name="source_card_more_description">მეტი მოქმედება</string>
     <string name="source_card_browse_patches">ფაჩების დათვალიერება</string>
+    <string name="source_card_report_issue">პრობლემის შეტყობინება</string>
     <string name="source_card_priority">პრიორიტეტი %1$d</string>
     <string name="source_card_open_link">გახსენით %1$s ბრაუზერში</string>
     <string name="source_card_enable_description">ჩართეთ %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">ლოკალური</string>
     <string name="patch_source_dialog_valid_github">GitHub-ის რეპოზიტორია</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab-ის რეპოზიტორია</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg-ის რეპოზიტორია</string>
+    <string name="patch_source_dialog_valid_json">JSON პატჩის პაკეტი</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s %2$s-ზე. ყოველთვის იყენებს ამ PR-ის უახლეს ბილდს</string>
     <string name="patch_source_dialog_builtin_note">ეს არის ჩაშენებული პატჩის წყარო. მისი სახელისა და მდებარეობის შეცვლა შეუძლებელია. გადაირთვით სტაბილურ და წინასწარ ვერსიებს შორის მის ბარათზე</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">ლოკალური ფაილი</string>
     <string name="patch_source_dialog_name_label">სახელი</string>
     <string name="patch_source_dialog_name_placeholder">ჩემი პერსონალური პატჩები</string>
-    <string name="patch_source_dialog_repo_url_label">რეპოზიტორიუმის URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo ან gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">იღებს GitHub-ის, GitLab-ის ან morphe.software/add-source ბმულს</string>
+    <string name="patch_source_dialog_repo_url_label">წყაროს URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo ან example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">იღებს GitHub-ის, GitLab-ის, Codeberg-ის, .json URL-ს ან morphe.software/add-source ბმულს</string>
     <string name="patch_source_dialog_error_name_required">სახელი სავალდებულოა</string>
-    <string name="patch_source_dialog_error_invalid_url">შეიყვანეთ GitHub-ის ან GitLab-ის ვალიდური URL</string>
+    <string name="patch_source_dialog_error_invalid_url">შეიყვანეთ ვალიდური GitHub, GitLab, Codeberg ან .json URL</string>
     <string name="patch_source_dialog_error_invalid_file">აირჩიეთ ვალიდური .mpp ფაილი</string>
     <string name="patch_source_dialog_add_button">დამატება</string>
     <string name="patch_source_dialog_edit_title">წყაროს რედაქტირება</string>
     <string name="patch_source_dialog_type_github_repo">GitHub რეპოზიტორი</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab რეპოზიტორი</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg-ის რეპოზიტორია</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON პატჩის პაკეტი</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp ფაილი ან საქაღალდე</string>
     <string name="patch_source_dialog_mpp_label">.mpp ფაილი</string>
     <string name="patch_source_dialog_path_placeholder_dev">გზა .mpp-ისკენ ან საქაღალდისკენ</string>

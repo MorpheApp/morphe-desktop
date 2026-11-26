@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Käsitsi (asenda fail)</string>
     <string name="source_card_loads_newest">Kataloogi uusim .mpp</string>
     <string name="source_card_loads_pr">Viimane pull requesti build</string>
+    <string name="source_card_loads_json">JSON-manifestist</string>
     <string name="source_card_disabled">See allikas on lameksitud. Aktiveeri see patchide laadimiseks</string>
     <string name="source_card_disabled_tag">Keelatud</string>
     <string name="source_card_last_enabled">Vähemalt üks allikas peab jääma aktiveeritud</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Kuva kaustas</string>
     <string name="source_card_more_description">Rohkem tegevusi</string>
     <string name="source_card_browse_patches">Sirvi parandusi</string>
+    <string name="source_card_report_issue">Teata probleemist</string>
     <string name="source_card_priority">Prioriteet %1$d</string>
     <string name="source_card_open_link">Ava %1$s brauseris</string>
     <string name="source_card_enable_description">Lülita %1$s sisse</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Kohalik</string>
     <string name="patch_source_dialog_valid_github">GitHubi hoidla</string>
     <string name="patch_source_dialog_valid_gitlab">GitLabi hoidla</string>
+    <string name="patch_source_dialog_valid_codeberg">Codebergi repositorioium</string>
+    <string name="patch_source_dialog_valid_json">JSON-i paranduste pakett</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s aadressil %2$s. Kasutab alati sellest PR-ist uusimat versiooni</string>
     <string name="patch_source_dialog_builtin_note">See on sisseehitatud plaastiallika. Selle nime ja asukohta ei saa muuta. Lülitage stabiilse ja eelväljalasetud versiooni vahel selle kaardi pealt</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Kohalik fail</string>
     <string name="patch_source_dialog_name_label">Nimi</string>
     <string name="patch_source_dialog_name_placeholder">Minu kohandatud plaastrid</string>
-    <string name="patch_source_dialog_repo_url_label">Hoidla URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/omanik/hoidla või gitlab.com/omanik/hoidla</string>
-    <string name="patch_source_dialog_repo_hint">Aktsepteerib GitHubi, GitLabi või morphe.software/add-source linki</string>
+    <string name="patch_source_dialog_repo_url_label">Allika URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/omanik/repo või example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Toetatud on GitHub, GitLab, Codeberg, .json URL või morphe.software/add-source link</string>
     <string name="patch_source_dialog_error_name_required">Nimi on kohustuslik</string>
-    <string name="patch_source_dialog_error_invalid_url">Sisestage kehtiv GitHubi või GitLabi URL</string>
+    <string name="patch_source_dialog_error_invalid_url">Sisestage kehtiv GitHubi, GitLabi, Codebergi või .json URL</string>
     <string name="patch_source_dialog_error_invalid_file">Valige kehtiv .mpp fail</string>
     <string name="patch_source_dialog_add_button">Lisa</string>
     <string name="patch_source_dialog_edit_title">Muuda allikat</string>
     <string name="patch_source_dialog_type_github_repo">GitHubi hoidla</string>
     <string name="patch_source_dialog_type_github_pr">GitHubi Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLabi hoidla</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codebergi Repositoorium</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON-i Paranduste Pakett</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp fail või kaust</string>
     <string name="patch_source_dialog_mpp_label">.mpp fail</string>
     <string name="patch_source_dialog_path_placeholder_dev">Tee .mpp failini või kaustani</string>

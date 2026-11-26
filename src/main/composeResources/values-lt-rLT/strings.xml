@@ -567,6 +567,7 @@
     <string name="source_card_updates_manual">Prankus (pakeisti failą)</string>
     <string name="source_card_loads_newest">Naujausias .mpp aplanke</string>
     <string name="source_card_loads_pr">Naujausias „pull request“ সবারas</string>
+    <string name="source_card_loads_json">Iš JSON manifestacijos</string>
     <string name="source_card_disabled">Šis šaltinis yra išjungtas. Įjunkite jį, kad įkeltumėte pataisymus</string>
     <string name="source_card_disabled_tag">Išjungta</string>
     <string name="source_card_last_enabled">Bent vienas šaltinis turi likti įjungtas</string>
@@ -580,6 +581,7 @@
     <string name="source_card_show_in_folder">Rodyti aplanke</string>
     <string name="source_card_more_description">Daugiau veiksmų</string>
     <string name="source_card_browse_patches">Naršyti pataisų</string>
+    <string name="source_card_report_issue">Pranešti apie problemą</string>
     <string name="source_card_priority">Prioritetas %1$d</string>
     <string name="source_card_open_link">Atidaryti %1$s naršyklėje</string>
     <string name="source_card_enable_description">Įjungti %1$s</string>
@@ -629,6 +631,8 @@
     <string name="patch_source_dialog_kind_local">Vietinis</string>
     <string name="patch_source_dialog_valid_github">GitHub repozitorijus</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab repozitorijus</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg saugykla</string>
+    <string name="patch_source_dialog_valid_json">JSON pataisymų paketas</string>
     <string name="patch_source_dialog_valid_pr">Traukimo užklausa #%1$s %2$s. Visada naudojamas naujausias šios užklausos versija</string>
     <string name="patch_source_dialog_builtin_note">Tai integruotas pataymų šaltinis. Jo pavadadimo ir vietos pakeisti negalima. Jo kortelėje perjunkite tarp stabilios ir ankstyvos versijų</string>
     <!-- Signing Key Trust Dialog -->
@@ -642,17 +646,19 @@
     <string name="patch_source_dialog_local_file_label">Vietinis failas</string>
     <string name="patch_source_dialog_name_label">Pavadinimas</string>
     <string name="patch_source_dialog_name_placeholder">Mano pasirinktinės pataisos</string>
-    <string name="patch_source_dialog_repo_url_label">Saugyklos URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo arba gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Priima GitHub, GitLab arba morphe.software/add-source nuorodą</string>
+    <string name="patch_source_dialog_repo_url_label">Šaltinio URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/savininkas/saugykla arba pavyzdys.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Priima GitHub, GitLab, Codeberg, .json URL arba morphe.software/add-source nuorodą</string>
     <string name="patch_source_dialog_error_name_required">Pavadinimas privalomas</string>
-    <string name="patch_source_dialog_error_invalid_url">Įveskite tinkamą GitHub arba GitLab URL</string>
+    <string name="patch_source_dialog_error_invalid_url">Įveskite galiojantį GitHub, GitLab, Codeberg arba .json URL</string>
     <string name="patch_source_dialog_error_invalid_file">Pasirinkite tinkamą .mpp failą</string>
     <string name="patch_source_dialog_add_button">Pridėti</string>
     <string name="patch_source_dialog_edit_title">Redaguoti šaltinį</string>
     <string name="patch_source_dialog_type_github_repo">GitHub saugykla</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab saugykla</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg saugykla</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON pataisymų paketas</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp failas arba aplankas</string>
     <string name="patch_source_dialog_mpp_label">.mpp failas</string>
     <string name="patch_source_dialog_path_placeholder_dev">Kelias iki .mpp failo arba aplanko</string>

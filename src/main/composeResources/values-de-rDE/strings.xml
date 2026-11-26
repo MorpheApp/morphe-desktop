@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Manuell (Datei ersetzen)</string>
     <string name="source_card_loads_newest">Neueste .mpp im Ordner</string>
     <string name="source_card_loads_pr">Neuester Pull-Request-Build</string>
+    <string name="source_card_loads_json">Aus JSON-Manifest</string>
     <string name="source_card_disabled">Diese Quelle ist deaktiviert. Aktivieren Sie sie, um Patches zu laden</string>
     <string name="source_card_disabled_tag">Deaktiviert</string>
     <string name="source_card_last_enabled">Mindestens eine Quelle muss aktiviert bleiben</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Im Ordner anzeigen</string>
     <string name="source_card_more_description">Weitere Aktionen</string>
     <string name="source_card_browse_patches">Patches durchsuchen</string>
+    <string name="source_card_report_issue">Problem melden</string>
     <string name="source_card_priority">Priorität %1$d</string>
     <string name="source_card_open_link">%1$s im Browser öffnen</string>
     <string name="source_card_enable_description">%1$s aktivieren</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Lokal</string>
     <string name="patch_source_dialog_valid_github">GitHub-Repository</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab-Repository</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg-Repository</string>
+    <string name="patch_source_dialog_valid_json">JSON-Patch-Bündel</string>
     <string name="patch_source_dialog_valid_pr">Pull-Request #%1$s auf %2$s. Verwendet immer den neuesten Build aus diesem PR</string>
     <string name="patch_source_dialog_builtin_note">Dies ist die integrierte Patch-Quelle. Ihr Name und Standort können nicht geändert werden. Wechseln Sie auf ihrer Karte zwischen stabil und Pre-Release</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Lokale Datei</string>
     <string name="patch_source_dialog_name_label">Name</string>
     <string name="patch_source_dialog_name_placeholder">Meine benutzerdefinierten Patches</string>
-    <string name="patch_source_dialog_repo_url_label">Repository-URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo oder gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Akzeptiert GitHub-, GitLab- oder morphe.software/add-source-Links</string>
+    <string name="patch_source_dialog_repo_url_label">Quell-URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo oder example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Akzeptiert GitHub, GitLab, Codeberg, .json-URL oder morphe.software/add-source-Link</string>
     <string name="patch_source_dialog_error_name_required">Name ist erforderlich</string>
-    <string name="patch_source_dialog_error_invalid_url">Gib eine gültige GitHub- oder GitLab-URL ein</string>
+    <string name="patch_source_dialog_error_invalid_url">Geben Sie eine gültige GitHub-, GitLab-, Codeberg- oder .json-URL ein</string>
     <string name="patch_source_dialog_error_invalid_file">Wähle eine gültige .mpp-Datei</string>
     <string name="patch_source_dialog_add_button">Hinzufügen</string>
     <string name="patch_source_dialog_edit_title">Quelle bearbeiten</string>
     <string name="patch_source_dialog_type_github_repo">GitHub-Repository</string>
     <string name="patch_source_dialog_type_github_pr">GitHub-Pull-Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab-Repository</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg-Repository</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON-Patch-Bündel</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp-Datei oder Ordner</string>
     <string name="patch_source_dialog_mpp_label">.mpp-Datei</string>
     <string name="patch_source_dialog_path_placeholder_dev">Pfad zur .mpp-Datei oder zum Ordner</string>

@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">ດ້ວຍຕົນເອງ (ປ່ຽນແທນໄຟລ໌)</string>
     <string name="source_card_loads_newest">.mpp ຫຼ້າສຸດໃນໂຟນເດີ</string>
     <string name="source_card_loads_pr">ການສ້າງ pull request ຫຼ້າສຸດ</string>
+    <string name="source_card_loads_json">ຈາກ JSON manifest</string>
     <string name="source_card_disabled">ແຫຼ່ງຂໍ້ມູນນີ້ຖືກປິດໃຊ້ງານ. ກະລຸນາເປີດໃຊ້ງານເພື່ອໂຫຼດ patches</string>
     <string name="source_card_disabled_tag">ປິດໃຊ້ງານ</string>
     <string name="source_card_last_enabled">ຕ້ອງມີຢ່າງໜ້ອຍໜຶ່ງແຫຼ່ງຂໍ້ມູນທີ່ເປີດໃຊ້ງານຢູ່</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">ສະແດງໃນໂຟນເດີ</string>
     <string name="source_card_more_description">ການດຳເນີນການເພີ່ມເຕີມ</string>
     <string name="source_card_browse_patches">ເບິ່ງ patches</string>
+    <string name="source_card_report_issue">ລາຍງານບັນຫາ</string>
     <string name="source_card_priority">ລຳດັບຄວາມສຳຄັນ %1$d</string>
     <string name="source_card_open_link">ເປີດ %1$s ໃນບຣາວເຊີ</string>
     <string name="source_card_enable_description">ເປີດໃຊ້ %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">ທ້ອງຖິ່ນ</string>
     <string name="patch_source_dialog_valid_github">ສາງเก็บຂໍ້ມູນ GitHub (GitHub repository)</string>
     <string name="patch_source_dialog_valid_gitlab">ຄັງເກັບ GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">ຄັງเก็บ Codeberg</string>
+    <string name="patch_source_dialog_valid_json">ຊຸດ patch JSON</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s ໃນ %2$s. ຈະໃຊ້ການບິລລ໌ຫຼ້າສຸດຈາກ PR ນີ້ສະເໝີ</string>
     <string name="patch_source_dialog_builtin_note">ນີ້ແມ່ນແຫຼ່ງ patch ທີ່ຕິດຕັ້ງມາພ້ອມກັບລະບົບ. ຊື່ ແລະ ຕຳແໜ່ງຂອງມັນບໍ່ສາມາດປ່ຽນໄດ້. ສະລັບລະຫວ່າງ stable ແລະ pre-release ໄດ້ໃນບັດຂອງມັນ</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">ໄຟລ໌ທ້ອງຖິ່ນ</string>
     <string name="patch_source_dialog_name_label">ຊື່</string>
     <string name="patch_source_dialog_name_placeholder">Custom Patches ຂອງຂ້ອຍ</string>
-    <string name="patch_source_dialog_repo_url_label">URL ຂອງ Repository</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo ຫຼື gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">ຍອມຮັບລິ້ງ GitHub, GitLab, ຫຼື morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL ຂອງແຫຼ່ງຂໍ້ມູນ</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo ຫຼື example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">ຮອງຮັບ GitHub, GitLab, Codeberg, .json URL, ຫຼື ລິ້ງ morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">ຈຳເປັນຕ້ອງໃສ່ຊື່</string>
-    <string name="patch_source_dialog_error_invalid_url">ກະລຸນາປ້ອນ URL ຂອງ GitHub ຫຼື GitLab ທີ່ຖືກຕ້ອງ</string>
+    <string name="patch_source_dialog_error_invalid_url">ກະລຸນາປ້ອນ URL ຂອງ GitHub, GitLab, Codeberg, ຫຼື .json ທີ່ຖືກຕ້ອງ</string>
     <string name="patch_source_dialog_error_invalid_file">ກະລຸນາເລືອກໄຟລ໌ .mpp ທີ່ຖືກຕ້ອງ</string>
     <string name="patch_source_dialog_add_button">ເພີ່ມ</string>
     <string name="patch_source_dialog_edit_title">ແກ້ໄຂແຫຼ່ງທີ່ມາ</string>
     <string name="patch_source_dialog_type_github_repo">ຄັງເກັບຂໍ້ມູນ GitHub</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">ຄັງເກັບຂໍ້ມູນ GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">ຄັງเก็บ Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">ຊຸດ Patch JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">ໄຟລ໌ ຫຼື ໂຟນເດີ .mpp</string>
     <string name="patch_source_dialog_mpp_label">ໄຟລ໌ .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">ເສັ້ນທາງໄປຫາ .mpp ຫຼື ໂຟນເດີ</string>

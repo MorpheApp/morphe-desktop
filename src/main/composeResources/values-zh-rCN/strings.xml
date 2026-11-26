@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">手动（替换文件）</string>
     <string name="source_card_loads_newest">文件夹中最新的 .mpp</string>
     <string name="source_card_loads_pr">最新的拉取请求构建</string>
+    <string name="source_card_loads_json">来自 JSON 清单</string>
     <string name="source_card_disabled">此源已禁用。请启用它以加载补丁</string>
     <string name="source_card_disabled_tag">已禁用</string>
     <string name="source_card_last_enabled">必须至少保留一个启用的源</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">在文件夹中显示</string>
     <string name="source_card_more_description">更多操作</string>
     <string name="source_card_browse_patches">浏览补丁</string>
+    <string name="source_card_report_issue">报告问题</string>
     <string name="source_card_priority">优先级 %1$d</string>
     <string name="source_card_open_link">在浏览器中打开 %1$s</string>
     <string name="source_card_enable_description">启用 %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">本地</string>
     <string name="patch_source_dialog_valid_github">GitHub 仓库</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab 仓库</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg 仓库</string>
+    <string name="patch_source_dialog_valid_json">JSON 补丁包</string>
     <string name="patch_source_dialog_valid_pr">%2$s 上的 Pull Request #%1$s。始终使用此 PR 的最新构建版本</string>
     <string name="patch_source_dialog_builtin_note">这是内置的补丁源。其名称和位置无法更改。可以在其卡片上切换稳定版和预发布版</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">本地文件</string>
     <string name="patch_source_dialog_name_label">名称</string>
     <string name="patch_source_dialog_name_placeholder">我的自定义补丁</string>
-    <string name="patch_source_dialog_repo_url_label">仓库 URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo 或 gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">接受 GitHub、GitLab 或 morphe.software/add-source 链接</string>
+    <string name="patch_source_dialog_repo_url_label">来源 URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo 或 example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">支持 GitHub、GitLab、Codeberg、.json URL 或 morphe.software/add-source 链接</string>
     <string name="patch_source_dialog_error_name_required">名称为必填项</string>
-    <string name="patch_source_dialog_error_invalid_url">输入有效的 GitHub 或 GitLab URL</string>
+    <string name="patch_source_dialog_error_invalid_url">请输入有效的 GitHub、GitLab、Codeberg 或 .json URL</string>
     <string name="patch_source_dialog_error_invalid_file">选择有效的 .mpp 文件</string>
     <string name="patch_source_dialog_add_button">添加</string>
     <string name="patch_source_dialog_edit_title">编辑来源</string>
     <string name="patch_source_dialog_type_github_repo">GitHub 仓库</string>
     <string name="patch_source_dialog_type_github_pr">GitHub 拉取请求</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab 仓库</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg 仓库</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON 补丁包</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp 文件或文件夹</string>
     <string name="patch_source_dialog_mpp_label">.mpp 文件</string>
     <string name="patch_source_dialog_path_placeholder_dev">.mpp 或文件夹的路径</string>

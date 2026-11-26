@@ -574,6 +574,7 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="source_card_updates_manual">Manual (reemplazar archivo)</string>
     <string name="source_card_loads_newest">El .mpp más reciente en la carpeta</string>
     <string name="source_card_loads_pr">Compilación de la solicitud de extracción más reciente</string>
+    <string name="source_card_loads_json">Desde el manifiesto JSON</string>
     <string name="source_card_disabled">Esta fuente está desactivada. Actívala para cargar parches</string>
     <string name="source_card_disabled_tag">Desactivado</string>
     <string name="source_card_last_enabled">Al menos una fuente debe permanecer activada</string>
@@ -587,6 +588,7 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="source_card_show_in_folder">Mostrar en carpeta</string>
     <string name="source_card_more_description">Más acciones</string>
     <string name="source_card_browse_patches">Explorar parches</string>
+    <string name="source_card_report_issue">Informar de un problema</string>
     <string name="source_card_priority">Prioridad %1$d</string>
     <string name="source_card_open_link">Abrir %1$s en el navegador</string>
     <string name="source_card_enable_description">Activar %1$s</string>
@@ -636,6 +638,8 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="patch_source_dialog_kind_local">Local</string>
     <string name="patch_source_dialog_valid_github">Repositorio de GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Repositorio de GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Repositorio de Codeberg</string>
+    <string name="patch_source_dialog_valid_json">Paquete de parches JSON</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s en %2$s. Siempre utiliza la última compilación de este PR</string>
     <string name="patch_source_dialog_builtin_note">Esta es la fuente de parches integrada. Su nombre y ubicación no se pueden cambiar. Cambia entre la versión estable y la pre-lanzamiento en su tarjeta</string>
     <!-- Signing Key Trust Dialog -->
@@ -649,17 +653,19 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="patch_source_dialog_local_file_label">Archivo local</string>
     <string name="patch_source_dialog_name_label">Nombre</string>
     <string name="patch_source_dialog_name_placeholder">Mis parches personalizados</string>
-    <string name="patch_source_dialog_repo_url_label">URL del repositorio</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo o gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Acepta enlaces de GitHub, GitLab o morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL de origen</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo o example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Acepta enlaces de GitHub, GitLab, Codeberg, URL .json o morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">El nombre es obligatorio</string>
-    <string name="patch_source_dialog_error_invalid_url">Introduce una URL válida de GitHub o GitLab</string>
+    <string name="patch_source_dialog_error_invalid_url">Introduce una URL válida de GitHub, GitLab, Codeberg o .json</string>
     <string name="patch_source_dialog_error_invalid_file">Selecciona un archivo .mpp válido</string>
     <string name="patch_source_dialog_add_button">Añadir</string>
     <string name="patch_source_dialog_edit_title">Editar fuente</string>
     <string name="patch_source_dialog_type_github_repo">Repositorio de GitHub</string>
     <string name="patch_source_dialog_type_github_pr">Pull request de GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">Repositorio de GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Repositorio de Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">Paquete de parches JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">Archivo .mpp o carpeta</string>
     <string name="patch_source_dialog_mpp_label">Archivo .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">Ruta al .mpp o carpeta</string>

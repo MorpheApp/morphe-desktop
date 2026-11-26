@@ -581,6 +581,7 @@
     <string name="source_card_show_in_folder">Qovluqda göstər</string>
     <string name="source_card_more_description">Daha çox fəaliyyət</string>
     <string name="source_card_browse_patches">Yamaqlara nəzər yetir</string>
+    <string name="source_card_report_issue">Problemi bildir</string>
     <string name="source_card_priority">Prioritet %1$d</string>
     <string name="source_card_open_link">Brauzerdə %1$s aç</string>
     <string name="source_card_enable_description">%1$s 'ı aktivləşdir</string>
@@ -643,11 +644,8 @@
     <string name="patch_source_dialog_local_file_label">Lokal fayl</string>
     <string name="patch_source_dialog_name_label">Ad</string>
     <string name="patch_source_dialog_name_placeholder">Mənim xüsusi yamaqlarım</string>
-    <string name="patch_source_dialog_repo_url_label">Repozitoriya URL-i</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/sahib/repo və ya gitlab.com/sahib/repo</string>
-    <string name="patch_source_dialog_repo_hint">GitHub, GitLab və ya morphe.software/add-source keçidini qəbul edir</string>
+    <string name="patch_source_dialog_repo_url_label">Mənbə URL-si</string>
     <string name="patch_source_dialog_error_name_required">Ad tələb olunur</string>
-    <string name="patch_source_dialog_error_invalid_url">Düzgün GitHub və ya GitLab URL-i daxil edin</string>
     <string name="patch_source_dialog_error_invalid_file">Düzgün .mpp faylı seçin</string>
     <string name="patch_source_dialog_add_button">Əlavə et</string>
     <string name="patch_source_dialog_edit_title">Mənbəyə düzəliş et</string>

@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">กำหนดเอง (แทนที่ไฟล์)</string>
     <string name="source_card_loads_newest">ไฟล์ .mpp ล่าสุดในโฟลเดอร์</string>
     <string name="source_card_loads_pr">บิลด์ pull request ล่าสุด</string>
+    <string name="source_card_loads_json">จาก JSON manifest</string>
     <string name="source_card_disabled">แหล่งที่มานี้ถูกปิดใช้งาน โปรดเปิดใช้งานเพื่อโหลดแพตช์</string>
     <string name="source_card_disabled_tag">ปิดใช้งาน</string>
     <string name="source_card_last_enabled">ต้องมีแหล่งที่มาอย่างน้อยหนึ่งแห่งที่เปิดใช้งานอยู่</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">แสดงในโฟลเดอร์</string>
     <string name="source_card_more_description">การดำเนินการเพิ่มเติม</string>
     <string name="source_card_browse_patches">เรียกดูแพตช์</string>
+    <string name="source_card_report_issue">รายงานปัญหา</string>
     <string name="source_card_priority">ลำดับความสำคัญ %1$d</string>
     <string name="source_card_open_link">เปิด %1$s ในเบราว์เซอร์</string>
     <string name="source_card_enable_description">เปิดใช้งาน %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">ในเครื่อง</string>
     <string name="patch_source_dialog_valid_github">คลัง GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">คลัง GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">รีโพสิทอรี Codeberg</string>
+    <string name="patch_source_dialog_valid_json">ชุดแพตช์ JSON</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s บน %2$s โดยจะใช้บิลด์ล่าสุดจาก PR นี้เสมอ</string>
     <string name="patch_source_dialog_builtin_note">นี่คือแหล่งแพตช์ในตัว ไม่สามารถเปลี่ยนชื่อและตำแหน่งได้ คุณสามารถสลับระหว่างรุ่นเสถียรและรุ่นก่อนเผยแพร่ได้ที่การ์ดของแหล่งนี้</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">ไฟล์ในเครื่อง</string>
     <string name="patch_source_dialog_name_label">ชื่อ</string>
     <string name="patch_source_dialog_name_placeholder">แพตช์กำหนดเองของฉัน</string>
-    <string name="patch_source_dialog_repo_url_label">URL ที่เก็บ</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo หรือ gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">รองรับ GitHub, GitLab หรือลิงก์ morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL แหล่งที่มา</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo หรือ example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">รองรับ GitHub, GitLab, Codeberg, URL .json หรือลิงก์ morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">จำเป็นต้องระบุชื่อ</string>
-    <string name="patch_source_dialog_error_invalid_url">ป้อน URL GitHub หรือ GitLab ที่ถูกต้อง</string>
+    <string name="patch_source_dialog_error_invalid_url">กรุณาป้อน URL ของ GitHub, GitLab, Codeberg หรือ .json ที่ถูกต้อง</string>
     <string name="patch_source_dialog_error_invalid_file">เลือกไฟล์ .mpp ที่ถูกต้อง</string>
     <string name="patch_source_dialog_add_button">เพิ่ม</string>
     <string name="patch_source_dialog_edit_title">แก้ไขแหล่ง</string>
     <string name="patch_source_dialog_type_github_repo">ที่เก็บ GitHub</string>
     <string name="patch_source_dialog_type_github_pr">Pull Request ของ GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">ที่เก็บ GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">รีโพสิทอรี Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">ชุดแพตช์ JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">ไฟล์ .mpp หรือโฟลเดอร์</string>
     <string name="patch_source_dialog_mpp_label">ไฟล์ .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">เส้นทางไปยัง .mpp หรือโฟลเดอร์</string>

@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">মেনুৱেল (ফাইলটো সলনি কৰক)</string>
     <string name="source_card_loads_newest">ফোল্ডাৰৰ শেহতীয়া .mpp</string>
     <string name="source_card_loads_pr">শেহতীয়া পুল ৰিকুৱেষ্ট বিল্ড</string>
+    <string name="source_card_loads_json">JSON মেনিফেষ্টৰ পৰা</string>
     <string name="source_card_disabled">এই উৎসটো নিষ্ক্ৰীয় কৰা হৈছে। পেচসমূহ লোড কৰিবলৈ ইয়াক সক্ৰীয় কৰক</string>
     <string name="source_card_disabled_tag">নিষ্ক্ৰীয়</string>
     <string name="source_card_last_enabled">কমকমেক এটা উৎস সক্ৰীয় হৈ থাকিব লাগিব</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">ফোল্ডৰত দেখুওক</string>
     <string name="source_card_more_description">অধিক কাৰ্য</string>
     <string name="source_card_browse_patches">প্যাচসমূহ ব্ৰাউজ কৰক</string>
+    <string name="source_card_report_issue">এটা সমস্যাৰ কথা জনাওক</string>
     <string name="source_card_priority">প্ৰাইঅৰিটি %1$d</string>
     <string name="source_card_open_link">%1$s ব্ৰাউজাৰত খোলক</string>
     <string name="source_card_enable_description">%1$s সক্ৰিয় কৰক</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">স্থানীয়</string>
     <string name="patch_source_dialog_valid_github">GitHub ৰিপজিটৰী</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab ৰিপজিটৰী</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg ৰিপজিটেৰী</string>
+    <string name="patch_source_dialog_valid_json">JSON পেচ বান্ডেল</string>
     <string name="patch_source_dialog_valid_pr">%2$s ৰ পুল ৰিকুৱেষ্ট #%1$s। সদায় এই PR ৰ পৰা শেৰিত বিল্ডটো ব্যৱহাৰ কৰে</string>
     <string name="patch_source_dialog_builtin_note">এইটো হৈছে বিল্ট-ইন পেচ উৎস। ইয়াৰ নাম আৰু স্থান সলনি কৰিব নোৱাৰি। ইয়াৰ কাৰ্ডত ষ্টেবল আৰু প্ৰি-ৰিলিজৰ মাজত পৰিৱৰ্তন কৰক</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">স্থানীয় ফাইল</string>
     <string name="patch_source_dialog_name_label">নাম</string>
     <string name="patch_source_dialog_name_placeholder">মোৰ কাস্টম পেচসমূহ</string>
-    <string name="patch_source_dialog_repo_url_label">ৰিপজিটেৰী URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo বা gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">GitHub, GitLab, বা morphe.software/add-source লিংক গ্ৰহণ কৰে</string>
+    <string name="patch_source_dialog_repo_url_label">উৎস URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo বা example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">GitHub, GitLab, Codeberg, .json URL, অথবা morphe.software/add-source লিংক গ্ৰহণ কৰে</string>
     <string name="patch_source_dialog_error_name_required">নামটো প্ৰয়োজনীয়</string>
-    <string name="patch_source_dialog_error_invalid_url">এটা বৈধ GitHub বা GitLab URL প্ৰদান কৰক</string>
+    <string name="patch_source_dialog_error_invalid_url">এটা বৈধ GitHub, GitLab, Codeberg, বা .json URL লিখক</string>
     <string name="patch_source_dialog_error_invalid_file">এটা বৈধ .mpp ফাইল বাছনি কৰক</string>
     <string name="patch_source_dialog_add_button">যোগ কৰক</string>
     <string name="patch_source_dialog_edit_title">উৎস সম্পাদনা কৰক</string>
     <string name="patch_source_dialog_type_github_repo">GitHub ৰিপজিটেৰী</string>
     <string name="patch_source_dialog_type_github_pr">GitHub পুল ৰিকুৱেষ্ট</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab ৰিপজিটেৰী</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg ৰিপজিটেৰী</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON পেচ বান্ডেল</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp ফাইল বা ফোল্ডাৰ</string>
     <string name="patch_source_dialog_mpp_label">.mpp ফাইল</string>
     <string name="patch_source_dialog_path_placeholder_dev">.mpp বা ফোল্ডাৰৰ পথ</string>

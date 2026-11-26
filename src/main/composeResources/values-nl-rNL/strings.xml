@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Handmatig (bestand vervangen)</string>
     <string name="source_card_loads_newest">Nieuwste .mpp in map</string>
     <string name="source_card_loads_pr">Laatste pull request build</string>
+    <string name="source_card_loads_json">Vanuit JSON-manifest</string>
     <string name="source_card_disabled">Deze bron is uitgeschakeld. Schakel deze in om patches te laden</string>
     <string name="source_card_disabled_tag">Uitgeschakeld</string>
     <string name="source_card_last_enabled">Ten minste één bron moet ingeschakeld blijven</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Tonen in map</string>
     <string name="source_card_more_description">Meer acties</string>
     <string name="source_card_browse_patches">Patches doorzoeken</string>
+    <string name="source_card_report_issue">Meld een probleem</string>
     <string name="source_card_priority">Prioriteit %1$d</string>
     <string name="source_card_open_link">Open %1$s in browser</string>
     <string name="source_card_enable_description">Schakel %1$s in</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Lokaal</string>
     <string name="patch_source_dialog_valid_github">GitHub-repository</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab-repository</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg-repository</string>
+    <string name="patch_source_dialog_valid_json">JSON-patchbundel</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s op %2$s. Gebruikt altijd de nieuwste build van deze PR</string>
     <string name="patch_source_dialog_builtin_note">Dit is de ingebouwde patchbron. De naam en locatie kunnen niet worden gewijzigd. Schakel op de kaart tussen stabiel en pre-release</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Lokaal bestand</string>
     <string name="patch_source_dialog_name_label">Naam</string>
     <string name="patch_source_dialog_name_placeholder">Mijn aangepaste patches</string>
-    <string name="patch_source_dialog_repo_url_label">Repository-URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/eigenaar/repo of gitlab.com/eigenaar/repo</string>
-    <string name="patch_source_dialog_repo_hint">Accepteert GitHub-, GitLab- of morphe.software/add-source-link</string>
+    <string name="patch_source_dialog_repo_url_label">Bron-URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/eigenaar/repo of example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Accepteert GitHub, GitLab, Codeberg, .json URL, of morphe.software/add-source link</string>
     <string name="patch_source_dialog_error_name_required">Naam is verplicht</string>
-    <string name="patch_source_dialog_error_invalid_url">Voer een geldige GitHub- of GitLab-URL in</string>
+    <string name="patch_source_dialog_error_invalid_url">Voer een geldige GitHub, GitLab, Codeberg, of .json URL in</string>
     <string name="patch_source_dialog_error_invalid_file">Selecteer een geldig .mpp-bestand</string>
     <string name="patch_source_dialog_add_button">Toevoegen</string>
     <string name="patch_source_dialog_edit_title">Bron bewerken</string>
     <string name="patch_source_dialog_type_github_repo">GitHub-repository</string>
     <string name="patch_source_dialog_type_github_pr">GitHub-pullrequest</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab-repository</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg-repository</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON-patchbundel</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp-bestand of -map</string>
     <string name="patch_source_dialog_mpp_label">.mpp-bestand</string>
     <string name="patch_source_dialog_path_placeholder_dev">Pad naar .mpp of map</string>

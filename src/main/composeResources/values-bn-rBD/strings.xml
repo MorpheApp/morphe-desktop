@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">ম্যানুয়াল (ফাইল প্রতিস্থাপন করুন)</string>
     <string name="source_card_loads_newest">ফোল্ডারের নতুনতম .mpp</string>
     <string name="source_card_loads_pr">সর্বশেষ পুল রিকোয়েস্ট বিল্ড</string>
+    <string name="source_card_loads_json">JSON ম্যানিফেস্ট থেকে</string>
     <string name="source_card_disabled">এই সোর্সটি নিষ্ক্রিয় করা হয়েছে। প্যাচ লোড করতে এটি সক্রিয় করুন</string>
     <string name="source_card_disabled_tag">নিষ্ক্রিয়</string>
     <string name="source_card_last_enabled">অন্তত একটি সোর্স সক্রিয় থাকতে হবে</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">ফোল্ডারে দেখান</string>
     <string name="source_card_more_description">আরও অ্যাকশন</string>
     <string name="source_card_browse_patches">প্যাচগুলো ব্রাউজ করুন</string>
+    <string name="source_card_report_issue">একটি সমস্যার কথা জানান</string>
     <string name="source_card_priority">অগ্রাধিকার %1$d</string>
     <string name="source_card_open_link">%1$s ব্রাউজারে ওপেন করুন</string>
     <string name="source_card_enable_description">%1$s সক্রিয় করুন</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">লোকাল</string>
     <string name="patch_source_dialog_valid_github">GitHub রিপোজিটরি</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab রিপোজিটরি</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg রিপোজিটরি</string>
+    <string name="patch_source_dialog_valid_json">JSON প্যাচ বান্ডেল</string>
     <string name="patch_source_dialog_valid_pr">%2$s-এর পুল রিকোয়েস্ট #%1$s। সব সময় এই PR থেকে সর্বশেষ বিল্ডটি ব্যবহার করা হয়</string>
     <string name="patch_source_dialog_builtin_note">এটি বিল্ট-ইন প্যাচ সোর্স। এর নাম এবং অবস্থান পরিবর্তন করা যাবে না। এর কার্ড থেকে স্টেবল এবং প্রি-রিলিজের মধ্যে পরিবর্তন করুন</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">লোকাল ফাইল</string>
     <string name="patch_source_dialog_name_label">নাম</string>
     <string name="patch_source_dialog_name_placeholder">আমার কাস্টম প্যাচ</string>
-    <string name="patch_source_dialog_repo_url_label">রিপোজিটরি URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo বা gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">GitHub, GitLab বা morphe.software/add-source লিংক গ্রহণ করে</string>
+    <string name="patch_source_dialog_repo_url_label">সোর্স URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo অথবা example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">GitHub, GitLab, Codeberg, .json URL, অথবা morphe.software/add-source লিঙ্ক গ্রহণ করে</string>
     <string name="patch_source_dialog_error_name_required">নাম প্রয়োজন</string>
-    <string name="patch_source_dialog_error_invalid_url">একটি বৈধ GitHub বা GitLab URL লিখুন</string>
+    <string name="patch_source_dialog_error_invalid_url">একটি বৈধ GitHub, GitLab, Codeberg, অথবা .json URL লিখুন</string>
     <string name="patch_source_dialog_error_invalid_file">একটি বৈধ .mpp ফাইল নির্বাচন করুন</string>
     <string name="patch_source_dialog_add_button">যোগ করুন</string>
     <string name="patch_source_dialog_edit_title">সোর্স সম্পাদনা করুন</string>
     <string name="patch_source_dialog_type_github_repo">GitHub রিপোজিটরি</string>
     <string name="patch_source_dialog_type_github_pr">GitHub পুল রিকোয়েস্ট</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab রিপোজিটরি</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg রিপোজিটরি</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON প্যাচ বান্ডেল</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp ফাইল বা ফোল্ডার</string>
     <string name="patch_source_dialog_mpp_label">.mpp ফাইল</string>
     <string name="patch_source_dialog_path_placeholder_dev">.mpp বা ফোল্ডারের পাথ</string>

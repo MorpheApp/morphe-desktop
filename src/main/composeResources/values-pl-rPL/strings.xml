@@ -569,6 +569,7 @@
     <string name="source_card_updates_manual">Ręczne (zastąp plik)</string>
     <string name="source_card_loads_newest">Najnowszy plik .mpp w folderze</string>
     <string name="source_card_loads_pr">Najnowsza kompilacja z pull requesta</string>
+    <string name="source_card_loads_json">Z manifestu JSON</string>
     <string name="source_card_disabled">To źródło jest wyłączone. Włącz je, aby wczytać modyfikacje</string>
     <string name="source_card_disabled_tag">Wyłączone</string>
     <string name="source_card_last_enabled">Co najmniej jedno źródło musi pozostać włączone</string>
@@ -582,6 +583,7 @@
     <string name="source_card_show_in_folder">Pokaż w folderze</string>
     <string name="source_card_more_description">Więcej akcji</string>
     <string name="source_card_browse_patches">Przeglądaj modyfikacje</string>
+    <string name="source_card_report_issue">Zgłoś problem</string>
     <string name="source_card_priority">Priorytet %1$d</string>
     <string name="source_card_open_link">Otwórz %1$s w przeglądarce</string>
     <string name="source_card_enable_description">Włącz %1$s</string>
@@ -631,6 +633,8 @@
     <string name="patch_source_dialog_kind_local">Lokalne</string>
     <string name="patch_source_dialog_valid_github">Repozytorium GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Repozytorium GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Repozytorium Codeberg</string>
+    <string name="patch_source_dialog_valid_json">Pakiet modyfikacji JSON</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s w %2$s. Zawsze używa najnowszej kompilacji z tego PR</string>
     <string name="patch_source_dialog_builtin_note">To jest wbudowane źródło modyfikacji. Jego nazwy ani lokalizacji nie można zmienić. Przełączaj między wersją stabilną a przedpremierową na jego karcie</string>
     <!-- Signing Key Trust Dialog -->
@@ -644,17 +648,19 @@
     <string name="patch_source_dialog_local_file_label">Lokalny plik</string>
     <string name="patch_source_dialog_name_label">Nazwa</string>
     <string name="patch_source_dialog_name_placeholder">Moje własne modyfikacje</string>
-    <string name="patch_source_dialog_repo_url_label">Adres repozytorium</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/uzytkownik/repo lub gitlab.com/uzytkownik/repo</string>
-    <string name="patch_source_dialog_repo_hint">Obsługuje linki z GitHub, GitLab lub morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">Adres źródła</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/właściciel/repo lub przykład.pl/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Obsługuje linki GitHub, GitLab, Codeberg, adresy .json lub linki morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Nazwa jest wymagana</string>
-    <string name="patch_source_dialog_error_invalid_url">Wprowadź prawidłowy adres GitHub lub GitLab</string>
+    <string name="patch_source_dialog_error_invalid_url">Wprowadź prawidłowy adres GitHub, GitLab, Codeberg lub .json</string>
     <string name="patch_source_dialog_error_invalid_file">Wybierz prawidłowy plik .mpp</string>
     <string name="patch_source_dialog_add_button">Dodaj</string>
     <string name="patch_source_dialog_edit_title">Edytuj źródło</string>
     <string name="patch_source_dialog_type_github_repo">Repozytorium GitHub</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">Repozytorium GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Repozytorium Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">Pakiet modyfikacji JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">Plik .mpp lub folder</string>
     <string name="patch_source_dialog_mpp_label">Plik .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">Ścieżka do pliku .mpp lub folderu</string>

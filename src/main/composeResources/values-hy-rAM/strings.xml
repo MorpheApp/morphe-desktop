@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Ձեռքով (փոխարինել ֆայլը)</string>
     <string name="source_card_loads_newest">Ամենանոր .mpp-ն թղթապանակում</string>
     <string name="source_card_loads_pr">Վերջին pull request-ի կառուցումը</string>
+    <string name="source_card_loads_json">JSON մանիֆեստից</string>
     <string name="source_card_disabled">Այս աղբյուրը անջատված է: Միացրեք այն՝ փաթեթներ բեռնելու համար</string>
     <string name="source_card_disabled_tag">Անջատված է</string>
     <string name="source_card_last_enabled">Առնվազն մեկ աղբյուր պետք է մնա միացված</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Ցույց տալ թղթապանակում</string>
     <string name="source_card_more_description">Ավելի 많은 գործողություններ</string>
     <string name="source_card_browse_patches">Դիտել ուղղումները</string>
+    <string name="source_card_report_issue">Հայտնել խնդրի մասին</string>
     <string name="source_card_priority">Առաջնահերթություն %1$d</string>
     <string name="source_card_open_link">Բացել %1$s-ը բրաուզերում</string>
     <string name="source_card_enable_description">Միացնել %1$s-ը</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Տեղական</string>
     <string name="patch_source_dialog_valid_github">GitHub-ի ռեպոզիտորիա</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab-ի ռեպոզիտորիա</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg-ի ռեպոզիտորիա</string>
+    <string name="patch_source_dialog_valid_json">JSON փաթեթ</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s-ը %2$s-ում: Միշտ օգտագործում է այս PR-ի վերջին կառուցվածքը</string>
     <string name="patch_source_dialog_builtin_note">Սա ներկառուցված փաչի աղբյուրն է: Դրա անվանումը և տեղադրությունը չեն կարող փոփոխվել: Անցնեք կայուն և նախնական թողարկման տարբերակների միջև դրա քարտի վրա</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Տեղական ֆայլ</string>
     <string name="patch_source_dialog_name_label">Անուն</string>
     <string name="patch_source_dialog_name_placeholder">Իմ հատուկ փաթեթները</string>
-    <string name="patch_source_dialog_repo_url_label">Ռեպոզիտորիայի URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo կամ gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Ընդունում է GitHub, GitLab կամ morphe.software/add-source հղումը</string>
+    <string name="patch_source_dialog_repo_url_label">Աղբյուրի URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo կամ example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Ընդունում է GitHub, GitLab, Codeberg, .json URL կամ morphe.software/add-source հղում</string>
     <string name="patch_source_dialog_error_name_required">Անունը պարտադիր է</string>
-    <string name="patch_source_dialog_error_invalid_url">Մուտքագրեք GitHub-ի կամ GitLab-ի վավեր URL</string>
+    <string name="patch_source_dialog_error_invalid_url">Մուտքագրեք GitHub-ի, GitLab-ի, Codeberg-ի կամ .json-ի վավեր URL</string>
     <string name="patch_source_dialog_error_invalid_file">Ընտրեք վավեր .mpp ֆայլ</string>
     <string name="patch_source_dialog_add_button">Ավելացնել</string>
     <string name="patch_source_dialog_edit_title">Խմբագրել աղբյուրը</string>
     <string name="patch_source_dialog_type_github_repo">GitHub ռեպոզիտորիում</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab-ի ռեպոզիտորիա</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg-ի ռեպոզիտորիա</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON փաթեթ</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp ֆայլ կամ թղթապանակ</string>
     <string name="patch_source_dialog_mpp_label">.mpp ֆայլ</string>
     <string name="patch_source_dialog_path_placeholder_dev">Ուղին դեպի .mpp կամ թղթապանակ</string>

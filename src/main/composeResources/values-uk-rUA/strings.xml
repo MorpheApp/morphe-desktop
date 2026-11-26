@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Вручну (замінити файл)</string>
     <string name="source_card_loads_newest">Найновіший .mpp у теці</string>
     <string name="source_card_loads_pr">Остання збірка pull-запиту</string>
+    <string name="source_card_loads_json">З JSON-маніфесту</string>
     <string name="source_card_disabled">Це джерело вимкнено. Увімкніть його, щоб завантажити патчі</string>
     <string name="source_card_disabled_tag">Вимкнено</string>
     <string name="source_card_last_enabled">Принаймні одне джерело має залишатися увімкненим</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Показати в теці</string>
     <string name="source_card_more_description">Інші дії</string>
     <string name="source_card_browse_patches">Переглянути патчі</string>
+    <string name="source_card_report_issue">Повідомити про проблему</string>
     <string name="source_card_priority">Пріоритет %1$d</string>
     <string name="source_card_open_link">Відкрити %1$s у браузері</string>
     <string name="source_card_enable_description">Увімкнути %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Локальне</string>
     <string name="patch_source_dialog_valid_github">Репозиторій GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Репозиторій GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Репозиторій Codeberg</string>
+    <string name="patch_source_dialog_valid_json">JSON-пакет патчів</string>
     <string name="patch_source_dialog_valid_pr">Pull-запит #%1$s у %2$s. Завжди використовує останню збірку з цього PR</string>
     <string name="patch_source_dialog_builtin_note">Це вбудоване джерело патчів. Його назву та розташування змінити неможливо. Перемикайтеся між стабільною та попередньою версіями на його картці</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Локальний файл</string>
     <string name="patch_source_dialog_name_label">Назва</string>
     <string name="patch_source_dialog_name_placeholder">Мої власні патчі</string>
-    <string name="patch_source_dialog_repo_url_label">URL репозиторію</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo або gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Приймає GitHub, GitLab або посилання morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL джерела</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo або example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Приймає GitHub, GitLab, Codeberg, .json URL або посилання morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Назва обов'язкова</string>
-    <string name="patch_source_dialog_error_invalid_url">Введіть дійсний URL GitHub або GitLab</string>
+    <string name="patch_source_dialog_error_invalid_url">Введіть коректну URL-адресу GitHub, GitLab, Codeberg або .json</string>
     <string name="patch_source_dialog_error_invalid_file">Виберіть дійсний файл .mpp</string>
     <string name="patch_source_dialog_add_button">Додати</string>
     <string name="patch_source_dialog_edit_title">Редагувати джерело</string>
     <string name="patch_source_dialog_type_github_repo">Репозиторій GitHub</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">Репозиторій GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Репозиторій Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON-пакет патчів</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp-файл або тека</string>
     <string name="patch_source_dialog_mpp_label">.mpp-файл</string>
     <string name="patch_source_dialog_path_placeholder_dev">Шлях до .mpp або теки</string>

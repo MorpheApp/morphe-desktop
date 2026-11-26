@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">በእጅ (ፋይሉን ተካ)</string>
     <string name="source_card_loads_newest">በፎልደሩ ውስጥ ያለ አዲስ .mpp</string>
     <string name="source_card_loads_pr">የቅርብ ጊዜው የpull request ግንባታ</string>
+    <string name="source_card_loads_json">ከ JSON ማኒፌስት</string>
     <string name="source_card_disabled">ይህ ምንጭ አይሰራም። ፓቾችን ለመጫን አብቃው</string>
     <string name="source_card_disabled_tag">ተሰናክሏል</string>
     <string name="source_card_last_enabled">ቢያንስ አንድ ምንጭ ክፍት ሆኖ መቆየት አለበት</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">በፎልደር ውስጥ አሳይ</string>
     <string name="source_card_more_description">ተጨማሪ ድርጊቶች</string>
     <string name="source_card_browse_patches">ፓቾችን ተመልከት</string>
+    <string name="source_card_report_issue">ችግርን ሪፖርት ያድርጉ</string>
     <string name="source_card_priority">ቅድሚያ የሚሰጠው %1$d</string>
     <string name="source_card_open_link">%1$s በብሮውዘር ክፈት</string>
     <string name="source_card_enable_description">%1$s አግብር</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">የአካባቢ</string>
     <string name="patch_source_dialog_valid_github">የGitHub ማከማቻ</string>
     <string name="patch_source_dialog_valid_gitlab">የGitLab ማከማቻ</string>
+    <string name="patch_source_dialog_valid_codeberg">የCodeberg ማከማቻ</string>
+    <string name="patch_source_dialog_valid_json">የJSON ፓች ጥቅል</string>
     <string name="patch_source_dialog_valid_pr">በ %2$s ላይ ያለ የPull request #%1$s። ሁልጊዜ ከዚህ PR የቅርብ ጊዜውን ግንባታ ይጠቀማል</string>
     <string name="patch_source_dialog_builtin_note">ይህ የተገነባው የጥገና ምንጭ ነው። ስሙ እና ቦታው ሊቀየሩ አይችሉም። በካርዱ ላይ በstable እና pre-release መካከል ይቀያየሩ</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">የአካባቢ ፋይል</string>
     <string name="patch_source_dialog_name_label">ስም</string>
     <string name="patch_source_dialog_name_placeholder">የእኔ ብጁ ፓቾች</string>
-    <string name="patch_source_dialog_repo_url_label">የሪፖዚቶሪ URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo ወይም gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">የGitHub፣ GitLab፣ ወይም morphe.software/add-source ሊንኮችን ይቀበላል</string>
+    <string name="patch_source_dialog_repo_url_label">የምንጩ URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo ወይም example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">GitHub, GitLab, Codeberg, .json URL, ወይም morphe.software/add-source ሊንክን ይቀበላል</string>
     <string name="patch_source_dialog_error_name_required">ስም ያስፈልጋል</string>
-    <string name="patch_source_dialog_error_invalid_url">ትክክለኛ የGitHub ወይም GitLab URL ያስገቡ</string>
+    <string name="patch_source_dialog_error_invalid_url">ትክክለኛ የGitHub, GitLab, Codeberg, ወይም .json URL ያስገቡ</string>
     <string name="patch_source_dialog_error_invalid_file">ትክክለኛ .mpp ፋይል ይምረጡ</string>
     <string name="patch_source_dialog_add_button">ጨምር</string>
     <string name="patch_source_dialog_edit_title">ምንጩን አርም</string>
     <string name="patch_source_dialog_type_github_repo">የGitHub ማከማቻ</string>
     <string name="patch_source_dialog_type_github_pr">የGitHub ፑል ሪኩዌስት</string>
     <string name="patch_source_dialog_type_gitlab_repo">የGitLab ማከማቻ</string>
+    <string name="patch_source_dialog_type_codeberg_repo">የCodeberg ማከማቻ</string>
+    <string name="patch_source_dialog_type_json_bundle">የJSON ፓች ጥቅል</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp ፋይል ወይም ፎልደር</string>
     <string name="patch_source_dialog_mpp_label">.mpp ፋይል</string>
     <string name="patch_source_dialog_path_placeholder_dev">ወደ .mpp ወይም ፎልደር የሚወስድ መንገድ</string>

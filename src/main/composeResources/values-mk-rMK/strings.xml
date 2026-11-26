@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Рачно (замени ја датотеката)</string>
     <string name="source_card_loads_newest">Најнов .mpp во папката</string>
     <string name="source_card_loads_pr">Најнова build од pull request</string>
+    <string name="source_card_loads_json">Од JSON манифест</string>
     <string name="source_card_disabled">Овој извор е оневозможен. Овозможете го за да се вчитаат закрпите</string>
     <string name="source_card_disabled_tag">Оневозможено</string>
     <string name="source_card_last_enabled">Најмалку еден извор мора да остане овозможен</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Прикажи во папка</string>
     <string name="source_card_more_description">Повеќе акции</string>
     <string name="source_card_browse_patches">Прегледај поправки</string>
+    <string name="source_card_report_issue">Пријави проблем</string>
     <string name="source_card_priority">Приоритет %1$d</string>
     <string name="source_card_open_link">Отвори %1$s во прелистувач</string>
     <string name="source_card_enable_description">Овозможи %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Локално</string>
     <string name="patch_source_dialog_valid_github">GitHub репозиториум</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab репозиториум</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg репозиториум</string>
+    <string name="patch_source_dialog_valid_json">JSON пакет со закрпи</string>
     <string name="patch_source_dialog_valid_pr">Pull барање #%1$s на %2$s. Секогаш ја користи најновата верзија од ова PR</string>
     <string name="patch_source_dialog_builtin_note">Ова е вграден извор за закрпи. Неговото име и локација не можат да се променат. Префрлете се помеѓу стабилна и пред-релиза верзија на неговата картичка</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Локална датотека</string>
     <string name="patch_source_dialog_name_label">Име</string>
     <string name="patch_source_dialog_name_placeholder">Моите прилагодени закрпи</string>
-    <string name="patch_source_dialog_repo_url_label">URL на репозиториумот</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/сопственик/репо или gitlab.com/сопственик/репо</string>
-    <string name="patch_source_dialog_repo_hint">Прифаќа GitHub, GitLab или morphe.software/add-source линк</string>
+    <string name="patch_source_dialog_repo_url_label">URL на извор</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo или example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Прифаќа GitHub, GitLab, Codeberg, .json URL или линк од morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Името е задолжително</string>
-    <string name="patch_source_dialog_error_invalid_url">Внесете валиден GitHub или GitLab URL</string>
+    <string name="patch_source_dialog_error_invalid_url">Внесете валиден GitHub, GitLab, Codeberg или .json URL</string>
     <string name="patch_source_dialog_error_invalid_file">Изберете валидна .mpp датотека</string>
     <string name="patch_source_dialog_add_button">Додај</string>
     <string name="patch_source_dialog_edit_title">Уреди извор</string>
     <string name="patch_source_dialog_type_github_repo">GitHub репозиториум</string>
     <string name="patch_source_dialog_type_github_pr">GitHub барање за спојување (Pull Request)</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab репозиториум</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg репозиториум</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON пакет со закрпи</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp датотека или папка</string>
     <string name="patch_source_dialog_mpp_label">.mpp датотека</string>
     <string name="patch_source_dialog_path_placeholder_dev">Патека до .mpp или папка</string>

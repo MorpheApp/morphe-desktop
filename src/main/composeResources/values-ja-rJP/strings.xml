@@ -569,6 +569,7 @@
     <string name="source_card_updates_manual">手動（ファイルを置換）</string>
     <string name="source_card_loads_newest">フォルダ内の最新の.mpp</string>
     <string name="source_card_loads_pr">最新のプルリクエストビルド</string>
+    <string name="source_card_loads_json">JSONマニフェストから</string>
     <string name="source_card_disabled">このソースは無効です。パッチをロードするには有効にしてください</string>
     <string name="source_card_disabled_tag">無効</string>
     <string name="source_card_last_enabled">少なくとも1つのソースは有効のままにする必要があります。</string>
@@ -582,6 +583,7 @@
     <string name="source_card_show_in_folder">フォルダで表示</string>
     <string name="source_card_more_description">その他のアクション</string>
     <string name="source_card_browse_patches">パッチを閲覧</string>
+    <string name="source_card_report_issue">問題を報告する</string>
     <string name="source_card_priority">優先度 %1$d</string>
     <string name="source_card_open_link">ブラウザで %1$s を開く</string>
     <string name="source_card_enable_description">%1$s を有効にする</string>
@@ -631,6 +633,8 @@
     <string name="patch_source_dialog_kind_local">ローカル</string>
     <string name="patch_source_dialog_valid_github">GitHub リポジトリ</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab リポジトリ</string>
+    <string name="patch_source_dialog_valid_codeberg">Codebergリポジトリ</string>
+    <string name="patch_source_dialog_valid_json">JSONパッチバンドル</string>
     <string name="patch_source_dialog_valid_pr">%2$s のプルリクエスト #%1$s。常にこの PR の最新ビルドを使用します</string>
     <string name="patch_source_dialog_builtin_note">これは組み込みのパッチソースです。名前と場所は変更できません。カード上で安定版とプレリリース版を切り替えてください</string>
     <!-- Signing Key Trust Dialog -->
@@ -644,17 +648,19 @@
     <string name="patch_source_dialog_local_file_label">ローカルファイル</string>
     <string name="patch_source_dialog_name_label">名前</string>
     <string name="patch_source_dialog_name_placeholder">マイカスタムパッチ</string>
-    <string name="patch_source_dialog_repo_url_label">リポジトリ URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo または gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">GitHub、GitLab、または morphe.software/add-source リンクを受け付けます</string>
+    <string name="patch_source_dialog_repo_url_label">ソース URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo または example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">GitHub、GitLab、Codeberg、.json URL、または morphe.software/add-source リンクに対応しています</string>
     <string name="patch_source_dialog_error_name_required">名前は必須です</string>
-    <string name="patch_source_dialog_error_invalid_url">有効な GitHub または GitLab の URL を入力してください</string>
+    <string name="patch_source_dialog_error_invalid_url">有効なGitHub、GitLab、Codeberg、または .json URLを入力してください</string>
     <string name="patch_source_dialog_error_invalid_file">有効な .mpp ファイルを選択してください</string>
     <string name="patch_source_dialog_add_button">追加</string>
     <string name="patch_source_dialog_edit_title">ソースを編集</string>
     <string name="patch_source_dialog_type_github_repo">GitHub リポジトリ</string>
     <string name="patch_source_dialog_type_github_pr">GitHub プルリクエスト</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab リポジトリ</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codebergリポジトリ</string>
+    <string name="patch_source_dialog_type_json_bundle">JSONパッチバンドル</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp ファイルまたはフォルダ</string>
     <string name="patch_source_dialog_mpp_label">.mpp ファイル</string>
     <string name="patch_source_dialog_path_placeholder_dev">.mpp またはフォルダへのパス</string>

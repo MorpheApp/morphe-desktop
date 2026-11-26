@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Ročno (zamenjava datoteke)</string>
     <string name="source_card_loads_newest">Najnovejša datoteka .mpp v mapi</string>
     <string name="source_card_loads_pr">Zadnji build zahteva za združevanje</string>
+    <string name="source_card_loads_json">Iz JSON manifesta</string>
     <string name="source_card_disabled">Ta vir je onemkljubljen. Omeylite ga za nalaganje popravkov</string>
     <string name="source_card_disabled_tag">Onemogočeno</string>
     <string name="source_card_last_enabled">Vsaj en vir mora ostati omogočen</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Pokaži v mapi</string>
     <string name="source_card_more_description">Več ukrepov</string>
     <string name="source_card_browse_patches">Prebrskaj popravke</string>
+    <string name="source_card_report_issue">Prijavite težavo</string>
     <string name="source_card_priority">Prioriteta %1$d</string>
     <string name="source_card_open_link">Odpri %1$s v brskalniku</string>
     <string name="source_card_enable_description">Omogoči %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Lokalni</string>
     <string name="patch_source_dialog_valid_github">GitHub skladišče</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab skladišče</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg skladišče</string>
+    <string name="patch_source_dialog_valid_json">JSON paket popravkov</string>
     <string name="patch_source_dialog_valid_pr">Zahtev za združitev #%1$s na %2$s. Vedno uporabi najnovejšo različijo iz tega PR</string>
     <string name="patch_source_dialog_builtin_note">To je vgrajen vir popravkov. Njegovega imena in lokacije ni mogoče spremeniti. Na njegovi kartici lahko preklopite med stabilno različijo in predrazličjo</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Lokalna datoteka</string>
     <string name="patch_source_dialog_name_label">Ime</string>
     <string name="patch_source_dialog_name_placeholder">Moji popravki po meri</string>
-    <string name="patch_source_dialog_repo_url_label">URL skladišča</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo ali gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Sprejema povezave GitHub, GitLab ali morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">Izvorni URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/lastnik/repo ali example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Sprejema GitHub, GitLab, Codeberg, .json URL ali povezavo morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Ime je obvezno</string>
-    <string name="patch_source_dialog_error_invalid_url">Vnesite veljaven URL za GitHub ali GitLab</string>
+    <string name="patch_source_dialog_error_invalid_url">Vnesite veljaven GitHub, GitLab, Codeberg ali .json URL</string>
     <string name="patch_source_dialog_error_invalid_file">Izberite veljavno datoteko .mpp</string>
     <string name="patch_source_dialog_add_button">Dodaj</string>
     <string name="patch_source_dialog_edit_title">Uredi vir</string>
     <string name="patch_source_dialog_type_github_repo">Skladišče GitHub</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">Skladišče GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg skladišče</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON paket popravkov</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp datoteka ali mapa</string>
     <string name="patch_source_dialog_mpp_label">.mpp datoteka</string>
     <string name="patch_source_dialog_path_placeholder_dev">Pot do .mpp ali mape</string>

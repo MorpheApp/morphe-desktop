@@ -567,6 +567,7 @@
     <string name="source_card_updates_manual">கைமுறை (கோப்பை மாற்றவும்)</string>
     <string name="source_card_loads_newest">கோப்புறையில் உள்ள சமீபத்திய .mpp</string>
     <string name="source_card_loads_pr">சமீபத்திய புல் ரிக்வெஸ்ட் பில்ட்</string>
+    <string name="source_card_loads_json">JSON மேனிபெஸ்ட்டிலிருந்து</string>
     <string name="source_card_disabled">இந்த ஆதாரம் முடக்கப்பட்டுள்ளது. பேட்ச்களை ஏற்ற இதைச் செயல்படுத்தவும்</string>
     <string name="source_card_disabled_tag">முடக்கப்பட்டது</string>
     <string name="source_card_last_enabled">குறைந்தது ஒரு ஆதாரம் செயல்படுத்தப்பட்டிருக்க வேண்டும்</string>
@@ -580,6 +581,7 @@
     <string name="source_card_show_in_folder">கோப்புறையில் காட்டவும்</string>
     <string name="source_card_more_description">கூடுதல் செயல்பாடுகள்</string>
     <string name="source_card_browse_patches">பேட்ச்களைத் தேடவும்</string>
+    <string name="source_card_report_issue">பிரச்சனையைப் புகாரளிக்கவும்</string>
     <string name="source_card_priority">முன்னுரிமை %1$d</string>
     <string name="source_card_open_link">%1$s-ஐ உலாவியில் திறக்கவும்</string>
     <string name="source_card_enable_description">%1$s-ஐ இயக்கவும்</string>
@@ -629,6 +631,8 @@
     <string name="patch_source_dialog_kind_local">உள்ளூர்</string>
     <string name="patch_source_dialog_valid_github">GitHub களஞ்சியம்</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab களஞ்சியம்</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg களஞ்சியம்</string>
+    <string name="patch_source_dialog_valid_json">JSON பேட்ச் தொகுப்பு</string>
     <string name="patch_source_dialog_valid_pr">%2$s-ல் உள்ள Pull request #%1$s. இந்த PR-லிருந்து எப்போதும் சமீபத்திய பதிப்பைப் பயன்படுத்துகிறது</string>
     <string name="patch_source_dialog_builtin_note">இது உள்ளமைக்கப்பட்ட பேட்ச் மூலமாகும். இதன் பெயர் மற்றும் இருப்பிடத்தை மாற்ற முடியாது. அதன் கார்டில் நிலையான மற்றும் முன்னோட்ட வெளியீடு ஆகியவற்றிற்கு இடையே மாறவும்</string>
     <!-- Signing Key Trust Dialog -->
@@ -642,17 +646,19 @@
     <string name="patch_source_dialog_local_file_label">உள்ளூர் கோப்பு</string>
     <string name="patch_source_dialog_name_label">பெயர்</string>
     <string name="patch_source_dialog_name_placeholder">எனது தனிப்பயனாக்கப்பட்ட பேட்ச்கள்</string>
-    <string name="patch_source_dialog_repo_url_label">ரிப்போசிட்டரி URL</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo அல்லது gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">GitHub, GitLab, அல்லது morphe.software/add-source இணைப்புகளை ஏற்கிறது</string>
+    <string name="patch_source_dialog_repo_url_label">மூல URL</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo அல்லது example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">GitHub, GitLab, Codeberg, .json URL, அல்லது morphe.software/add-source இணைப்புகளை ஏற்கும்</string>
     <string name="patch_source_dialog_error_name_required">பெயர் அவசியம்</string>
-    <string name="patch_source_dialog_error_invalid_url">செல்லுபடியாகும் GitHub அல்லது GitLab URL-ஐ உள்ளிடவும்</string>
+    <string name="patch_source_dialog_error_invalid_url">சரியான GitHub, GitLab, Codeberg, அல்லது .json URL-ஐ உள்ளிடவும்</string>
     <string name="patch_source_dialog_error_invalid_file">செல்லுபடியாகும் .mpp கோப்பைத் தேர்ந்தெடுக்கவும்</string>
     <string name="patch_source_dialog_add_button">சேர்</string>
     <string name="patch_source_dialog_edit_title">மூலத்தைத் திருத்தவும்</string>
     <string name="patch_source_dialog_type_github_repo">GitHub களஞ்சியம்</string>
     <string name="patch_source_dialog_type_github_pr">GitHub புல் ரிக்வெஸ்ட்</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab களஞ்சியம்</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg களஞ்சியம்</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON பேட்ச் தொகுப்பு</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp கோப்பு அல்லது ஃபோல்டர்</string>
     <string name="patch_source_dialog_mpp_label">.mpp கோப்பு</string>
     <string name="patch_source_dialog_path_placeholder_dev">.mpp அல்லது ஃபோல்டருக்கான பாதை</string>

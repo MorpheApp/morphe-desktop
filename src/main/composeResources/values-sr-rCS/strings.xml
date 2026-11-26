@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Ručno (zameni datoteku)</string>
     <string name="source_card_loads_newest">Najnoviji .mpp u folderu</string>
     <string name="source_card_loads_pr">Najnovija build pull request-a</string>
+    <string name="source_card_loads_json">Iz JSON manifesta</string>
     <string name="source_card_disabled">Ovaj izvor je onemogućen. Omogući ga da bi učitao zakrpe</string>
     <string name="source_card_disabled_tag">Onemogućen</string>
     <string name="source_card_last_enabled">Barem jedan izvor mora ostati omogućen</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Prikaži u folderu</string>
     <string name="source_card_more_description">Više akcija</string>
     <string name="source_card_browse_patches">Pretraži zakrpe</string>
+    <string name="source_card_report_issue">Prijavi problem</string>
     <string name="source_card_priority">Prioritet %1$d</string>
     <string name="source_card_open_link">Otvori %1$s u pregledaču</string>
     <string name="source_card_enable_description">Omogući %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Lokalni</string>
     <string name="patch_source_dialog_valid_github">GitHub repozitorijum</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab repozitorijum</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg repozitorijum</string>
+    <string name="patch_source_dialog_valid_json">JSON paket zakrpa</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s na %2$s. Uvek koristi najnoviju verziju iz ovog PR-a</string>
     <string name="patch_source_dialog_builtin_note">Ovo je ugrađeni izvor zakrpa. Njegovo ime i lokacija se ne mogu promeniti. Prebacite se između stabilne i pre-release verzije na njegovoj kartici</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Lokalna datoteka</string>
     <string name="patch_source_dialog_name_label">Naziv</string>
     <string name="patch_source_dialog_name_placeholder">Moje prilagođene zakrpe</string>
-    <string name="patch_source_dialog_repo_url_label">URL repozitorijuma</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo ili gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Prihvata GitHub, GitLab ili morphe.software/add-source link</string>
+    <string name="patch_source_dialog_repo_url_label">URL izvor </string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo ili example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Prihvata GitHub, GitLab, Codeberg, .json URL ili morphe.software/add-source link</string>
     <string name="patch_source_dialog_error_name_required">Naziv je obavezan</string>
-    <string name="patch_source_dialog_error_invalid_url">Unesi ispravan GitHub ili GitLab URL</string>
+    <string name="patch_source_dialog_error_invalid_url">Unesite validan GitHub, GitLab, Codeberg ili .json URL</string>
     <string name="patch_source_dialog_error_invalid_file">Izaberi ispravnu .mpp datoteku</string>
     <string name="patch_source_dialog_add_button">Dodaj</string>
     <string name="patch_source_dialog_edit_title">Uredi izvor</string>
     <string name="patch_source_dialog_type_github_repo">GitHub repozitorijum</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab repozitorijum</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg repozitorijum</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON paket zakrpa</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp datoteka ili fascikla</string>
     <string name="patch_source_dialog_mpp_label">.mpp datoteka</string>
     <string name="patch_source_dialog_path_placeholder_dev">Putanja do .mpp datoteke ili fascikle</string>

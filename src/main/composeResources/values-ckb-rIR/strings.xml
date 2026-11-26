@@ -572,6 +572,7 @@
     <string name="source_card_updates_manual">دەستی (گۆڕینی فایل)</string>
     <string name="source_card_loads_newest">نوێترین .mpp لە فۆڵدەرەکەدا</string>
     <string name="source_card_loads_pr">دوایین بڵاوکراوەی pull request</string>
+    <string name="source_card_loads_json">لە مانیفێستی JSON</string>
     <string name="source_card_disabled">ئەم سەرچاوەیە ناچالاکە. چالاکی بکە بۆ بارکردنی پاتچەکان</string>
     <string name="source_card_disabled_tag">ناچالاک</string>
     <string name="source_card_last_enabled">دەبێت لانی کەم یەک سەرچاوە چالاک بمێنێت</string>
@@ -585,6 +586,7 @@
     <string name="source_card_show_in_folder">نیشاندانی لە فۆڵدەر</string>
     <string name="source_card_more_description">کردارەکانی تر</string>
     <string name="source_card_browse_patches">گەڕان لە پاتچەکان</string>
+    <string name="source_card_report_issue">ڕاگەیاندنی کێشەیەک</string>
     <string name="source_card_priority">ئەولەویەتی %1$d</string>
     <string name="source_card_open_link">کردنەوەی %1$s لە وێبگەڕ</string>
     <string name="source_card_enable_description">چالاککردنی %1$s</string>
@@ -634,6 +636,8 @@
     <string name="patch_source_dialog_kind_local">ناوخۆ</string>
     <string name="patch_source_dialog_valid_github">کۆگای GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">کۆگای GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">کۆگای Codeberg</string>
+    <string name="patch_source_dialog_valid_json">باندڵی پاتچی JSON</string>
     <string name="patch_source_dialog_valid_pr">داواکاری ڕاکێشانی #%1$s لە %2$s. هەمیشە نوێترین وەشان لەم PR-ە بەکاردەهێنێت</string>
     <string name="patch_source_dialog_builtin_note">ئەمە سەرچاوەی پاتچی داخراوە. ناوی و شوێنەکەی ناگۆڕێت. لەسەر کارتەکەی نێوان جێگیر و پێش-بڵاوکردن بگۆڕە</string>
     <!-- Signing Key Trust Dialog -->
@@ -647,17 +651,19 @@
     <string name="patch_source_dialog_local_file_label">فایلی ناوخۆیی</string>
     <string name="patch_source_dialog_name_label">ناو</string>
     <string name="patch_source_dialog_name_placeholder">پاتچە تایبەتەکانی من</string>
-    <string name="patch_source_dialog_repo_url_label">بەستەری کۆگا (URL)</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo یا gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">پشتگیری لە لینکی GitHub، GitLab یان morphe.software/add-source دەکات</string>
+    <string name="patch_source_dialog_repo_url_label">URLی سەرچاوە</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo یان example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">پشتگیری لە GitHub, GitLab, Codeberg, .json URL, یان لینکی morphe.software/add-source دەکات</string>
     <string name="patch_source_dialog_error_name_required">ناو پێویستە</string>
-    <string name="patch_source_dialog_error_invalid_url">ناونیشانێکی (URL) دروستی GitHub یان GitLab بنووسە</string>
+    <string name="patch_source_dialog_error_invalid_url">ناونیشانێکی دروستی GitHub, GitLab, Codeberg, یان .json بنوسە</string>
     <string name="patch_source_dialog_error_invalid_file">فایلێکی دروستی .mpp هەڵبژێرە</string>
     <string name="patch_source_dialog_add_button">زیادکردن</string>
     <string name="patch_source_dialog_edit_title">دەستکاریکردنی سەرچاوە</string>
     <string name="patch_source_dialog_type_github_repo">کۆگای GitHub</string>
     <string name="patch_source_dialog_type_github_pr">داواکاری ڕاکێشانی GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">کۆگای GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">کۆگای Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">باندڵی پاتچی JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">فایلی .mpp یان فۆڵدەر</string>
     <string name="patch_source_dialog_mpp_label">فایلی .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">ڕێگای .mpp یان فۆڵدەر</string>

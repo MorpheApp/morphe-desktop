@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Handvirkt (skipta skrá)</string>
     <string name="source_card_loads_newest">Nýjasta .mpp skrá í möppu</string>
     <string name="source_card_loads_pr">Nýjasta pull request uppbygging</string>
+    <string name="source_card_loads_json">Úr JSON-skrá</string>
     <string name="source_card_disabled">Þessi uppspretta er afsett. Virkja hana til að hlaða plástra</string>
     <string name="source_card_disabled_tag">Óvirkt</string>
     <string name="source_card_last_enabled">Að minnsta kosti ein uppspretta verður að vera virk</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Sýna í möppu</string>
     <string name="source_card_more_description">Fleiri aðgerðir</string>
     <string name="source_card_browse_patches">Skoða plástra</string>
+    <string name="source_card_report_issue">Tilkynna vandamál</string>
     <string name="source_card_priority">Forgangsröð %1$d</string>
     <string name="source_card_open_link">Opna %1$s í vafra</string>
     <string name="source_card_enable_description">Virkja %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Staðbundið</string>
     <string name="patch_source_dialog_valid_github">GitHub gefing</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab gefing</string>
+    <string name="patch_source_dialog_valid_codeberg">Codeberg-geymsla</string>
+    <string name="patch_source_dialog_valid_json">JSON-bótapakki</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s á %2$s. Notar alltaf nýjasta build úr þessari PR</string>
     <string name="patch_source_dialog_builtin_note">Þetta er innbyggð uppspretta fyrir patch. Nafnið og staðsetningin geta ekki verið breytt. Skiptu á milli stöðugrar útgáfu og pre-release á kortinu</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Staðvær skrá</string>
     <string name="patch_source_dialog_name_label">Nafn</string>
     <string name="patch_source_dialog_name_placeholder">Mín sérsniðnu plástrar</string>
-    <string name="patch_source_dialog_repo_url_label">Slóð geymslusafns</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo eða gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Samþykkir GitHub, GitLab eða morphe.software/add-source tengil</string>
+    <string name="patch_source_dialog_repo_url_label">Vefslóð heimildar</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/eigandi/geymsla eða example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Tekur við GitHub, GitLab, Codeberg, .json URL eða morphe.software/add-source tengli</string>
     <string name="patch_source_dialog_error_name_required">Nafn er nauðsynlegt</string>
-    <string name="patch_source_dialog_error_invalid_url">Sláðu inn gilda GitHub eða GitLab slóð</string>
+    <string name="patch_source_dialog_error_invalid_url">Sláðu inn gildt GitHub, GitLab, Codeberg eða .json URL</string>
     <string name="patch_source_dialog_error_invalid_file">Veldu gilda .mpp skrá</string>
     <string name="patch_source_dialog_add_button">Bæta við</string>
     <string name="patch_source_dialog_edit_title">Breyta heimild</string>
     <string name="patch_source_dialog_type_github_repo">GitHub geymslusafn</string>
     <string name="patch_source_dialog_type_github_pr">GitHub Pull Request</string>
     <string name="patch_source_dialog_type_gitlab_repo">GitLab geymslusafn</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Codeberg-geymsla</string>
+    <string name="patch_source_dialog_type_json_bundle">JSON-bótapakki</string>
     <string name="patch_source_dialog_mpp_or_folder_label">.mpp skrá eða mappa</string>
     <string name="patch_source_dialog_mpp_label">.mpp skrá</string>
     <string name="patch_source_dialog_path_placeholder_dev">Slóð að .mpp eða möppu</string>

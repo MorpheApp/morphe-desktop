@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">دستی (جایگزینی فایل)</string>
     <string name="source_card_loads_newest">جدیدترین .mpp در پوشه</string>
     <string name="source_card_loads_pr">آخرین بیلد pull request</string>
+    <string name="source_card_loads_json">از مانیفست JSON</string>
     <string name="source_card_disabled">این منبع غیرفعال است. برای بارگذاری پچ‌ها آن را فعال کنید</string>
     <string name="source_card_disabled_tag">غیرفعال</string>
     <string name="source_card_last_enabled">حداقل یک منبع باید فعال بماند</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">نمایش در پوشه</string>
     <string name="source_card_more_description">عملیات بیشتر</string>
     <string name="source_card_browse_patches">مرور پچ‌ها</string>
+    <string name="source_card_report_issue">گزارش مشکل</string>
     <string name="source_card_priority">اولوییت %1$d</string>
     <string name="source_card_open_link">باز کردن %1$s در مرورگر</string>
     <string name="source_card_enable_description">فعال کردن %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">محلی</string>
     <string name="patch_source_dialog_valid_github">مخزن گیت‌هاب</string>
     <string name="patch_source_dialog_valid_gitlab">مخزن GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">مخزن Codeberg</string>
+    <string name="patch_source_dialog_valid_json">بسته پچ JSON</string>
     <string name="patch_source_dialog_valid_pr">درخواست pull شماره %1$s در %2$s. همیشه از آخرین بیلد این PR استفاده می‌کند</string>
     <string name="patch_source_dialog_builtin_note">این منبع پچ داخلی است. نام و مکان آن قابل تغییر نیست. در کارت مربوطه بین نسخه‌های پایدار و پیش‌انتشار جابه‌جا شوید</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">فایل محلی</string>
     <string name="patch_source_dialog_name_label">نام</string>
     <string name="patch_source_dialog_name_placeholder">پچ‌های سفارشی من</string>
-    <string name="patch_source_dialog_repo_url_label">آدرس مخزن</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo یا gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">پیوند GitHub، GitLab یا morphe.software/add-source را می‌پذیرد</string>
+    <string name="patch_source_dialog_repo_url_label">آدرس منبع</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo یا example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">پذیرای GitHub، GitLab، Codeberg، آدرس URL با پسوند .json یا لینک morphe.software/add-source است</string>
     <string name="patch_source_dialog_error_name_required">نام الزامی است</string>
-    <string name="patch_source_dialog_error_invalid_url">یک آدرس معتبر GitHub یا GitLab وارد کنید</string>
+    <string name="patch_source_dialog_error_invalid_url">یک آدرس URL معتبر از GitHub، GitLab، Codeberg یا .json وارد کنید</string>
     <string name="patch_source_dialog_error_invalid_file">یک فایل .mpp معتبر انتخاب کنید</string>
     <string name="patch_source_dialog_add_button">افزودن</string>
     <string name="patch_source_dialog_edit_title">ویرایش منبع</string>
     <string name="patch_source_dialog_type_github_repo">مخزن GitHub</string>
     <string name="patch_source_dialog_type_github_pr">درخواست کشش گیت‌هاب</string>
     <string name="patch_source_dialog_type_gitlab_repo">مخزن GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">مخزن Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">بسته پچ JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">فایل .mpp یا پوشه</string>
     <string name="patch_source_dialog_mpp_label">فایل .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">مسیر .mpp یا پوشه</string>

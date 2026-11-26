@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">ידני (החלף קובץ)</string>
     <string name="source_card_loads_newest">קובץ .mpp החדש ביותר בתיקייה</string>
     <string name="source_card_loads_pr">בניית pull request האחרונה</string>
+    <string name="source_card_loads_json">מתוך מניפסט JSON</string>
     <string name="source_card_disabled">מקור זה מושבת. הפעל אותו כדי לטעון תיקונים</string>
     <string name="source_card_disabled_tag">מושבת</string>
     <string name="source_card_last_enabled">לפחות מקור אחד חייב להישאר פעיל</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">הצג בתיקייה</string>
     <string name="source_card_more_description">פעולות נוספות</string>
     <string name="source_card_browse_patches">דפדף בתיקונים</string>
+    <string name="source_card_report_issue">דיווח על בעיה</string>
     <string name="source_card_priority">עדיפות %1$d</string>
     <string name="source_card_open_link">פתח את %1$s בדפדפן</string>
     <string name="source_card_enable_description">הפעל את %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">מקומי</string>
     <string name="patch_source_dialog_valid_github">מאגר GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">מאגר GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">מאגר Codeberg</string>
+    <string name="patch_source_dialog_valid_json">חבילת תיקון JSON</string>
     <string name="patch_source_dialog_valid_pr">Pull request #%1$s ב-%2$s. משתמש תמיד בבנייה האחרונה מ-PR זה</string>
     <string name="patch_source_dialog_builtin_note">זהו מקור התיקונים המובנה. לא ניתן לשנות את שמו או את מיקומו. ניתן לעבור בין גרסה יציבה ל-pre-release בכרטיס שלו</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">קובץ מקומי</string>
     <string name="patch_source_dialog_name_label">שם</string>
     <string name="patch_source_dialog_name_placeholder">הטלאים המותאמים אישית שלי</string>
-    <string name="patch_source_dialog_repo_url_label">כתובת URL של המאגר</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo או gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">מקבל קישור GitHub, GitLab או morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">כתובת מקור</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo או example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">מקבל GitHub, GitLab, Codeberg, כתובת URL של .json, או קישור ל-morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">שם הוא חובה</string>
-    <string name="patch_source_dialog_error_invalid_url">הזן כתובת URL תקינה של GitHub או GitLab</string>
+    <string name="patch_source_dialog_error_invalid_url">הזן כתובת URL תקינה של GitHub, GitLab, Codeberg או .json</string>
     <string name="patch_source_dialog_error_invalid_file">בחר קובץ .mpp תקני</string>
     <string name="patch_source_dialog_add_button">הוסף</string>
     <string name="patch_source_dialog_edit_title">ערוך מקור</string>
     <string name="patch_source_dialog_type_github_repo">מאגר GitHub</string>
     <string name="patch_source_dialog_type_github_pr">בקשת משיכה של GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">מאגר GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">מאגר Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">חבילת תיקון JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">קובץ .mpp או תיקייה</string>
     <string name="patch_source_dialog_mpp_label">קובץ .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">נתיב אל .mpp או תיקייה</string>

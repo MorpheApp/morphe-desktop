@@ -568,6 +568,7 @@
     <string name="source_card_updates_manual">Manual (ganti fail)</string>
     <string name="source_card_loads_newest">.mpp terbaru dalam folder</string>
     <string name="source_card_loads_pr">Binaan permintaan tarik terkini</string>
+    <string name="source_card_loads_json">Daripada manifest JSON</string>
     <string name="source_card_disabled">Sumber ini dinyahaktifkan. Aktifkannya untuk memuatkan tampalan</string>
     <string name="source_card_disabled_tag">Dilumpuhkan</string>
     <string name="source_card_last_enabled">Sekurang-kurangnya satu sumber mesti kekal aktif</string>
@@ -581,6 +582,7 @@
     <string name="source_card_show_in_folder">Tunjukkan dalam folder</string>
     <string name="source_card_more_description">Lebih banyak tindakan</string>
     <string name="source_card_browse_patches">Layari tampalan</string>
+    <string name="source_card_report_issue">Laporkan isu</string>
     <string name="source_card_priority">Keutamaan %1$d</string>
     <string name="source_card_open_link">Buka %1$s dalam pelayar web</string>
     <string name="source_card_enable_description">Dayakan %1$s</string>
@@ -630,6 +632,8 @@
     <string name="patch_source_dialog_kind_local">Tempatan</string>
     <string name="patch_source_dialog_valid_github">Repositori GitHub</string>
     <string name="patch_source_dialog_valid_gitlab">Repositori GitLab</string>
+    <string name="patch_source_dialog_valid_codeberg">Repositori Codeberg</string>
+    <string name="patch_source_dialog_valid_json">Pakej tampalan JSON</string>
     <string name="patch_source_dialog_valid_pr">Permintaan tarik #%1$s pada %2$s. Sentiasa menggunakan binaan terbaru daripada PR ini</string>
     <string name="patch_source_dialog_builtin_note">Ini adalah sumber tampalan terbina dalam. Nama dan lokasinya tidak boleh diubah. Tukar antara stabil dan pra-rilis pada kadnya</string>
     <!-- Signing Key Trust Dialog -->
@@ -643,17 +647,19 @@
     <string name="patch_source_dialog_local_file_label">Fail tempatan</string>
     <string name="patch_source_dialog_name_label">Nama</string>
     <string name="patch_source_dialog_name_placeholder">Tampalan Tersuai Saya</string>
-    <string name="patch_source_dialog_repo_url_label">URL Repositori</string>
-    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo atau gitlab.com/owner/repo</string>
-    <string name="patch_source_dialog_repo_hint">Menerima pautan GitHub, GitLab, atau morphe.software/add-source</string>
+    <string name="patch_source_dialog_repo_url_label">URL sumber</string>
+    <string name="patch_source_dialog_repo_placeholder">github.com/owner/repo atau example.com/patches-bundle.json</string>
+    <string name="patch_source_dialog_repo_hint">Menerima GitHub, GitLab, Codeberg, URL .json, atau pautan morphe.software/add-source</string>
     <string name="patch_source_dialog_error_name_required">Nama diperlukan</string>
-    <string name="patch_source_dialog_error_invalid_url">Masukkan URL GitHub atau GitLab yang sah</string>
+    <string name="patch_source_dialog_error_invalid_url">Masukkan URL GitHub, GitLab, Codeberg, atau .json yang sah</string>
     <string name="patch_source_dialog_error_invalid_file">Pilih fail .mpp yang sah</string>
     <string name="patch_source_dialog_add_button">Tambah</string>
     <string name="patch_source_dialog_edit_title">Edit sumber</string>
     <string name="patch_source_dialog_type_github_repo">Repositori GitHub</string>
     <string name="patch_source_dialog_type_github_pr">Permintaan Tarik GitHub</string>
     <string name="patch_source_dialog_type_gitlab_repo">Repositori GitLab</string>
+    <string name="patch_source_dialog_type_codeberg_repo">Repositori Codeberg</string>
+    <string name="patch_source_dialog_type_json_bundle">Pakej Tampalan JSON</string>
     <string name="patch_source_dialog_mpp_or_folder_label">fail atau folder .mpp</string>
     <string name="patch_source_dialog_mpp_label">fail .mpp</string>
     <string name="patch_source_dialog_path_placeholder_dev">Laluan ke .mpp atau folder</string>
