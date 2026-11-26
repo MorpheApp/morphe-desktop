@@ -38,7 +38,7 @@ internal fun SimplePatchingContent(
     step: PatchStep?,
     isCompleted: Boolean,
     isActive: Boolean = true,
-    onCancel: () -> Unit
+    onCancel: (() -> Unit)? = null
 ) {
     var showSlowWarning by remember { mutableStateOf(false) }
     LaunchedEffect(step) {
@@ -141,17 +141,19 @@ internal fun SimplePatchingContent(
             )
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        if (onCancel != null) {
+            Spacer(modifier = Modifier.height(32.dp))
 
-        val isWrappingUp = progress >= 1f
+            val isWrappingUp = progress >= 1f
 
-        MorpheButton(
-            label = stringResource(Res.string.cancel),
-            variant = MorpheButtonVariant.DANGER,
-            size = MorpheButtonSize.LARGE,
-            enabled = isActive && !isWrappingUp,
-            modifier = Modifier.widthIn(min = 160.dp),
-            onClick = onCancel
-        )
+            MorpheButton(
+                label = stringResource(Res.string.cancel),
+                variant = MorpheButtonVariant.DANGER,
+                size = MorpheButtonSize.LARGE,
+                enabled = isActive && !isWrappingUp,
+                modifier = Modifier.widthIn(min = 160.dp),
+                onClick = onCancel
+            )
+        }
     }
 }

@@ -73,7 +73,7 @@ internal fun AdbInstallSection(
                 )
                 if (isMount) {
                     MorpheBadge(
-                        text = stringResource(Res.string.result_adb_badge_root_mount),
+                        text = stringResource(Res.string.root_mount),
                         tone = MorpheBadgeTone.Primary,
                     )
                 }

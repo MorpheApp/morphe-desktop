@@ -149,6 +149,32 @@ class OriginalApkStoreTest {
         assertEquals(File(System.getProperty("user.home")), store.outputBaseFor(kept))
     }
 
+    @Test
+    fun `findFor returns the kept original for an exact package match`() {
+        val kept = store.save(apk("yt.apk", "v1"), "com.google.android.youtube", "20.12.46")!!
+
+        assertEquals(kept.canonicalFile, store.findFor("com.google.android.youtube")?.canonicalFile)
+    }
+
+    @Test
+    fun `findFor ignores prefix-colliding packages and staging files`() {
+        store.save(apk("extra.apk"), "com.app.extra", "1.0")
+        store.save(apk("underscore.apk"), "com.app_extra", "1.0")
+        storeDir.mkdirs()
+        File(storeDir, "com.app-1.0.apk.part").writeText("partial")
+
+        assertNull(store.findFor("com.app"))
+
+        val kept = store.save(apk("app.apk"), "com.app", "1.0")!!
+        assertEquals(kept.canonicalFile, store.findFor("com.app")?.canonicalFile)
+    }
+
+    @Test
+    fun `findFor returns null when store is empty or package is blank`() {
+        assertNull(store.findFor("com.missing.app"))
+        assertNull(store.findFor("   "))
+    }
+
     private fun record(inputApk: File, outputApk: File) = PatchedAppRecord(
         packageName = "com.app",
         displayName = "App",

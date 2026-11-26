@@ -148,7 +148,7 @@ private fun PercentageBadge(progress: Float) {
 }
 
 @Composable
-private fun ExpertLinearProgressBar(progress: () -> Float) {
+internal fun ExpertLinearProgressBar(progress: () -> Float) {
     val strokeWidth = 6.dp
     val stroke = with(LocalDensity.current) { Stroke(width = strokeWidth.toPx(), cap = StrokeCap.Round) }
     val trackColor = lerp(

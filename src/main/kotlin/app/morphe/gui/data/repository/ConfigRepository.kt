@@ -9,6 +9,8 @@ import app.morphe.engine.MorpheData
 import app.morphe.engine.config.mergeAndSaveJsonObject
 import app.morphe.engine.util.Logger
 import app.morphe.engine.util.isDevTag
+import app.morphe.gui.batch.BatchInstallPolicy
+import app.morphe.gui.batch.SavedBatchQueue
 import app.morphe.gui.data.model.AppConfig
 import app.morphe.gui.data.model.DEFAULT_PATCH_SOURCE
 import app.morphe.gui.data.model.FollowMode
@@ -328,6 +330,20 @@ open class ConfigRepository {
         if (current.preferredPatchSourceByPackage[packageName] == sourceName) return
         val updated = current.preferredPatchSourceByPackage + (packageName to sourceName)
         saveConfig(current.copy(preferredPatchSourceByPackage = updated))
+    }
+
+    /** Persists the batch post-patch install policy. */
+    suspend fun setBatchInstallPolicy(policy: BatchInstallPolicy) {
+        val current = loadConfig()
+        if (current.batchInstallPolicy == policy) return
+        saveConfig(current.copy(batchInstallPolicy = policy))
+    }
+
+    /** Persists or clears the pending batch queue kept for later. */
+    suspend fun setSavedBatchQueue(queue: SavedBatchQueue?) {
+        val current = loadConfig()
+        if (current.savedBatchQueue == queue) return
+        saveConfig(current.copy(savedBatchQueue = queue))
     }
 
     /** Toggles patch source enablement, ensuring at least one source remains active. */

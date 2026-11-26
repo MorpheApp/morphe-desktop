@@ -27,6 +27,7 @@ import app.morphe.engine.model.PatchLockState
 import app.morphe.engine.model.PatchMetadata
 import app.morphe.engine.model.lockState
 import app.morphe.engine.util.Logger
+import app.morphe.gui.batch.BatchSelectionEditResult
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.data.repository.SeenPatchesRepository
@@ -82,6 +83,7 @@ class PatchSelectionViewModel(
     /** Maps source names to stable source IDs. */
     private val sourceIdsByName: Map<String, String> = emptyMap(),
     private val enabledSources: List<PatchSource> = emptyList(),
+    initialUseMount: Boolean = false,
 ) : ViewModel() {
 
     // Resolved primary patch file path (may differ if redownloaded).
@@ -96,6 +98,7 @@ class PatchSelectionViewModel(
         PatchSelectionUiState(
             apkArchitectures = apkArchitectures,
             stripLibsStatus = computeStripLibsStatus(apkArchitectures, AndroidArchitectures.ALL),
+            isRootMode = initialUseMount,
         )
     )
     val uiState: StateFlow<PatchSelectionUiState> = _uiState.asStateFlow()
@@ -247,7 +250,7 @@ class PatchSelectionViewModel(
                         } else {
                             savedByBundle[bundle.bundleId] ?: defaultsByBundle[bundle.bundleId].orEmpty()
                         }
-                        bundle.bundleId to initial
+                        bundle.bundleId to adjustSelectionForLockState(bundle, initial)
                     }
 
                     if (anyBundleHasSaved) {
@@ -685,6 +688,22 @@ class PatchSelectionViewModel(
                 patchOptionValues = _uiState.value.patchOptionValues,
                 sourcesSnapshot = activeSources,
             ),
+        )
+    }
+
+    /** Captures current selections, options, and root-mount choice for batch editing without persisting to disk. */
+    fun captureBatchEditSnapshot(): BatchSelectionEditResult {
+        val state = _uiState.value
+        val (enabled, disabled) = flattenSelection()
+        val selectedByBundleName = state.bundles.associate { bundle ->
+            bundle.bundleName to state.selectedByBundle[bundle.bundleId].orEmpty()
+        }
+        return BatchSelectionEditResult(
+            selectedByBundle = selectedByBundleName,
+            enabledPatchNames = enabled.toSet(),
+            disabledPatchNames = disabled.toSet(),
+            patchOptionValues = state.patchOptionValues,
+            useMount = state.isRootMode,
         )
     }
 

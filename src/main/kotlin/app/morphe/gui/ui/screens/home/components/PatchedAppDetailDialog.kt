@@ -545,7 +545,7 @@ fun PatchedAppDetailDialog(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    StatCell(stringResource(Res.string.home_your_apps_status_patched), fullDate(record.patchedAt))
+                    StatCell(stringResource(Res.string.patched), fullDate(record.patchedAt))
                     StatCell(
                         stringResource(Res.string.home_detail_app_version_label),
                         buildString {

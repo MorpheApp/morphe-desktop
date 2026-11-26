@@ -34,6 +34,10 @@ internal fun HomeSplitLayout(
     selectedPatchSource: String? = null,
     onSelectPatchSource: ((String) -> Unit)? = null,
     isSimple: Boolean = false,
+    hasPendingBatchQueue: Boolean = false,
+    isBatchRunning: Boolean = false,
+    onPatchOutdatedAll: () -> Unit = {},
+    onBatchPatchSelected: (List<String>) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     BoxWithConstraints(
@@ -70,6 +74,10 @@ internal fun HomeSplitLayout(
                 onRetry = onRetry,
                 onManageSources = onManageSources,
                 isSimple = isSimple,
+                onPatchOutdatedAll = onPatchOutdatedAll,
+                onBatchPatchSelected = onBatchPatchSelected,
+                hasPendingBatchQueue = hasPendingBatchQueue,
+                isBatchRunning = isBatchRunning,
                 modifier = Modifier
                     .weight(1.2f)
                     .heightIn(max = bodyViewport),

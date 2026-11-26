@@ -11,6 +11,7 @@ import app.morphe.engine.patches.RemotePatchSourceFactory
 import app.morphe.engine.util.Logger
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
+import app.morphe.gui.util.EnabledSourcesLoader
 import app.morphe.gui.util.PatchSourceNaming
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,6 +38,13 @@ class PatchSourceManager(
 
     private val _allSources = MutableStateFlow<List<PatchSource>>(emptyList())
     val allSources: StateFlow<List<PatchSource>> = _allSources.asStateFlow()
+
+    private val _latestSnapshot = MutableStateFlow<EnabledSourcesLoader.Result?>(null)
+    val latestSnapshot: StateFlow<EnabledSourcesLoader.Result?> = _latestSnapshot.asStateFlow()
+
+    fun updateLatestSnapshot(snapshot: EnabledSourcesLoader.Result?) {
+        _latestSnapshot.value = snapshot
+    }
 
     // Active UI mode used to prevent inactive ViewModels from fetching patches.
     private val _activeMode = MutableStateFlow(ActiveMode.SIMPLE)

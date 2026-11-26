@@ -8,6 +8,8 @@ package app.morphe.gui.ui.screens.home.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,6 +40,7 @@ import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.theme.LocalThemeState
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.ThemeStyle
+import app.morphe.gui.ui.theme.contrastingForeground
 import app.morphe.morphe_desktop.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -54,6 +57,8 @@ fun SupportedAppListRow(
     /** Device installation status and version information, if available. */
     deviceInfo: DeviceAppInfo? = null,
     icon: AppIconState = AppIconState(),
+    selectionMode: Boolean = false,
+    isSelected: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
     val cardColors = appCardColors()
@@ -68,8 +73,10 @@ fun SupportedAppListRow(
         appIconColorHex = app.appIconColor,
         fill = cardFills[app.packageName],
         onClick = onClick,
-        onCustomise = {
-            cardFills.requestEdit(app.packageName, app.displayName, app.appIconColor)
+        onCustomise = if (selectionMode) null else {
+            {
+                cardFills.requestEdit(app.packageName, app.displayName, app.appIconColor)
+            }
         },
     ) {
         Column(
@@ -79,6 +86,23 @@ fun SupportedAppListRow(
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
+            if (selectionMode) {
+                Checkbox(
+                    checked = isSelected,
+                    onCheckedChange = null,
+                    colors = CheckboxDefaults.colors(
+                        checkedColor = if (cardColors.isMonochrome) MorpheTheme.colors.primary else Color.White,
+                        checkmarkColor = if (cardColors.isMonochrome) {
+                            MorpheTheme.colors.primary.contrastingForeground()
+                        } else {
+                            Color.Black
+                        },
+                        uncheckedColor = cardColors.subtitle,
+                    ),
+                    modifier = Modifier.size(20.dp),
+                )
+                Spacer(Modifier.width(10.dp))
+            }
             MorpheAppAvatar(
                 name = app.displayName,
                 size = MorpheAvatarSize.ROW,
@@ -172,7 +196,7 @@ internal fun PatchedStateBadge(
 ) {
     val isMonochrome = LocalThemeState.current.style == ThemeStyle.MONOCHROME
     val label = when (state) {
-        PatchedAppState.PATCHED -> stringResource(Res.string.home_your_apps_status_patched)
+        PatchedAppState.PATCHED -> stringResource(Res.string.patched)
         PatchedAppState.PATCHED_WITH_UPDATES -> stringResource(Res.string.home_app_row_update_available_badge)
         PatchedAppState.MODIFIED_EXTERNALLY -> stringResource(Res.string.home_app_row_modified_badge)
         PatchedAppState.APK_MISSING -> stringResource(Res.string.home_app_row_apk_missing_badge)
