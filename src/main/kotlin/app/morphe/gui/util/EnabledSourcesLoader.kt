@@ -43,6 +43,7 @@ object EnabledSourcesLoader {
         val resolvedVersion: String? = null,
         val latestAvailableVersion: String? = null,
         val releasedAtMillis: Long? = null,
+        val pageUrl: String? = null,
         val isOffline: Boolean = false,
         val isPinned: Boolean = false,
         val error: String? = null,
@@ -209,7 +210,9 @@ object EnabledSourcesLoader {
             PatchSourceType.LOCAL -> PatchResolver.resolveLocal(source.filePath, excludedMppPatterns)
             PatchSourceType.DEFAULT,
             PatchSourceType.GITHUB,
-            PatchSourceType.GITLAB -> {
+            PatchSourceType.GITLAB,
+            PatchSourceType.CODEBERG,
+            PatchSourceType.JSON -> {
                 if (repo == null) {
                     PatchResolver.ResolutionResult(error = PatchResolver.Error.NoRepository(source.name))
                 } else {
@@ -244,6 +247,7 @@ object EnabledSourcesLoader {
             resolvedVersion = resolvedVersion,
             latestAvailableVersion = latestAvailableVersion,
             releasedAtMillis = releasedAtMillis,
+            pageUrl = pageUrl,
             isOffline = isOffline,
             channel = channel,
             signingKey = signingKey,
@@ -361,6 +365,7 @@ data class SourceDetails(
     val isPinned: Boolean,
     val fileName: String?,
     val releasedAtMillis: Long? = null,
+    val pageUrl: String? = null,
 )
 
 fun EnabledSourcesLoader.Result?.sourceDetailsMap(): Map<String, SourceDetails> {
@@ -384,6 +389,7 @@ fun EnabledSourcesLoader.Result?.sourceDetailsMap(): Map<String, SourceDetails> 
             isPinned = r.isPinned,
             fileName = file.name,
             releasedAtMillis = r.releasedAtMillis,
+            pageUrl = r.pageUrl,
         )
     }.toMap()
 }

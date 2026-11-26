@@ -61,9 +61,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.engine.patches.DEFAULT_BUNDLE_FILE
 import app.morphe.engine.patches.PatchProvider
 import app.morphe.engine.patches.PatchResolver.Channel
 import app.morphe.engine.patches.RemotePatchSourceFactory
+import app.morphe.engine.patches.SourceUrl
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.ui.components.MorpheSwitch
@@ -76,6 +78,7 @@ import app.morphe.gui.ui.components.MorpheMenuItem
 import app.morphe.gui.ui.components.MorpheOverflowMenu
 import app.morphe.gui.ui.components.MorphePopupSurface
 import app.morphe.gui.ui.icons.MorpheIcons
+import app.morphe.gui.ui.icons.sourceIcon
 import app.morphe.gui.ui.screens.home.components.fullDate
 import app.morphe.gui.ui.screens.home.components.humanSize
 import app.morphe.gui.ui.screens.home.components.relativeOrShortDate
@@ -111,6 +114,8 @@ data class SourceCardModel(
 ) {
     val isPullRequest: Boolean =
         source.url?.let { RemotePatchSourceFactory.parse(it)?.provider == PatchProvider.GITHUB_PR } == true
+    val supportsPrerelease: Boolean =
+        source.type != PatchSourceType.LOCAL && (source.url?.let { RemotePatchSourceFactory.parse(it)?.supportsPrerelease } ?: true)
 }
 
 class SourceCardActions(
@@ -120,11 +125,19 @@ class SourceCardActions(
     val onRemove: (() -> Unit)?,
     val onOpenPatches: (() -> Unit)?,
     val onOpenPullRequest: () -> Unit,
+    val onReportIssue: (() -> Unit)? = null,
     val onFollowLatest: () -> Unit,
     val onRetry: () -> Unit,
     val onReviewSigner: () -> Unit,
     val onShowInFolder: () -> Unit,
 )
+
+/** Resolves the repository issues page for [source], falling back to [manifestPageUrl] when known. */
+internal fun resolveIssuesUrl(source: PatchSource, manifestPageUrl: String? = null): String? {
+    if (source.type == PatchSourceType.LOCAL) return null
+    return source.url?.let(SourceUrl::parse)?.issuesUrl
+        ?: manifestPageUrl?.let(SourceUrl::parse)?.issuesUrl
+}
 
 private val CardPadding = 18.dp
 private val FactInset = 8.dp
@@ -329,10 +342,32 @@ private fun SourceLink(source: PatchSource) {
     val uri = LocalUriHandler.current
     val hover = remember { MutableInteractionSource() }
     val hovered by hover.collectIsHoveredAsState()
-    val (label, link, icon) = when (source.type) {
-        PatchSourceType.LOCAL -> Triple(source.filePath?.let(::shortenHome) ?: "", null, MorpheIcons.Folder)
-        PatchSourceType.GITLAB -> Triple(source.url?.substringAfter("gitlab.com/")?.trimEnd('/') ?: "", source.url, MorpheIcons.Source)
-        else -> Triple(source.url?.substringAfter("github.com/")?.trimEnd('/') ?: "", source.url, MorpheIcons.Github)
+    val (label, link, icon) = if (source.type == PatchSourceType.LOCAL) {
+        Triple(source.filePath?.let(::shortenHome) ?: "", null, sourceIcon(source.type))
+    } else {
+        val url = source.url.orEmpty()
+        val parsed = SourceUrl.parse(url)
+        val prNumber = RemotePatchSourceFactory.parse(url)?.prNumber
+        val bare = url.substringAfter("://").removePrefix("www.").substringBefore('?')
+        val displayLabel = when {
+            prNumber != null && parsed?.repoPath != null -> "${parsed.repoPath}/pull/$prNumber"
+            source.type == PatchSourceType.JSON && parsed?.repoPath != null -> {
+                val file = parsed.filePath
+                if (file != null && !file.equals(DEFAULT_BUNDLE_FILE, ignoreCase = true)) {
+                    "${parsed.repoPath} · ${file.substringAfterLast('/')}"
+                } else {
+                    parsed.repoPath!!
+                }
+            }
+            parsed?.repoPath != null -> parsed.repoPath!!
+            else -> bare
+        }
+        val linkTarget = if (source.type == PatchSourceType.JSON) {
+            parsed?.repositoryUrl ?: url.takeIf { it.isNotBlank() }
+        } else {
+            source.url
+        }
+        Triple(displayLabel, linkTarget, sourceIcon(source.type, url))
     }
     val color = if (link != null && hovered) colors.primary else scheme.onSurfaceVariant.copy(alpha = 0.8f)
     val openLabel = stringResource(Res.string.source_card_open_link, label)
@@ -765,6 +800,7 @@ private fun ChannelRow(
                 else Res.string.source_card_updates_manual
             )
             model.isPullRequest -> stringResource(Res.string.source_card_loads_pr)
+            !model.supportsPrerelease -> stringResource(Res.string.source_card_loads_json)
             else -> null
         }
         Text(
@@ -947,13 +983,17 @@ private fun FooterIcon(
 @Composable
 private fun SourceMenuButton(model: SourceCardModel, actions: SourceCardActions, enabled: Boolean) {
     val canBrowse = actions.onOpenPatches != null && model.error == null && model.source.enabled
-    if (!canBrowse && !model.source.deletable) return
+    val canReportIssue = actions.onReportIssue != null
+    if (!canBrowse && !canReportIssue && !model.source.deletable) return
     MorpheOverflowMenu(
         contentDescription = stringResource(Res.string.source_card_more_description),
         enabled = enabled,
     ) { close ->
         if (canBrowse) {
             MorpheMenuItem(MorpheIcons.MenuBook, stringResource(Res.string.source_card_browse_patches)) { close(); actions.onOpenPatches.invoke() }
+        }
+        if (canReportIssue) {
+            MorpheMenuItem(MorpheIcons.BugReport, stringResource(Res.string.source_card_report_issue)) { close(); actions.onReportIssue.invoke() }
         }
         if (model.source.deletable) {
             MorpheMenuItem(MorpheIcons.Edit, stringResource(Res.string.source_sheet_edit_description)) { close(); actions.onEdit() }

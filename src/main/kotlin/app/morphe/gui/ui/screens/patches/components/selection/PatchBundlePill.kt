@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.ui.components.handCursor
 import app.morphe.gui.ui.icons.MorpheIcons
+import app.morphe.gui.ui.icons.sourceIcon
 import app.morphe.gui.ui.screens.patches.BundlePatches
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.outlineBorder
@@ -108,7 +109,8 @@ fun PatchBundlePill(
         BundleIcon(
             bundleName = bundle.bundleName,
             sourceType = bundle.sourceType,
-            avatarUrl = bundle.avatarUrl,
+            avatarUrls = bundle.avatarUrls,
+            sourceUrl = bundle.sourceUrl,
             modifier = Modifier.size(24.dp)
         )
 
@@ -140,10 +142,22 @@ fun PatchBundlePill(
 fun BundleIcon(
     bundleName: String,
     sourceType: PatchSourceType?,
-    avatarUrl: String?,
+    avatarUrls: List<String>,
+    sourceUrl: String? = null,
     modifier: Modifier = Modifier,
 ) {
-    val isDefault = sourceType == PatchSourceType.DEFAULT && avatarUrl.isNullOrBlank()
+    val isDefault = sourceType == PatchSourceType.DEFAULT && avatarUrls.isEmpty()
+    val fallbackIcon = sourceIcon(sourceType, sourceUrl, localIcon = MorpheIcons.Source)
+    val fallback: @Composable () -> Unit = {
+        Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+            Icon(
+                imageVector = fallbackIcon,
+                contentDescription = bundleName,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(14.dp)
+            )
+        }
+    }
 
     Surface(
         modifier = modifier,
@@ -158,66 +172,32 @@ fun BundleIcon(
                     modifier = Modifier.fillMaxSize().padding(2.dp)
                 )
             }
-            !avatarUrl.isNullOrBlank() -> {
+            avatarUrls.isNotEmpty() -> {
                 RemoteAvatar(
-                    url = avatarUrl,
+                    urls = avatarUrls,
                     modifier = Modifier.fillMaxSize(),
-                ) {
-                    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                        Icon(
-                            imageVector = when (sourceType) {
-                                PatchSourceType.GITLAB -> MorpheIcons.Language
-                                PatchSourceType.LOCAL -> MorpheIcons.Source
-                                else -> MorpheIcons.Github
-                            },
-                            contentDescription = bundleName,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.size(14.dp)
-                        )
-                    }
-                }
+                    fallback = fallback,
+                )
             }
-            sourceType == PatchSourceType.LOCAL -> {
-                Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                    Icon(
-                        imageVector = MorpheIcons.Source,
-                        contentDescription = bundleName,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(14.dp)
-                    )
-                }
-            }
-            else -> {
-                Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                    Icon(
-                        imageVector = when (sourceType) {
-                            PatchSourceType.GITLAB -> MorpheIcons.Language
-                            else -> MorpheIcons.Github
-                        },
-                        contentDescription = bundleName,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(14.dp)
-                    )
-                }
-            }
+            else -> fallback()
         }
     }
 }
 
 /**
- * Loads and displays an avatar image from [url], rendering [fallback] while loading or on failure.
+ * Loads and displays the first available avatar image from [urls], rendering [fallback] while loading or on failure.
  */
 @Composable
 fun RemoteAvatar(
-    url: String,
+    urls: List<String>,
     modifier: Modifier = Modifier,
     fallback: @Composable () -> Unit = {},
 ) {
     val httpClient: HttpClient = koinInject()
-    var bitmap by remember(url) { mutableStateOf<ImageBitmap?>(null) }
+    var bitmap by remember(urls) { mutableStateOf<ImageBitmap?>(null) }
 
-    LaunchedEffect(url) {
-        bitmap = AvatarLoader.loadAvatar(url, httpClient)
+    LaunchedEffect(urls) {
+        bitmap = AvatarLoader.loadFirstAvatar(urls, httpClient)
     }
 
     if (bitmap != null) {

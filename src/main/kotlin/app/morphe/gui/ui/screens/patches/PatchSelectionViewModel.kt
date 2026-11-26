@@ -53,7 +53,8 @@ data class BundlePatches(
     val bundleName: String,
     val patches: List<PatchMetadata>,
     val sourceType: PatchSourceType = PatchSourceType.DEFAULT,
-    val avatarUrl: String? = null,
+    val avatarUrls: List<String> = emptyList(),
+    val sourceUrl: String? = null,
     val patchesFilePath: String? = null,
 )
 
@@ -322,14 +323,15 @@ class PatchSelectionViewModel(
             } else {
                 PatchSourceType.GITHUB
             }
-            val avatarUrl = matchedSource?.let { AvatarLoader.resolveAvatarUrl(it) }
+            val avatarUrls = matchedSource?.let(AvatarLoader::resolveAvatarUrls).orEmpty()
 
             BundlePatches(
                 bundleId = "bundle-$idx-${File(path).nameWithoutExtension}",
                 bundleName = displayName,
                 patches = patches.sortedBy { it.name.lowercase() },
                 sourceType = sourceType,
-                avatarUrl = avatarUrl,
+                avatarUrls = avatarUrls,
+                sourceUrl = matchedSource?.url,
                 patchesFilePath = path,
             )
         }

@@ -109,8 +109,8 @@ data class PatchSource (
 )
 
 @Serializable
-enum class PatchSourceType{
-    DEFAULT, GITHUB, GITLAB, LOCAL
+enum class PatchSourceType {
+    DEFAULT, GITHUB, GITLAB, CODEBERG, JSON, LOCAL
 }
 
 /** Release channel preference for update notifications. */

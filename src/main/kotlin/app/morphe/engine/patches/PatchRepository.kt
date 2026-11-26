@@ -21,9 +21,13 @@ class PatchRepository(
 ) {
     val repoPath: String get() = remoteSource.repoPath
 
+    private val isDefaultRepo: Boolean
+        get() = remoteSource.provider == PatchProvider.GITHUB &&
+            repoPath.equals(RemotePatchSourceFactory.DEFAULT_REPO_PATH, ignoreCase = true)
+
     /** Key official Morphe Patches releases are signed with when [repoPath] is the default source. */
     val officialSigningKey: String?
-        get() = if (repoPath.equals(RemotePatchSourceFactory.DEFAULT_REPO_PATH, ignoreCase = true)) {
+        get() = if (isDefaultRepo) {
             RemotePatchSourceFactory.OFFICIAL_PATCHES_SIGNING_KEY
         } else null
 
@@ -112,38 +116,36 @@ class PatchRepository(
     suspend fun getLatestDevRelease(forceRefresh: Boolean = false): Result<Release?> =
         latestFromManifestOrApi(prerelease = true, forceRefresh = forceRefresh)
 
+    private fun Release.withDefaultSigningKey(): Release =
+        if (isDefaultRepo) copy(publicKey = publicKey ?: RemotePatchSourceFactory.OFFICIAL_PATCHES_SIGNING_KEY) else this
+
     /** Resolves latest release via manifest CDN, falling back to releases API. */
     private suspend fun latestFromManifestOrApi(
         prerelease: Boolean,
         forceRefresh: Boolean = false,
     ): Result<Release?> =
         withContext(Dispatchers.IO) {
-            val manifest = cachedManifests[prerelease]
+            val cached = cachedManifests[prerelease]
                 ?.takeIf { (fetchedAt, _) -> !forceRefresh && System.currentTimeMillis() - fetchedAt < CACHE_TTL_MS }
                 ?.second
-                ?: remoteSource.fetchLatestFromManifest(prerelease).getOrNull()
-                    ?.also { cachedManifests[prerelease] = System.currentTimeMillis() to it }
-            manifest?.let {
-                Logger.info("Latest ${if (prerelease) "dev" else "stable"} via patches-bundle.json: ${it.tagName}")
-                val release = if (repoPath.equals(RemotePatchSourceFactory.DEFAULT_REPO_PATH, ignoreCase = true)) {
-                    it.copy(publicKey = it.publicKey ?: RemotePatchSourceFactory.OFFICIAL_PATCHES_SIGNING_KEY)
-                } else it
-                return@withContext Result.success(release)
-            }
-            if (prerelease) fetchDevReleases(forceRefresh = forceRefresh).map { list ->
-                list.firstOrNull()?.let {
-                    if (repoPath.equals(RemotePatchSourceFactory.DEFAULT_REPO_PATH, ignoreCase = true)) {
-                        it.copy(publicKey = it.publicKey ?: RemotePatchSourceFactory.OFFICIAL_PATCHES_SIGNING_KEY)
-                    } else it
+            val manifestResult = if (cached != null) {
+                Result.success(cached)
+            } else {
+                remoteSource.fetchLatestFromManifest(prerelease).onSuccess { manifest ->
+                    cachedManifests[prerelease] = System.currentTimeMillis() to manifest
                 }
             }
-            else fetchStableReleases(forceRefresh = forceRefresh).map { list ->
-                list.firstOrNull()?.let {
-                    if (repoPath.equals(RemotePatchSourceFactory.DEFAULT_REPO_PATH, ignoreCase = true)) {
-                        it.copy(publicKey = it.publicKey ?: RemotePatchSourceFactory.OFFICIAL_PATCHES_SIGNING_KEY)
-                    } else it
-                }
+            manifestResult.getOrNull()?.let { manifest ->
+                Logger.info("Latest ${if (prerelease) "dev" else "stable"} via $DEFAULT_BUNDLE_FILE: ${manifest.tagName}")
+                return@withContext Result.success(manifest.withDefaultSigningKey())
             }
+
+            if (remoteSource is JsonPatchSource) {
+                return@withContext manifestResult.map { it }
+            }
+
+            val fallback = if (prerelease) fetchDevReleases(forceRefresh = forceRefresh) else fetchStableReleases(forceRefresh = forceRefresh)
+            fallback.map { list -> list.firstOrNull()?.withDefaultSigningKey() }
         }
 
     /** Reads the pinned signing key directly from disk. */

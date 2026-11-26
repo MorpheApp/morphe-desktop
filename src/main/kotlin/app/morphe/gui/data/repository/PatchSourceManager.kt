@@ -111,30 +111,34 @@ class PatchSourceManager(
         return PatchRepository(remote)
     }
 
-    /** Returns cached or newly created [PatchRepository] for [source], or null if local. */
+    /** Returns cached or newly created [PatchRepository] for [source], or null if local or invalid JSON URL. */
     fun getRepositoryForSource(source: PatchSource): PatchRepository? {
         if (source.type == PatchSourceType.LOCAL) return null
+        repositories[source.id]?.let { return it }
 
-        return repositories.getOrPut(source.id) {
-            val remote = if (!source.url.isNullOrBlank()) {
-                RemotePatchSourceFactory.from(source.url, httpClient)
-            } else null
+        val remote = if (!source.url.isNullOrBlank()) {
+            RemotePatchSourceFactory.from(source.url, httpClient)
+        } else null
 
-            val finalRemote = remote ?: run {
-                // Map source type to engine provider enum; default source uses GitHub.
-                val provider = when (source.type) {
-                    PatchSourceType.GITLAB -> PatchProvider.GITLAB
-                    else -> PatchProvider.GITHUB
-                }
-                RemotePatchSourceFactory.build(
-                    provider,
-                    RemotePatchSourceFactory.DEFAULT_REPO_PATH,
-                    httpClient,
-                )
+        val finalRemote = remote ?: run {
+            if (source.type == PatchSourceType.JSON) {
+                Logger.warn("Invalid or missing URL for JSON patch source '${source.name}' (id=${source.id})")
+                return null
             }
-            Logger.info("Creating PatchRepository for source '${source.name}' (repo=${finalRemote.repoPath}, provider=${finalRemote.provider})")
-            PatchRepository(finalRemote)
+            // Map source type to engine provider enum; default source uses GitHub.
+            val provider = when (source.type) {
+                PatchSourceType.GITLAB -> PatchProvider.GITLAB
+                PatchSourceType.CODEBERG -> PatchProvider.CODEBERG
+                else -> PatchProvider.GITHUB
+            }
+            RemotePatchSourceFactory.build(
+                provider,
+                RemotePatchSourceFactory.DEFAULT_REPO_PATH,
+                httpClient,
+            )
         }
+        Logger.info("Creating PatchRepository for source '${source.name}' (repo=${finalRemote.repoPath}, provider=${finalRemote.provider})")
+        return PatchRepository(finalRemote).also { repositories[source.id] = it }
     }
 
     /** Returns active patch source configuration. */

@@ -198,7 +198,7 @@ Morphe fetches the available releases from your configured source and tags them:
 
 <h4 id="gui-expert-sources">Managing patch sources</h4>
 
-The **Sources page** (accessed via the **Sources** tab in the top navigation pill) lets you manage the patch sources Morphe fetches from: add community sources (GitHub / GitLab repos, or `morphe.software/add-source` links), remove them, or refresh them on demand. Adding more than one source is the GUI counterpart to passing several `-p` URLs on the CLI: their patches show up together, grouped by bundle, on the patch selection screen.
+The **Sources page** (accessed via the **Sources** tab in the top navigation pill) lets you manage the patch sources Morphe fetches from: add community sources (GitHub / GitLab / Codeberg repos, `.json` bundle manifest URLs, or `morphe.software/add-source` links), remove them, or refresh them on demand. Adding more than one source is the GUI counterpart to passing several `-p` URLs on the CLI: their patches show up together, grouped by bundle, on the patch selection screen.
 
 Each source row displays its current version, release channel badge, and signing key fingerprint:
 
@@ -651,7 +651,7 @@ Required: Yes
 
 Default: -
 
-This flag specifies the patch file(s) to apply to your APK. You can pass local `.mpp` file paths, directories containing `.mpp` files, or remote repository URLs (GitHub/GitLab repos or GitHub pull requests), and you can repeat `-p` to combine several bundles in one run (see [Using multiple patch bundles](#using-multiple-bundles) below). When a directory is provided, Morphe automatically detects and resolves the newest `.mpp` bundle inside it. When a remote URL is provided, Morphe downloads the bundle and caches it on disk for future runs.
+This flag specifies the patch file(s) to apply to your APK. You can pass local `.mpp` file paths, directories containing `.mpp` files, or remote URLs (GitHub/GitLab/Codeberg repos, GitHub pull requests, or `.json` bundle manifests), and you can repeat `-p` to combine several bundles in one run (see [Using multiple patch bundles](#using-multiple-bundles) below). When a directory is provided, Morphe automatically detects and resolves the newest `.mpp` bundle inside it. When a remote URL is provided, Morphe downloads the bundle and caches it on disk for future runs.
 
 ```
 # Local file or directory:
@@ -659,7 +659,7 @@ java -jar morphe-desktop-*-all.jar patch --patches patches-*.mpp your_app.apk
 java -jar morphe-desktop-*-all.jar patch --patches /path/to/patches/ your_app.apk
 ```
 
-You can also pass a GitHub or GitLab repo URL:
+You can also pass a GitHub, GitLab, Codeberg, or `.json` bundle URL:
 
 ```
 java -jar morphe-desktop-*-all.jar patch --patches https://github.com/MorpheApp/morphe-patches your_app.apk
@@ -713,7 +713,7 @@ Required: No
 
 Default: `false`
 
-When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release. If no dev pre-release is found on the repository, Morphe falls back to the latest stable release automatically.
+When using a GitHub, GitLab, Codeberg, or code-host `.json` URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release. If no dev pre-release is found on the repository, Morphe falls back to the latest stable release automatically.
 
 ```
 java -jar morphe-desktop-*-all.jar patch --patches https://github.com/MorpheApp/morphe-patches --prerelease your_app.apk
@@ -1191,7 +1191,7 @@ Required: Yes
 
 Default: -
 
-One or more paths to `.mpp` patch files, directories containing `.mpp` files, or remote repository URLs (GitHub/GitLab repos or GitHub pull requests) to list patches from. When a directory is provided, Morphe automatically detects and resolves the newest `.mpp` bundle inside it. When a remote URL is provided, Morphe downloads the bundle and caches it on disk for future runs.
+One or more paths to `.mpp` patch files, directories containing `.mpp` files, or remote repository URLs (GitHub/GitLab/Codeberg repos, GitHub pull requests, or `.json` bundle manifests) to list patches from. When a directory is provided, Morphe automatically detects and resolves the newest `.mpp` bundle inside it. When a remote URL is provided, Morphe downloads the bundle and caches it on disk for future runs.
 
 ```
 java -jar morphe-desktop-*-all.jar list-patches --patches patches.mpp
@@ -1205,7 +1205,7 @@ Required: No
 
 Default: `false`
 
-When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release (automatically falling back to the other channel if the preferred channel is not available).
+When using a GitHub, GitLab, Codeberg, or code-host `.json` URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release (automatically falling back to the other channel if the preferred channel is not available).
 
 ```
 java -jar morphe-desktop-*-all.jar list-patches --patches https://github.com/MorpheApp/morphe-patches --prerelease
@@ -1346,7 +1346,7 @@ Required: Yes
 
 Default: -
 
-One or more paths to `.mpp` patch files, directories containing `.mpp` files, or remote repository URLs (GitHub/GitLab repos or GitHub pull requests). When a directory is provided, Morphe automatically detects and resolves the newest `.mpp` bundle inside it. When a URL is provided, Morphe downloads the bundle and caches it on disk for future runs.
+One or more paths to `.mpp` patch files, directories containing `.mpp` files, or remote repository URLs (GitHub/GitLab/Codeberg repos, GitHub pull requests, or `.json` bundle manifests). When a directory is provided, Morphe automatically detects and resolves the newest `.mpp` bundle inside it. When a URL is provided, Morphe downloads the bundle and caches it on disk for future runs.
 
 ```
 java -jar morphe-desktop-*-all.jar list-versions --patches patches.mpp
@@ -1360,7 +1360,7 @@ Required: No
 
 Default: `false`
 
-When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release (automatically falling back to the other channel if the preferred channel is not available).
+When using a GitHub, GitLab, Codeberg, or code-host `.json` URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release (automatically falling back to the other channel if the preferred channel is not available).
 
 ```
 java -jar morphe-desktop-*-all.jar list-versions --patches https://github.com/MorpheApp/morphe-patches --prerelease
@@ -1429,7 +1429,7 @@ Required: Yes
 
 Default: -
 
-One or more paths to `.mpp` patch files, directories containing `.mpp` files, or remote repository URLs (GitHub/GitLab repos or GitHub pull requests) to generate options from. When a directory is provided, Morphe automatically detects and resolves the newest `.mpp` bundle inside it. Multiple `-p` flags can be supplied to include options from multiple bundles in a single file. When a URL is provided, Morphe downloads the bundle and caches it on disk for future runs.
+One or more paths to `.mpp` patch files, directories containing `.mpp` files, or remote repository URLs (GitHub/GitLab/Codeberg repos, GitHub pull requests, or `.json` bundle manifests) to generate options from. When a directory is provided, Morphe automatically detects and resolves the newest `.mpp` bundle inside it. Multiple `-p` flags can be supplied to include options from multiple bundles in a single file. When a URL is provided, Morphe downloads the bundle and caches it on disk for future runs.
 
 ```
 java -jar morphe-desktop-*-all.jar options-create -p patches.mpp -o options.json
@@ -1443,7 +1443,7 @@ Required: No
 
 Default: `false`
 
-When using a GitHub or GitLab repo URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release (automatically falling back to the other channel if the preferred channel is not available).
+When using a GitHub, GitLab, Codeberg, or code-host `.json` URL with `--patches`, fetch the latest dev pre-release instead of the latest stable release (automatically falling back to the other channel if the preferred channel is not available).
 
 ```
 java -jar morphe-desktop-*-all.jar options-create -p https://github.com/MorpheApp/morphe-patches --prerelease -o options.json

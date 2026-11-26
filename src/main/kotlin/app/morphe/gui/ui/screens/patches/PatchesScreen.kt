@@ -115,6 +115,9 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
                     }
                 }
                 val sourceUrl = uiState.sourceUrl
+                val selectedReleaseUrl = uiState.selectedRelease?.let { rel ->
+                    sourceUrl?.let { releaseUrl(it, rel.tagName, rel.pageUrl) } ?: rel.pageUrl
+                }
                 val actions = VersionDetailActions(
                     onSelect = viewModel::selectRelease,
                     onUse = viewModel::useSelected,
@@ -132,8 +135,8 @@ fun PatchesScreenContent(viewModel: PatchesViewModel) {
                         }
                     },
                     onShowInFolder = viewModel::showInFolder,
-                    onOpenReleasePage = sourceUrl?.let { url ->
-                        { uiState.selectedRelease?.let { uriHandler.openUri(releaseUrl(url, it.tagName)) } }
+                    onOpenReleasePage = selectedReleaseUrl?.let { url ->
+                        { uriHandler.openUri(url) }
                     },
                 )
                 Row(Modifier.fillMaxSize()) {

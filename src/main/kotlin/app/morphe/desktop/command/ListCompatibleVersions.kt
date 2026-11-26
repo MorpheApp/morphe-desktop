@@ -31,7 +31,7 @@ internal class ListCompatibleVersions : Runnable {
 
     @Option(
         names = ["--patches"],
-        description = ["Path to a MPP file or a GitHub repo url such as https://github.com/MorpheApp/morphe-patches"],
+        description = ["Path to a .mpp file, directory, GitHub/GitLab/Codeberg repo URL, or .json bundle URL such as https://github.com/MorpheApp/morphe-patches"],
         arity = "1..*",
         required = true
     )

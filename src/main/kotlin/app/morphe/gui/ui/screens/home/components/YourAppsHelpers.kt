@@ -11,6 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import app.morphe.engine.model.PatchedAppRecord
+import app.morphe.engine.patches.SourceUrl
 import app.morphe.engine.util.formatFileSize
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
@@ -46,10 +47,11 @@ internal fun rememberPatchedAppIcon(record: PatchedAppRecord, deviceInfo: Device
     )
 }
 
-/** Formats the release URL based on host platform conventions. */
-internal fun releaseUrl(sourceUrl: String, tag: String): String =
-    if (sourceUrl.contains("gitlab", ignoreCase = true)) "$sourceUrl/-/releases/$tag"
-    else "$sourceUrl/releases/tag/$tag"
+/** Formats the release URL based on host platform conventions, or null if the host has no known release layout. */
+internal fun releaseUrl(sourceUrl: String, tag: String, pageUrl: String? = null): String? {
+    pageUrl?.takeIf { it.isNotBlank() }?.let { return it }
+    return SourceUrl.parse(sourceUrl)?.releaseUrl(tag)
+}
 
 /** Displays device installation status and signing verification. */
 @Composable

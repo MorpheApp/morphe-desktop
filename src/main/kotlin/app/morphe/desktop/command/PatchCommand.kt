@@ -63,7 +63,7 @@ internal object PatchCommand : Callable<Int> {
     internal class BundleArgs {
         @CommandLine.Option(
             names = ["-p", "--patches"],
-            description = ["Path to a MPP file or a GitHub/Gitlab repo url such as https://github.com/MorpheApp/morphe-patches (Supports multiple patch files)"],
+            description = ["Path to a .mpp file, directory, GitHub/GitLab/Codeberg repo URL, or .json bundle URL (e.g., https://github.com/MorpheApp/morphe-patches) (Supports multiple patch files)"],
             required = true,
         )
         lateinit var patchesFile: File

@@ -46,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.morphe.engine.patches.SourceUrl
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.ui.components.MorpheTooltip
@@ -68,12 +69,12 @@ internal class SourceAvatarState(val bitmap: ImageBitmap?, val accentHue: Float?
 
 @Composable
 internal fun rememberSourceAvatar(source: PatchSource): SourceAvatarState {
-    val url = remember(source.type, source.url) { avatarUrl(source) }
-    if (url == null) return SourceAvatarState(null, null, 0f)
+    val urls = remember(source.type, source.url) { AvatarLoader.resolveAvatarUrls(source) }
+    if (urls.isEmpty()) return SourceAvatarState(null, null, 0f)
     val httpClient: HttpClient = koinInject()
-    var state by remember(url) { mutableStateOf(SourceAvatarState(null, null, 0f)) }
-    LaunchedEffect(url) {
-        val bmp = AvatarLoader.loadAvatar(url, httpClient) ?: return@LaunchedEffect
+    var state by remember(urls) { mutableStateOf(SourceAvatarState(null, null, 0f)) }
+    LaunchedEffect(urls) {
+        val bmp = AvatarLoader.loadFirstAvatar(urls, httpClient) ?: return@LaunchedEffect
         val (hue, sat) = dominantHue(bmp) ?: (null to 0f)
         state = SourceAvatarState(bmp, hue, sat)
     }
@@ -215,15 +216,8 @@ internal fun hashHue(key: String): Float =
 internal fun hueColor(hue: Float, saturation: Float, dark: Boolean): Color =
     Color.hsl(hue, saturation.coerceIn(0.35f, 0.7f), if (dark) 0.72f else 0.42f)
 
-internal fun sourceOwner(source: PatchSource): String? = source.url?.let {
-    AvatarLoader.extractGitHubOwner(it) ?: AvatarLoader.extractGitLabOwner(it)
-}
-
-private fun avatarUrl(source: PatchSource): String? = when (source.type) {
-    PatchSourceType.LOCAL -> null
-    PatchSourceType.DEFAULT -> AvatarLoader.resolveAvatarUrl(source.copy(type = PatchSourceType.GITHUB))
-    else -> AvatarLoader.resolveAvatarUrl(source)
-}
+internal fun sourceOwner(source: PatchSource): String? =
+    source.url?.let(SourceUrl::parse)?.let { it.owner ?: it.host }
 
 private fun dominantHue(bitmap: ImageBitmap): Pair<Float, Float>? {
     val pixels = runCatching { bitmap.toPixelMap() }.getOrNull() ?: return null

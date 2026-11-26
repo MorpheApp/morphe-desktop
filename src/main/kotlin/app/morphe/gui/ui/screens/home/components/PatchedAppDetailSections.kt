@@ -434,12 +434,13 @@ internal fun PatchSourceSection(
                                 verticalArrangement = Arrangement.spacedBy(4.dp),
                             ) {
                                 group.forEach { release ->
+                                    val relUrl = sourceUrl?.let { releaseUrl(it, release.tag) }
                                     MorpheCardChip(
                                         text = release.tag,
-                                        icon = if (sourceUrl != null) MorpheIcons.OpenInNew else null,
+                                        icon = if (relUrl != null) MorpheIcons.OpenInNew else null,
                                         onCard = false,
-                                        onIconClick = sourceUrl?.let {
-                                            { uriHandler.openUri(releaseUrl(it, release.tag)) }
+                                        onIconClick = relUrl?.let {
+                                            { uriHandler.openUri(it) }
                                         },
                                         onClick = {
                                             onChoose(

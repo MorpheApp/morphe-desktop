@@ -26,9 +26,13 @@ object PatchCache {
 
     private val versionRegex = Regex("""v?(\d+\.\d+\.\d+(?:[-._][A-Za-z0-9.]+)?)""")
 
+    /** Converts [repoPath] into a cross-platform safe directory name (preserving `owner-repo` for repos). */
+    fun dirName(repoPath: String): String =
+        repoPath.replace("/", "-").replace(Regex("""[<>:"\\|?*]"""), "_")
+
     /** Per-source cache directory. */
     fun sourceDir(repoPath: String): File =
-        File(MorpheData.patchesDir, repoPath.replace("/", "-")).also { it.mkdirs() }
+        File(MorpheData.patchesDir, dirName(repoPath)).also { it.mkdirs() }
 
     /** Constructs cache filename prefixed with release tag to prevent cross-version collisions. */
     fun cachedFileName(release: Release, asset: ReleaseAsset): String =
