@@ -1,3 +1,10 @@
+# [2.4.0-dev.5](https://github.com/MorpheApp/morphe-desktop/compare/v2.4.0-dev.4...v2.4.0-dev.5) (2026-11-26)
+
+
+### Features
+
+* Add Codeberg and JSON patch source support ([b37c7b1](https://github.com/MorpheApp/morphe-desktop/commit/b37c7b1e3c8743147b51884b80eeca5236c7ec90))
+
 # [2.4.0-dev.4](https://github.com/MorpheApp/morphe-desktop/compare/v2.4.0-dev.3...v2.4.0-dev.4) (2026-11-25)
 
 
