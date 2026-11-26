@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">个人访问令牌</string>
     <!-- App Info Dialog -->
     <string name="about_component">桌面</string>
-    <string name="about_version_patcher_library">补丁程序 v%1$s · 库 v%2$s</string>
+    <string name="about_version_patcher">补丁程序 v%1$s</string>
     <string name="about_update_available">有可用更新：%1$s</string>
     <string name="about_up_to_date">已是最新版本</string>
     <string name="about_links">官方链接</string>

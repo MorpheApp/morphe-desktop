@@ -911,7 +911,7 @@
     <string name="settings_github_pat_label">Asmeninis prieigos raktas</string>
     <!-- App Info Dialog -->
     <string name="about_component">Stalo kompiuteris</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Biblioteka v%2$s</string>
+    <string name="about_version_patcher">Pataisykis v%1$s</string>
     <string name="about_update_available">Atnaujinimas prieinamas: %1$s</string>
     <string name="about_up_to_date">Atnaujinta</string>
     <string name="about_links">Oficialios nuorodos</string>

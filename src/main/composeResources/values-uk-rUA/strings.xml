@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">Персональний токен доступу</string>
     <!-- App Info Dialog -->
     <string name="about_component">Десктоп</string>
-    <string name="about_version_patcher_library">Патчер v%1$s · Бібліотека v%2$s</string>
+    <string name="about_version_patcher">Патчер v%1$s</string>
     <string name="about_update_available">Доступне оновлення: %1$s</string>
     <string name="about_up_to_date">Актуальна версія</string>
     <string name="about_links">Офіційні посилання</string>

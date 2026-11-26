@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">Token d'Accés Personal</string>
     <!-- App Info Dialog -->
     <string name="about_component">Escriptori</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Biblioteca v%2$s</string>
+    <string name="about_version_patcher">Patcher v%1$s</string>
     <string name="about_update_available">Actualització disponible: %1$s</string>
     <string name="about_up_to_date">Actualitzat</string>
     <string name="about_links">Enllaços oficials</string>

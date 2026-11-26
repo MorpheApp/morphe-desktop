@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">Persónulegt aðgangstákn</string>
     <!-- App Info Dialog -->
     <string name="about_component">Skálborð</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Bókasafn v%2$s</string>
+    <string name="about_version_patcher">Patcher v%1$s</string>
     <string name="about_update_available">Uppfærsla í boði: %1$s</string>
     <string name="about_up_to_date">Uppfært</string>
     <string name="about_links">Opinber tenglar</string>

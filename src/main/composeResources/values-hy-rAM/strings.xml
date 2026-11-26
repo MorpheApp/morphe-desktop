@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">Անձնական հասանելիության տոկեն</string>
     <!-- App Info Dialog -->
     <string name="about_component">Աշխատասեղան</string>
-    <string name="about_version_patcher_library">Պատչեր v%1$s · Գրադարան v%2$s</string>
+    <string name="about_version_patcher">Պատչեր v%1$s</string>
     <string name="about_update_available">Հասանելի է թարմացում՝ %1$s</string>
     <string name="about_up_to_date">Թարմացված է</string>
     <string name="about_links">Պաշտոնական հղումներ</string>

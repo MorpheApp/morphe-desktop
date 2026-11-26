@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">ໂທເຄັນການເຂົ້າເຖິງສ່ວນຕົວ (Personal Access Token)</string>
     <!-- App Info Dialog -->
     <string name="about_component">ເດັສທັອບ</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · ຫໍສະໝຸດ v%2$s</string>
+    <string name="about_version_patcher">ຕົວປັບປຸງ Patcher v%1$s</string>
     <string name="about_update_available">ມີການອັບເດດ: %1$s</string>
     <string name="about_up_to_date">ເປັນເວີຊັນຫຼ້າສຸດແລ້ວ</string>
     <string name="about_links">ລິ້ງທາງການ</string>

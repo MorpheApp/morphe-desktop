@@ -916,7 +916,7 @@
     <string name="settings_github_pat_label">تۆکنی دەسترسی کەسی</string>
     <!-- App Info Dialog -->
     <string name="about_component">دێسکتۆپ</string>
-    <string name="about_version_patcher_library">پاچەر v%1$s · کتێبخانە v%2$s</string>
+    <string name="about_version_patcher">پاچی وێرژن %1$s</string>
     <string name="about_update_available">نوێکردنەوەی بەردەستە: %1$s</string>
     <string name="about_up_to_date">نوێکراوە</string>
     <string name="about_links">لینکە فەرمییەکان</string>

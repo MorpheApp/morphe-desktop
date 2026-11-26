@@ -914,7 +914,7 @@
     <string name="settings_github_pat_label">Personal Access Token</string>
     <!-- App Info Dialog -->
     <string name="about_component">Bureau</string>
-    <string name="about_version_patcher_library">Patcheur v%1$s · Bibliothèque v%2$s</string>
+    <string name="about_version_patcher">Patcheur v%1$s</string>
     <string name="about_update_available">Mise à jour disponible : %1$s</string>
     <string name="about_up_to_date">À jour</string>
     <string name="about_links">Liens officiels</string>

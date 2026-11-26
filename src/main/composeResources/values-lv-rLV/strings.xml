@@ -288,6 +288,7 @@
     <string name="home_advice_unsupported_by_patches">v%1$s vairs netiek atbalstīts jaunākajos patchos</string>
     <string name="home_date_today">šodien</string>
     <string name="home_date_yesterday">vakar</string>
+    <string name="home_date_days_ago">pirms %1$d dienām</string>
     <string name="home_your_apps_empty_title">Vēl nav patchotu lietotņu</string>
     <string name="home_your_apps_empty_subtitle">Patchojiet lietotni, un tā parādīsies šeit</string>
     <string name="home_your_apps_no_matches_subtitle">Nekas neatbilst \"%1$s\"</string>
@@ -377,6 +378,7 @@
     <string name="patch_selection_run_info_verify_sdk">Android SDK verificēšana: %1$s</string>
     <string name="patch_selection_group_universal">Universāls</string>
     <string name="patch_selection_group_ungrouped">Negrupēts</string>
+    <string name="patch_selection_group_selected_count">%1$d atlasīti</string>
     <!-- Patching Screen -->
     <string name="patching_start_over_button">Sākt no jauna</string>
     <string name="patching_patches_count">%1$d / %2$d patchi</string>
@@ -701,6 +703,7 @@
     <string name="licenses_dialog_title">Atvērtā koda licences</string>
     <string name="licenses_dialog_empty_failed">// neizdevās ielādēt licences</string>
     <string name="licenses_dialog_empty_no_matches">// nav sakrītumu</string>
+    <string name="licenses_dialog_footer_matched">%1$d / %2$d sakrīt</string>
     <string name="licenses_search_placeholder">Meklēt bibliotēkas, SPDX ID, unikālo ID...</string>
     <string name="licenses_row_authors_label">Autori</string>
     <string name="licenses_row_org_label">Org</string>
@@ -909,7 +912,7 @@
     <string name="settings_github_pat_label">Personīgā piekļuves tokenis</string>
     <!-- App Info Dialog -->
     <string name="about_component">Galddators</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Bibliotēka v%2$s</string>
+    <string name="about_version_patcher">Labotājs v%1$s</string>
     <string name="about_update_available">Pieejams atjauninājums: %1$s</string>
     <string name="about_up_to_date">Aktuāli</string>
     <string name="about_links">Oficiālās saites</string>

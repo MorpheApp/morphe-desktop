@@ -913,7 +913,7 @@
     <string name="settings_github_pat_label">Kişisel Erişim Belirteci</string>
     <!-- App Info Dialog -->
     <string name="about_component">Masaüstü</string>
-    <string name="about_version_patcher_library">Yamalayıcı v%1$s · Kütüphane v%2$s</string>
+    <string name="about_version_patcher">Yama Aracı v%1$s</string>
     <string name="about_update_available">Güncelleme mevcut: %1$s</string>
     <string name="about_up_to_date">Güncel</string>
     <string name="about_links">Resmî bağlantılar</string>

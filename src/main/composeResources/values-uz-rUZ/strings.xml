@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">Shaxsiy kirish tokeni</string>
     <!-- App Info Dialog -->
     <string name="about_component">Ish stoli</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Kutubxona v%2$s</string>
+    <string name="about_version_patcher">Patcher v%1$s</string>
     <string name="about_update_available">Yangilanish mavjud: %1$s</string>
     <string name="about_up_to_date">Oxirgi versiya</string>
     <string name="about_links">Rasmiy havolalar</string>

@@ -918,7 +918,7 @@ Esta no es una versión compatible oficialmente. Es muy probable que los parches
     <string name="settings_github_pat_label">Token de acceso personal</string>
     <!-- App Info Dialog -->
     <string name="about_component">Escritorio</string>
-    <string name="about_version_patcher_library">Parcheador v%1$s · Librería v%2$s</string>
+    <string name="about_version_patcher">Parcheador v%1$s</string>
     <string name="about_update_available">Actualización disponible: %1$s</string>
     <string name="about_up_to_date">Actualizado</string>
     <string name="about_links">Enlaces oficiales</string>

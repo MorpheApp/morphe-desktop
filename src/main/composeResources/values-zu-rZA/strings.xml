@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">Personal Access Token</string>
     <!-- App Info Dialog -->
     <string name="about_component">Ideskithopu</string>
-    <string name="about_version_patcher_library">IPatcher v%1$s · ILibrary v%2$s</string>
+    <string name="about_version_patcher">IPatcher v%1$s</string>
     <string name="about_update_available">Ukubuyekezwa kutholakala: %1$s</string>
     <string name="about_up_to_date">Sekuvuselelwe</string>
     <string name="about_links">Izixhumelo ezisemthethweni</string>

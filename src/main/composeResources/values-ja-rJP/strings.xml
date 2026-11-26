@@ -913,7 +913,7 @@
     <string name="settings_github_pat_label">個人アクセストークン</string>
     <!-- App Info Dialog -->
     <string name="about_component">デスクトップ</string>
-    <string name="about_version_patcher_library">パッチャー v%1$s · ライブラリ v%2$s</string>
+    <string name="about_version_patcher">パッチャー v%1$s</string>
     <string name="about_update_available">利用可能な更新があります: %1$s</string>
     <string name="about_up_to_date">最新の状態です</string>
     <string name="about_links">公式リンク</string>

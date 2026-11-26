@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">Жеке кирүү токени</string>
     <!-- App Info Dialog -->
     <string name="about_component">Иш столу</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Китепкана v%2$s</string>
+    <string name="about_version_patcher">Патчер v%1$s</string>
     <string name="about_update_available">Жаңыртуу бар: %1$s</string>
     <string name="about_up_to_date">Актуалдуу</string>
     <string name="about_links">Расмий шилтемелер</string>

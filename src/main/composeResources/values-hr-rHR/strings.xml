@@ -918,7 +918,7 @@ Ovo nije službeno podržana verzija. Zakrpe će najvjerojatnije propasti</strin
     <string name="settings_github_pat_label">Osobni pristupni token</string>
     <!-- App Info Dialog -->
     <string name="about_component">Radna površina</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Knjiznica v%2$s</string>
+    <string name="about_version_patcher">Patcher v%1$s</string>
     <string name="about_update_available">Dostupno je ažuriranje: %1$s</string>
     <string name="about_up_to_date">Ažurno</string>
     <string name="about_links">Službene poveznice</string>

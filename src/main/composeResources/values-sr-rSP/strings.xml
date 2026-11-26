@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">Лични приступни токен</string>
     <!-- App Info Dialog -->
     <string name="about_component">Рачунар</string>
-    <string name="about_version_patcher_library">Патчер в%1$s · Библиотека в%2$s</string>
+    <string name="about_version_patcher">Патчер в%1$s</string>
     <string name="about_update_available">Доступно ажурирање: %1$s</string>
     <string name="about_up_to_date">Ажурирано</string>
     <string name="about_links">Званични линкови</string>

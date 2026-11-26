@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">Isiklik juurdepääsu token</string>
     <!-- App Info Dialog -->
     <string name="about_component">Töölaud</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Raamatukogu v%2$s</string>
+    <string name="about_version_patcher">Paikaja v%1$s</string>
     <string name="about_update_available">Saadaval on uuendus: %1$s</string>
     <string name="about_up_to_date">Ajakohane</string>
     <string name="about_links">Ametlikud lingid</string>

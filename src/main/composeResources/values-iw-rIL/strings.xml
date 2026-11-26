@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">אסימון גישה אישי</string>
     <!-- App Info Dialog -->
     <string name="about_component">שולחן עבודה</string>
-    <string name="about_version_patcher_library">Patcher גרסה %1$s · ספרייה גרסה %2$s</string>
+    <string name="about_version_patcher">מתקן v%1$s</string>
     <string name="about_update_available">עדכון זמין: %1$s</string>
     <string name="about_up_to_date">מעודכן</string>
     <string name="about_links">קישורים רשמיים</string>

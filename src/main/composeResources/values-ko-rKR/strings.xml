@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">개인 액세스 토큰</string>
     <!-- App Info Dialog -->
     <string name="about_component">데스크톱</string>
-    <string name="about_version_patcher_library">패처 v%1$s · 라이브러리 v%2$s</string>
+    <string name="about_version_patcher">패처 v%1$s</string>
     <string name="about_update_available">업데이트 가능: %1$s</string>
     <string name="about_up_to_date">최신 버전</string>
     <string name="about_links">공식 링크</string>

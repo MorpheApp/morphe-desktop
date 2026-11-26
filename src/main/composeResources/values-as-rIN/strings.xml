@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">ব্যক্তিগত এক্সেছ টোকেন</string>
     <!-- App Info Dialog -->
     <string name="about_component">ডেস্কটপ</string>
-    <string name="about_version_patcher_library">প্যাচাৰ v%1$s · লাইব্ৰেৰী v%2$s</string>
+    <string name="about_version_patcher">পেচাৰ v%1$s</string>
     <string name="about_update_available">আপডেট উপলব্ধ: %1$s</string>
     <string name="about_up_to_date">আপ-টু-ডেট</string>
     <string name="about_links">আধিকাৰিক লিংকসমূহ</string>

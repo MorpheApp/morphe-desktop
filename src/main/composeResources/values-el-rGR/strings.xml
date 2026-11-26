@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">Προσωπικός κωδικός πρόσβασης</string>
     <!-- App Info Dialog -->
     <string name="about_component">Επιτραπέζιος</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Βιβλιοθήκη v%2$s</string>
+    <string name="about_version_patcher">Patcher έκδοση %1$s</string>
     <string name="about_update_available">Διαθέσιμη ενημέρωση: %1$s</string>
     <string name="about_up_to_date">Ενημερωμένο</string>
     <string name="about_links">Επίσημοι σύνδεσμοι</string>

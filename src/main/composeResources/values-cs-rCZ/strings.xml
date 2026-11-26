@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">Osobní přístupový token</string>
     <!-- App Info Dialog -->
     <string name="about_component">Stolní verze</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Knihovna v%2$s</string>
+    <string name="about_version_patcher">Patcher v%1$s</string>
     <string name="about_update_available">K dispozici aktualizace: %1$s</string>
     <string name="about_up_to_date">Aktuální verze</string>
     <string name="about_links">Odkazy na oficiální stránky</string>

@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">رمز الوصول الشخصي</string>
     <!-- App Info Dialog -->
     <string name="about_component">سطح المكتب</string>
-    <string name="about_version_patcher_library">أداة التعديل v%1$s · المكتبة v%2$s</string>
+    <string name="about_version_patcher">أداة التعديل إصدار %1$s</string>
     <string name="about_update_available">تحديث متاح: %1$s</string>
     <string name="about_up_to_date">محدَّث</string>
     <string name="about_links">الروابط الرسمية</string>

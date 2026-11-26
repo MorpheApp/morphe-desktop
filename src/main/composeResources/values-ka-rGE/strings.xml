@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">პერსონალური წვდომის ტოკენი</string>
     <!-- App Info Dialog -->
     <string name="about_component">სამუშაო მაგიდა</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · ბიბლიოთეკა v%2$s</string>
+    <string name="about_version_patcher">პატჩერი v%1$s</string>
     <string name="about_update_available">ხელმისაწვდომია განახლება: %1$s</string>
     <string name="about_up_to_date">აქტუალურია</string>
     <string name="about_links">ოფიციალური ბმულები</string>

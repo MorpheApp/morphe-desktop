@@ -913,7 +913,7 @@
     <string name="settings_github_pat_label">Osobisty token dostępu</string>
     <!-- App Info Dialog -->
     <string name="about_component">Desktop</string>
-    <string name="about_version_patcher_library">Modyfikator v%1$s · Biblioteka v%2$s</string>
+    <string name="about_version_patcher">Modyfikator v%1$s</string>
     <string name="about_update_available">Dostępna aktualizacja: %1$s</string>
     <string name="about_up_to_date">Aktualny</string>
     <string name="about_links">Oficjalne linki</string>

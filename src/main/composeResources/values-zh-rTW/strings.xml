@@ -568,7 +568,7 @@
     <string name="source_card_updates_manual">手動 (替換檔案)</string>
     <string name="source_card_loads_newest">資料夾中最新的 .mpp</string>
     <string name="source_card_loads_pr">最新的拉取請求構建</string>
-    <string name="source_card_disabled">此來源已禁用。請啟用它以載入補丁</string>
+    <string name="source_card_disabled">此來源已停用。請啟用它以載入修補</string>
     <string name="source_card_disabled_tag">已停用</string>
     <string name="source_card_last_enabled">必須至少保留一個啟用的來源</string>
     <string name="source_card_retry">重試</string>
@@ -624,14 +624,14 @@
     <string name="source_remove_title">移除 %1$s？</string>
     <string name="source_remove_body">其修補程式將不再可用。您可以稍後再次新增此來源</string>
     <string name="source_prerelease_title">啟用預發佈修補程式？</string>
-    <string name="source_prerelease_body">預發行版本仍處於開發階段。補丁可能會失敗或導致應用程式損壞，且功能可能會在不經通知的情況下發生變更</string>
+    <string name="source_prerelease_body">預發行版本仍處於開發階段。修補可能會失敗或導致應用程式損壞，且功能可能會在未經通知的情況下發生變更</string>
     <string name="source_prerelease_confirm">啟用</string>
     <string name="patch_source_dialog_kind_repository">遠端</string>
     <string name="patch_source_dialog_kind_local">本機</string>
     <string name="patch_source_dialog_valid_github">GitHub 儲存庫</string>
     <string name="patch_source_dialog_valid_gitlab">GitLab 儲存庫</string>
     <string name="patch_source_dialog_valid_pr">%2$s 上的 Pull request #%1$s。始終使用此 PR 的最新構建版本</string>
-    <string name="patch_source_dialog_builtin_note">這是內建的補丁來源。其名稱和位置無法更改。可以在其卡片上切換穩定版本和預發行版本</string>
+    <string name="patch_source_dialog_builtin_note">這是內建的修補來源。其名稱和位置無法更改。可以在其卡片上切換穩定版本和預發行版本</string>
     <!-- Signing Key Trust Dialog -->
     <string name="sources_signing_key_changed_named">「%1$s」未更新，因為其最新版本並非由先前使用的金鑰所簽署</string>
     <string name="sources_signing_key_new">新金鑰</string>
@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">個人存取權杖</string>
     <!-- App Info Dialog -->
     <string name="about_component">桌面</string>
-    <string name="about_version_patcher_library">修補程式 v%1$s · 函式庫 v%2$s</string>
+    <string name="about_version_patcher">修補程式 v%1$s</string>
     <string name="about_update_available">可用更新：%1$s</string>
     <string name="about_up_to_date">已追上</string>
     <string name="about_links">官方連結</string>

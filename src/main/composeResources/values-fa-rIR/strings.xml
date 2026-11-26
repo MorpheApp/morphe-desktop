@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">توکن دسترسی شخصی</string>
     <!-- App Info Dialog -->
     <string name="about_component">دسکتاپ</string>
-    <string name="about_version_patcher_library">پچر نسخه %1$s · کتابخانه نسخه %2$s</string>
+    <string name="about_version_patcher">پچر نسخه %1$s</string>
     <string name="about_update_available">به‌روزرسانی موجود است: %1$s</string>
     <string name="about_up_to_date">به‌روز است</string>
     <string name="about_links">پیوندهای رسمی</string>

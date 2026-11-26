@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">Жеке қолжетімділік токені</string>
     <!-- App Info Dialog -->
     <string name="about_component">Жасөстелікнүкте</string>
-    <string name="about_version_patcher_library">Patcher нұсқасы %1$s · Кітапхана нұсқасы %2$s</string>
+    <string name="about_version_patcher">Patcher нұсқасы %1$s</string>
     <string name="about_update_available">Жаңарту қолжетімді: %1$s</string>
     <string name="about_up_to_date">Соңғы нұсқасы</string>
     <string name="about_links">Ресми сілтемелер</string>

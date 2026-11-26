@@ -911,7 +911,7 @@
     <string name="settings_github_pat_label">தனிப்பட்ட அணுகல் டோக்கன்</string>
     <!-- App Info Dialog -->
     <string name="about_component">டெஸ்க்டாப்</string>
-    <string name="about_version_patcher_library">பேட்சர் v%1$s · லைப்ரரி v%2$s</string>
+    <string name="about_version_patcher">பேட்சர் v%1$s</string>
     <string name="about_update_available">புதுப்பிப்பு கிடைக்கிறது: %1$s</string>
     <string name="about_up_to_date">புதுப்பிக்கப்பட்டது</string>
     <string name="about_links">அதிகாரப்பூர்வ இணைப்புகள்</string>

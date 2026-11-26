@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">व्यक्तिगत एक्सेस टोकन</string>
     <!-- App Info Dialog -->
     <string name="about_component">डेस्कटॉप</string>
-    <string name="about_version_patcher_library">पॅचर v%1$s · लाइब्रेरी v%2$s</string>
+    <string name="about_version_patcher">पैचर v%1$s</string>
     <string name="about_update_available">अपडेट उपलब्ध है: %1$s</string>
     <string name="about_up_to_date">अप-टू-डेट</string>
     <string name="about_links">आधिकारिक लिंक</string>

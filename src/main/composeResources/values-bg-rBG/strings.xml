@@ -916,7 +916,7 @@
     <string name="settings_github_pat_label">Личен токен за достъп</string>
     <!-- App Info Dialog -->
     <string name="about_component">Настолно</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Библиотека v%2$s</string>
+    <string name="about_version_patcher">Пачер v%1$s</string>
     <string name="about_update_available">Достигна достъпно обновление: %1$s</string>
     <string name="about_up_to_date">Актуален</string>
     <string name="about_links">Официални линкове</string>

@@ -46,7 +46,7 @@
     <string name="enable_adb_button">ADB-ni aktivləşdir</string>
     <string name="drag_to_reorder">Yenidən sıralamaq üçün sürükləyin</string>
     <string name="website">Veb-sayt</string>
-    <string name="off">Deaktiv</string>
+    <string name="off">Qapalı</string>
     <string name="on">Aktiv</string>
     <string name="browse">Axtar</string>
     <string name="save">Yadda saxla</string>
@@ -95,7 +95,7 @@
     <!-- App Card Fill Dialog -->
     <string name="card_fill_title">Kartı fərdiləşdir</string>
     <string name="card_fill_example_app_name">Nümunə tətbiq adı</string>
-    <string name="card_fill_mode_default">Varsayılan</string>
+    <string name="card_fill_mode_default">İlkin</string>
     <string name="card_fill_mode_default_blurb">Yamaq paketi ilə gələn standart rəng</string>
     <string name="card_fill_mode_accent">Vurğu rəngi</string>
     <string name="card_fill_mode_accent_blurb">Sistemin vurğu rəngini izləyir və o dəyişdikdə yenilənir</string>
@@ -144,7 +144,7 @@
     <string name="adb_error_run_command">Əmri icra etmək mümkün olmadı: %1$s</string>
     <string name="adb_error_pm_list_packages">pm list packages əmri alınmadı: %1$s</string>
     <string name="adb_status_routing_links">Keçidlər %1$s tətbiqinə yönləndirilir…</string>
-    <string name="adb_status_restoring_links">Varsayılan keçid idarəetməsi bərpa olunur…</string>
+    <string name="adb_status_restoring_links">İlkin keçid idarəetməsi bərpa olunur…</string>
     <string name="adb_status_disabling_links">%1$s tətbiqində keçidlər söndürülür…</string>
     <string name="adb_status_enabling_links">%1$s tətbiqində keçidlər yenidən aktivləşdirilir…</string>
     <!-- Version Status (ApkInfoCard & Quick Patch) -->
@@ -328,7 +328,7 @@
     <string name="patch_selection_icon_dialog_delete_message">Bu, ikonu təmizləyir və yadda saxlanılan layihəni, həmçinin yaradılan faylları silir. Bu əməliyyat geri qaytarıla bilməz</string>
     <string name="patch_selection_custom_icon_hint">Bu qovluğu özünüz yaratmalı deyilsiniz! İkon Studiyasında yaratmaq və ya Menecerdən idxal etmək üçün Dizayn et / Redaktə et ikonuna klikləyin</string>
     <string name="patch_selection_option_enabled">Aktivdir</string>
-    <string name="patch_selection_option_disabled">Deaktivdir</string>
+    <string name="patch_selection_option_disabled">Qapalıdı</string>
     <string name="patch_selection_mode_your_defaults">Sizin standartlarınız</string>
     <string name="patch_selection_mode_patch_defaults">Yamaq standartları</string>
     <string name="patch_selection_mode_all">Hamısı</string>
@@ -443,7 +443,7 @@
     <string name="result_adb_mount_version_mismatch">%3$s üzərindəki əsas tətbiq v%1$s 'dir, lakin yamaqlanmış APK v%2$s-dir. Root montajlaması uyğun versiyalar tələb edir</string>
     <string name="result_adb_mount_abi_mismatch">%3$s cihazı %1$s 'dir, lakin APK yalnız [%2$s] ehtiva edir. Yerli kitabxanalar yüklənə bilməyəcək</string>
     <string name="result_link_default_restored">Standart keçid idarəetməsi bərpa olundu</string>
-    <string name="result_link_routed_stock_disabled">Keçidlər yamaqlanmış tətbiqə yönləndirildi, orijinal deaktiv edildi</string>
+    <string name="result_link_routed_stock_disabled">Keçidlər yamaqlanmış tətbiqə yönləndirildi, orijinal bağlandı</string>
     <string name="result_adb_not_found_hint">ADB tapılmadı. Birbaşa quraşdırmanı aktiv etmək üçün Android SDK Platform Tools quraşdırın</string>
     <string name="result_adb_section_title">ADB ilə quraşdırma</string>
     <string name="result_adb_no_devices">Heç bir cihaz qoşulmayıb</string>
@@ -460,7 +460,7 @@
     <string name="result_cleanup_cleaned_title">Müvəqqəti fayllar təmizləndi</string>
     <string name="result_cleanup_auto_enabled">Avto-təmizləmə aktivdir</string>
     <string name="result_cleanup_freed">%1$s boşaldıldı</string>
-    <string name="result_adb_disabled_title">ADB qapalıdır. Cihazda quraşdırma deaktivdir</string>
+    <string name="result_adb_disabled_title">ADB qapalıdır. Cihazda quraşdırma qapalıdır</string>
     <string name="result_adb_disabled_subtitle">Yamaqlanmış APK-ları birbaşa göndərmək üçün Parametrlərdən ADB-ni aktiv edin</string>
     <!-- Icon Studio -->
     <string name="icon_studio_title">İkon Studiyası</string>
@@ -495,7 +495,7 @@
     <string name="icon_studio_adjust_saturation">Doyğunluq</string>
     <string name="icon_studio_adjust_brightness">Parlaqlıq</string>
     <string name="icon_studio_effect_shadow">Kölgə</string>
-    <string name="icon_studio_adjust_y_offset">Y ofseti</string>
+    <string name="icon_studio_adjust_y_offset">Y sürüşməsi</string>
     <string name="icon_studio_adjust_blur">Bulanıqlıq</string>
     <string name="icon_studio_effect_glow">Parlama</string>
     <string name="icon_studio_effect_stroke">Haşiyə</string>
@@ -733,8 +733,8 @@
     <string name="settings_section_theme">Mövzu</string>
     <string name="settings_appearance_theme_mode">Kolorit rejimi</string>
     <string name="settings_appearance_theme_mode_description">İşıqlı, qaranlıq, təmiz qara və ya sistem koloriti arasında keçid et</string>
-    <string name="settings_theme_light">Açıq</string>
-    <string name="settings_theme_dark">Tünd</string>
+    <string name="settings_theme_light">İşıqlı</string>
+    <string name="settings_theme_dark">Qaranlıq</string>
     <string name="settings_theme_amoled">Amoled</string>
     <string name="settings_appearance_color_style">Rəng üslubu</string>
     <string name="settings_appearance_color_style_description">Rəngli Morphe palitrası və ya boz rəngli saya üslub</string>
@@ -912,7 +912,6 @@
     <string name="settings_github_pat_label">Şəxsi Giriş Tokeni (PAT)</string>
     <!-- App Info Dialog -->
     <string name="about_component">Masaüstü</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Kitabxana v%2$s</string>
     <string name="about_update_available">Yeniləmə var: %1$s</string>
     <string name="about_up_to_date">Yenilənib</string>
     <string name="about_links">Rəsmi bağlantılar</string>

@@ -912,7 +912,7 @@
     <string name="settings_github_pat_label">Token ya Upatikanaji Binafsi</string>
     <!-- App Info Dialog -->
     <string name="about_component">Kompyuta ya mezani</string>
-    <string name="about_version_patcher_library">Patcher v%1$s · Maktaba v%2$s</string>
+    <string name="about_version_patcher">Kipachia v%1$s</string>
     <string name="about_update_available">Sasisho linapatikana: %1$s</string>
     <string name="about_up_to_date">Imesasishwa</string>
     <string name="about_links">Viungo rasmi</string>
