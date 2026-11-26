@@ -48,7 +48,6 @@ object Logger {
                 appendLine("Morphe-GUI Started")
                 appendLine("Version: ${UpdateChecker.currentVersion() ?: "dev"}")
                 appendLine("morphe-patcher: ${MorpheComponents.patcherVersion ?: "unknown"}")
-                appendLine("morphe-library: ${MorpheComponents.libraryVersion ?: "unknown"}")
                 appendLine("OS: ${System.getProperty("os.name")} ${System.getProperty("os.version")} (${System.getProperty("os.arch")})")
                 appendLine("Java: ${System.getProperty("java.version")} (${System.getProperty("java.vendor")}) ${System.getProperty("sun.arch.data.model")}-bit")
                 appendLine("Memory: ${Runtime.getRuntime().maxMemory() / 1024 / 1024} MB max")

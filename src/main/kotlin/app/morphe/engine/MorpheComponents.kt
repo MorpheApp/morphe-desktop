@@ -15,12 +15,6 @@ object MorpheComponents {
         readVersionProperty("/app/morphe/patcher/version.properties", "version")
     }
 
-    /** Version of morphe-library on the classpath. */
-    val libraryVersion: String? by lazy {
-        readVersionProperty("/app/morphe/library/version.properties", "version")
-            ?: readVersionProperty("/app/morphe/cli/components.properties", "libraryVersion")
-    }
-
     private fun readVersionProperty(resourcePath: String, key: String): String? =
         runCatching {
             MorpheComponents::class.java
