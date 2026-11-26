@@ -26,7 +26,7 @@ interface RemotePatchSource {
     val repoPath: String
 
     /** Whether this source supports switching between stable and pre-release channels. */
-    val supportsPrerelease: Boolean get() = true
+    val supportsPrerelease: Boolean
 
     /** Fetches all releases for [repoPath], normalized into the shared [Release] model. */
     suspend fun listReleases(): Result<List<Release>>

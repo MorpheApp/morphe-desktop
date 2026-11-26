@@ -51,6 +51,7 @@ class PatchBundleSigningTest {
     ) : RemotePatchSource {
         var downloadCount = 0
         override val provider: PatchProvider = PatchProvider.GITHUB
+        override val supportsPrerelease: Boolean = true
         override suspend fun listReleases(): Result<List<Release>> = Result.success(emptyList())
         override suspend fun fetchLatestFromManifest(prerelease: Boolean): Result<Release> =
             Result.failure(UnsupportedOperationException())

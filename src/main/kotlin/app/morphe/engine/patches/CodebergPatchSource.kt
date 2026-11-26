@@ -25,6 +25,7 @@ class CodebergPatchSource(
 ) : RemotePatchSource {
 
     override val provider = PatchProvider.CODEBERG
+    override val supportsPrerelease: Boolean = true
 
     private val releasesEndpoint = "$apiBase/repos/$repoPath/releases?limit=50"
 

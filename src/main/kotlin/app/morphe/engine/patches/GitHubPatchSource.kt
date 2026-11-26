@@ -24,6 +24,7 @@ open class GitHubPatchSource(
 ) : RemotePatchSource {
 
     override val provider = PatchProvider.GITHUB
+    override val supportsPrerelease: Boolean = true
 
     private val releasesEndpoint = "$apiBase/repos/$repoPath/releases"
 

@@ -37,6 +37,7 @@ class GitLabPatchSource(
 ) : RemotePatchSource {
 
     override val provider = PatchProvider.GITLAB
+    override val supportsPrerelease: Boolean = true
 
     // GitLab's projects API expects the path URL-encoded as `owner%2Frepo`.
     private val releasesEndpoint: String = run {

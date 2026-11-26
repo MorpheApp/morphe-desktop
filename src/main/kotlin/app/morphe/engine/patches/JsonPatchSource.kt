@@ -71,6 +71,22 @@ class JsonPatchSource(
         return release.copy(pageUrl = inferred)
     }
 
+    private suspend fun fetchSingleEndpoint(): Result<Release> {
+        val targetUrl = if (supportsPrerelease) endpointOn(BRANCH_STABLE) else endpoint
+        return try {
+            val bundle = fetchBundle(targetUrl)
+            val isPre = if (supportsPrerelease) false else bundle.version.isDevTag()
+            val release = bundle.toJsonRelease(prerelease = isPre)
+            Logger.info("JSON: bundle → ${release.tagName} @ $targetUrl")
+            Result.success(release)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Logger.warn("JSON manifest fetch error for $targetUrl: ${e.message}")
+            Result.failure(e)
+        }
+    }
+
     override suspend fun fetchLatestFromManifest(prerelease: Boolean): Result<Release> = withContext(Dispatchers.IO) {
         if (prerelease && supportsPrerelease) {
             coroutineScope {
@@ -97,19 +113,7 @@ class JsonPatchSource(
                 }
             }
         } else {
-            val targetUrl = if (supportsPrerelease) endpointOn(BRANCH_STABLE) else endpoint
-            try {
-                val bundle = fetchBundle(targetUrl)
-                val isPre = if (supportsPrerelease) false else bundle.version.isDevTag()
-                val release = bundle.toJsonRelease(prerelease = isPre)
-                Logger.info("JSON: bundle → ${release.tagName} @ $targetUrl")
-                Result.success(release)
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                Logger.warn("JSON manifest fetch error for $targetUrl: ${e.message}")
-                Result.failure(e)
-            }
+            fetchSingleEndpoint()
         }
     }
 
@@ -139,7 +143,7 @@ class JsonPatchSource(
                 }
             }
         } else {
-            fetchLatestFromManifest(prerelease = false).map(::listOf)
+            fetchSingleEndpoint().map(::listOf)
         }
     }
 
