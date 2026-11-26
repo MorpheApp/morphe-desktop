@@ -80,7 +80,6 @@ internal fun RunInfoDialog(info: RunInfo, onDismiss: () -> Unit) {
                     val modeLabel = when (dev.bytecodeMode) {
                         "STRIP_FAST" -> stringResource(Res.string.settings_dev_bytecode_mode_strip_fast)
                         "STRIP_SAFE" -> stringResource(Res.string.settings_dev_bytecode_mode_strip_safe)
-                        "FULL" -> stringResource(Res.string.settings_dev_bytecode_mode_full)
                         else -> dev.bytecodeMode
                     }
                     RunInfoDetail(stringResource(Res.string.patch_selection_run_info_bytecode_mode, modeLabel))

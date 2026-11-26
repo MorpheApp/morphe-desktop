@@ -513,7 +513,7 @@ A debugging aid: capture logcat from a connected device after a patched app cras
 
 This section is for people **building** patches and other developers. Off by default. Toggling it on unlocks patch-development tools under **Settings → Advanced → Developer options** as well as folder source workflows. Please feel free to make a request in the issues tab if you feel a feature could be added here.
 
-- **Bytecode mode** – choose the DEX bytecode transformation mode applied during patching (*Fast*, *Safe*, or *Full*).
+- **Bytecode mode** – choose the DEX bytecode transformation mode applied during patching (*Fast* or *Safe*).
 - **Fingerprint validation** – validate that each `match()` matches only one method (slower patching, useful when testing patches).
 - **Android SDK verification** – verify patched DEX and APK files using Android SDK tools (`d8`, `zipalign`), with an **Android SDK directory** picker (**Auto-detected** / **Browse** / **Reset**).
 - **Folder sources** – normally a local source points at a single `.mpp` file. With Developer options on, the add/edit source dialog gains a **Folder** button next to **File**. Pick a folder and Morphe always loads the **newest `.mpp`** inside it. Point it at your patch build-output directory once and you never re-pick the file: each rebuild is used on the next load. The [source sheet](#gui-expert-sources) also gains a **refresh** button (top-right) that re-scans on demand, so a patch you just built shows up without leaving the screen. Build outputs like `*-sources.mpp` and `*-javadoc.mpp` are always ignored, and you can set your own exclude patterns for a folder source from the source manager.

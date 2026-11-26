@@ -821,7 +821,6 @@
     <string name="settings_dev_bytecode_mode_desc">Transformation mode applied to DEX bytecode during patching</string>
     <string name="settings_dev_bytecode_mode_strip_fast">Fast</string>
     <string name="settings_dev_bytecode_mode_strip_safe">Safe</string>
-    <string name="settings_dev_bytecode_mode_full">Full</string>
     <string name="settings_dev_validate_label">Fingerprint validation</string>
     <string name="settings_dev_validate_desc">Validate that each match() matches only one method (slower patching, for patch testing)</string>
     <string name="settings_dev_verify_sdk_label">Android SDK verification</string>
