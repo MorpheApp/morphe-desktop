@@ -130,13 +130,13 @@ class PatchSourceSupportTest {
     }
 
     @Test
-    fun `MorpheIcons constructs Github, Gitlab, Codeberg, Link, and BugReport vectors cleanly`() {
-        assertEquals("Github", MorpheIcons.Github.name)
-        assertEquals(640f, MorpheIcons.Github.viewportWidth)
-        assertEquals(640f, MorpheIcons.Github.viewportHeight)
-        assertEquals("Gitlab", MorpheIcons.Gitlab.name)
-        assertEquals(640f, MorpheIcons.Gitlab.viewportWidth)
-        assertEquals(640f, MorpheIcons.Gitlab.viewportHeight)
+    fun `MorpheIcons constructs GitHub, GitLab, Codeberg, Link, and BugReport vectors cleanly`() {
+        assertEquals("GitHub", MorpheIcons.GitHub.name)
+        assertEquals(640f, MorpheIcons.GitHub.viewportWidth)
+        assertEquals(640f, MorpheIcons.GitHub.viewportHeight)
+        assertEquals("GitLab", MorpheIcons.GitLab.name)
+        assertEquals(640f, MorpheIcons.GitLab.viewportWidth)
+        assertEquals(640f, MorpheIcons.GitLab.viewportHeight)
         assertEquals("Codeberg", MorpheIcons.Codeberg.name)
         assertEquals(640f, MorpheIcons.Codeberg.viewportWidth)
         assertEquals(640f, MorpheIcons.Codeberg.viewportHeight)
@@ -146,16 +146,16 @@ class PatchSourceSupportTest {
 
     @Test
     fun `sourceIcon resolves host icons, code-host json icons, custom json links, and local overrides`() {
-        assertEquals(MorpheIcons.Github, sourceIcon(PatchSourceType.DEFAULT))
-        assertEquals(MorpheIcons.Github, sourceIcon(PatchSourceType.GITHUB, sources[1].url))
-        assertEquals(MorpheIcons.Gitlab, sourceIcon(PatchSourceType.GITLAB, sources[2].url))
+        assertEquals(MorpheIcons.GitHub, sourceIcon(PatchSourceType.DEFAULT))
+        assertEquals(MorpheIcons.GitHub, sourceIcon(PatchSourceType.GITHUB, sources[1].url))
+        assertEquals(MorpheIcons.GitLab, sourceIcon(PatchSourceType.GITLAB, sources[2].url))
         assertEquals(MorpheIcons.Codeberg, sourceIcon(PatchSourceType.CODEBERG, sources[3].url))
         assertEquals(
-            MorpheIcons.Github,
+            MorpheIcons.GitHub,
             sourceIcon(PatchSourceType.JSON, "https://raw.githubusercontent.com/Owner/Repo/main/patches-bundle.json"),
         )
         assertEquals(
-            MorpheIcons.Gitlab,
+            MorpheIcons.GitLab,
             sourceIcon(PatchSourceType.JSON, "https://gitlab.com/Owner/Repo/-/raw/main/patches-bundle.json"),
         )
         assertEquals(MorpheIcons.Codeberg, sourceIcon(PatchSourceType.JSON, sources[4].url))
