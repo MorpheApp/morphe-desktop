@@ -18,6 +18,7 @@ Now that you've done your first run, let's dig deeper into how the magic happens
   - [Custom app icons (Icon Studio)](#gui-icon-studio)
   - [Link handling ("open with")](#gui-expert-links)
   - [Your apps](#gui-your-apps)
+  - [Batch patching](#gui-batch)
   - [Settings](#gui-settings)
     - [Storage & cache](#gui-settings-storage)
     - [Signing](#gui-settings-signing)
@@ -139,14 +140,14 @@ The **Navigation Pill** sits in the center of the bar on Home with an animated s
 
 | Control                                          | What it does                                                                           | CLI equivalent                                                             |
 |--------------------------------------------------|----------------------------------------------------------------------------------------|----------------------------------------------------------------------------|
-| Drag & drop / **Browse files**                   | Choose the APK to patch (`.apk`, `.apkm`, `.xapk`, `.apks`)                            | positional `<apk>` argument                                                |
+| Drag & drop / **Browse files**                   | Choose one APK to patch, or drop/select 2+ files (`.apk`, `.apkm`, `.xapk`, `.apks`) to open [Batch patching](#gui-batch) | positional `<apk>` argument                                                |
 | **Supported apps** list                          | The apps your patches target, each tagged with compatibility status                    | informational – compare with [`list-versions`](#subcommand-3-list-versions) |
 | **Patch source selector**                        | Choose which enabled source to patch with (in Simple mode when multiple sources exist) | `-p <source>`                                                              |
 | **Change APK**                                   | Swap the selected file                                                                 | –                                                                          |
 | **Patch** (Simple mode)                          | Immediately patch using default patches and selected source                            | runs the `patch` command with defaults                                     |
 | **Continue** / **Continue anyway** (Expert mode) | Proceed to patch source & patch selection                                              | `--force` (when it reads *Continue anyway*)                                |
 
-Drop an APK anywhere on the window (the zone reads **Drop APK here** → **Release to drop**) or use **Browse files**. Split-APK bundles (`.apkm` / `.xapk` / `.apks`) are merged into a single APK automatically.
+Drop an APK anywhere on the window (the zone reads **Drop APK(s) here** → **Release to drop**) or click it to browse. Picking one file stages it for single-app patching; dropping or selecting 2+ files opens [Batch patching](#gui-batch) directly with all of them queued. Split-APK bundles (`.apkm` / `.xapk` / `.apks`) are merged into a single APK automatically.
 
 The **Supported apps** list shows what your enabled patch sources can target, each tagged with its compatibility status:
 - **Recommended** (primary color): The exact version tested and targeted by the patch bundle.
@@ -380,7 +381,7 @@ The **Link handling** section appears on the Result screen once the patched app 
 
 <h3 id="gui-your-apps">Your apps</h3>
 
-The home screen has two tabs: **Supported apps** (what your patches can target) and **Your apps**, a history of everything you've patched with Morphe. The "Your apps" tab carries a count badge, and when newer patches are available a banner ("N patched apps have updates available") jumps you there.
+The home screen has two tabs: **All apps** (what your patches can target) and **Your apps**, a history of everything you've patched with Morphe. The "Your apps" tab carries a count badge, and when newer patches are available a banner (*"N patched apps have updates available"*) lets you click **View** to inspect them or **Patch all** to update every outdated app in one [Batch patching](#gui-batch) run. You can also toggle **Select** next to the filter chips to multi-select apps across both tabs.
 
 <p align="center">
   <img src="images/documentation/gui/your-apps.png" width="60%" alt="Your Apps section" style="vertical-align: middle"/>
@@ -410,6 +411,52 @@ The detail view provides a comprehensive breakdown of the patched app:
   <img src="images/documentation/gui/your-apps-details-dialog.png" width="60%" alt="Your Apps details dialog" style="vertical-align: middle"/>
 </p>
 
+<h3 id="gui-batch">Batch patching</h3>
+
+Patch multiple apps in a single queued run instead of configuring them one by one. Batch patching works in both **Simple mode** and **Expert mode** and processes every queued app sequentially from a single preflight screen.
+
+#### Starting a batch
+
+You can start (or append to) a batch from **Home → Apps** in three ways:
+
+- **Multi-select (*Select*):** Click **Select** next to the **All apps** / **Your apps** filter chips to switch rows into checkboxes. Check apps across either or both tabs, use **Select all** / **Deselect all**, and click **Patch selected (N)** (or **Add to queue (N)** when a saved queue already exists).
+- **Update banner (*Patch all*):** When previously patched apps have patch updates available, click **Patch all** on the update banner to queue all outdated apps at once.
+- **Multi-APK drop or file picker:** Drag and drop 2 or more `.apk`, `.apkm`, `.xapk`, or `.apks` files onto **Drop APK(s) here**, or click to select multiple files at once.
+
+<p align="center">
+  <img src="images/documentation/gui/batch-home-select.png" width="55%" alt="Home multi-select for batch patching" style="vertical-align: middle"/>
+</p>
+
+#### Preflight review
+
+Once opened, Morphe inspects dropped APKs and automatically resolves local files for each queued package from files you attached, kept copies in `morphe-data/original-apks/`, and your patched-app history. Each app appears as a card showing its version, source APK, patch count, bundle names, and status badge (**Ready**, **APK needed**, **Unsupported version**, **Root mount**, etc.):
+
+| Control | What it does |
+|---|---|
+| **+ Add APKs** / drag & drop | Add more `.apk` / `.apkm` / `.xapk` / `.apks` files to the queue (dropping onto the window automatically attaches or appends) |
+| **Attach APK** / **Change APK** | Pick a local APK or split bundle for an app (or replace its current file) |
+| **Download APK** | Opens the app's download link when an APK is needed, outdated, or mismatched |
+| **Force version** | Override a version mismatch and queue an **Unsupported version** APK anyway (marked **Forced**) |
+| **Source** *(Simple mode)* | Switch patch source when multiple enabled sources support the app |
+| **Edit patches** | Opens the full [Patch selection](#gui-expert-selection) screen in batch-edit mode (`Save selection (N)` syncs choices back to the queue) |
+| **# Mount** *(Expert mode)* | Toggle root mount mode for that app |
+| **Exclude** / **Include** | Temporarily skip an app without removing it from the queue |
+| **Install / Mount when finished** | Shown when ADB is enabled and a device is connected; automatically installs/mounts patched apps after the batch finishes |
+| **Start batch (N)** / **Clear** / **Close** | Run all ready apps, clear the queue, or leave preflight (**Keep queue** saves the queue across restarts; **Clear queue** discards it) |
+
+<p align="center">
+  <img src="images/documentation/gui/batch-preflight.png" width="70%" alt="Batch patching preflight screen" style="vertical-align: middle"/>
+</p>
+
+#### Running, status banner &amp; finished
+
+- **Sequential execution:** Clicking **Start batch (N)** patches each ready app in order. In **Simple mode** it shows the circular progress view; in **Expert mode** it shows live logs and performance graphs. Use **Stop** in the header to cancel the active item and skip remaining queued apps while keeping already-patched outputs.
+- **Live Home status banner:** Returning to **Home** while a queue is planning, running, finished, or kept shows a live **Batch queue** banner at the top (**View** / **Open queue**). Competing single-app patch runs are blocked while a batch is active.
+- **Finished actions:** When the batch ends, each succeeded card provides **Install** (or **Mount**) / **Retry** and **Open folder**, while failed items offer **View error**. You can also click **Install all (N)** or **Retry unfinished** from the bottom bar.
+
+> [!NOTE]
+> When installing over ADB (whether individually, via **Install all**, or automatically), Morphe never auto-uninstalls an existing app on a signature mismatch; conflicts are reported per app so your existing app data stays safe.
+
 <h3 id="gui-settings">Settings</h3>
 
 Open Settings from the **Settings** tab in the Home navigation pill, or via the top-right **Settings** button on any workflow sub-screen. Think of it as the GUI's equivalent of the CLI flag set: most settings map directly to a `patch` flag. Settings is laid out as an integrated two-pane page with a live **Search settings** bar and three categories in the left sidebar: **Appearance**, **Advanced**, and **System**.
@@ -438,6 +485,7 @@ Open Settings from the **Settings** tab in the Home navigation pill, or via the 
 | **Output folder**              | Default location for patched APKs                                                                         | The input APK's folder                                                               | `-o` / `--out`                                                                             |
 | **Keep original APKs**         | Copy, Move, or Off: keep each app's original APK in `morphe-data/original-apks/`                         | Copy                                                                                 | `--save-original` (`OFF` unless set here)                                                |
 | **Auto-start ADB**             | Start the ADB daemon on launch so devices are monitored                                                   | Off                                                                                  | enables `-i` / install features                                                            |
+| **Auto-install after patching** | Automatically install or mount patched apps on the selected ADB device once patching finishes             | Off                                                                                  | `-i` / `--install`, `--mount`                                                              |
 | **Storage & cache**            | Inspect and clear caches, or open data root / logs directory                                              | –                                                                                    | [`utility clear-cache`](#utility-clear-cache)                                              |
 
 <p align="center">
@@ -451,7 +499,7 @@ A couple of items worth expanding on:
 - **About, Changelogs & Licenses** - **Settings → System → About** displays the application version, **View changelogs**, **Open Source licenses**, **Documentation**, and **Visit website**. The Changelog pane (also opened directly from update banners) features structured release notes parsed into categorized sections (*App support*, *Fixes*, *Improvements*, *New*, *Performance*, *Changes*) with change counters, clickable links, inline code chips, and release status badges (*Installed*, *Latest*, *Pre-release*).
 - **Storage & cache** - Found under **Settings → System**, this section displays live disk usage and file counts broken down by category (**Patches**, **Logs**, **Temporary files**, **Avatar cache**, and **App icon cache**). Each category can be cleared individually or all at once via **Clear all cache**, plus direct buttons to open Morphe's application data folder (`morphe-data/`) and logs folder (`morphe-data/logs/`) in your desktop file manager.
 - **Keep original APKs** - after a successful patch, Morphe keeps a copy of the APK you patched in `morphe-data/original-apks/`, named `<package>-<version>.<ext>`, and the app's repatch dialog uses that copy from then on, so you can tidy up your Downloads folder without losing it. The dropdown chooses **Copy** (the default), **Move**, which also removes the APK from where you picked it, or **Off**. When you **Forget** or **Uninstall** an app that has a kept APK, the dialog offers to delete that APK as well. When no **Output folder** is set, repatching from a kept APK saves the patched APK where the app's previous one was saved.
-- **Auto-start ADB** - when off, Morphe never starts the ADB server and all install/push features are disabled. Turn it on to install patched APKs to your phone from Morphe.
+- **Auto-start ADB** & **Auto-install after patching** *(Settings → System → ADB & Installation)* - when **Auto-start ADB** is off, Morphe never starts the ADB server and all install/push features are disabled. Turn it on to install patched APKs to your phone from Morphe. Enabling **Auto-install after patching** automatically installs (or root-mounts) finished APKs onto the selected connected device on the Result screen and turns on **Install / Mount when finished** by default in batch patching (respecting **Route links to patched app**, without ever auto-uninstalling on signature conflicts).
 - **Check for updates** - *Prerelease* surfaces pre-releases; *Stable* only stable ones; *Off* disables update checks. If you've never chosen, Morphe defaults smartly (Prerelease when you're running a dev build).
 - **Route links to patched app** - when on, every ADB install is followed by routing the app's supported web links to the patched app (the [Link handling](#gui-expert-links) step, run automatically). A nested **Disable stock app's links** option also stops the original app from opening those links – only relevant when a rename patch was used and the stock app is still installed. Both are reversible and need a connected device.
 
@@ -548,7 +596,7 @@ Morphe can push patched APKs straight to your phone over ADB:
 1. Enable **Auto-start ADB** in Settings (off by default).
 2. Connect your phone via USB with **USB debugging** enabled, and accept the authorization prompt on the device.
 3. The **device indicator** in the top bar shows it; click to pick a device if several are connected.
-4. After patching, use **ADB install** on the Result screen.
+4. After patching, use **ADB install** on the Result screen (or **Install** / **Install all** on the [Batch patching](#gui-batch) finished screen), or enable **Auto-install after patching** under **Settings → System → ADB & Installation** to install automatically once patching finishes.
 
 <p align="center">
   <img src="images/documentation/gui/device-indicator.png" width="60%" alt="Device Indicator" style="vertical-align: middle"/>
