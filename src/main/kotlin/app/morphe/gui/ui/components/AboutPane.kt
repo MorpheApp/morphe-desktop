@@ -42,6 +42,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -60,7 +61,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.morphe.engine.AppUpdateCheck
 import app.morphe.engine.MorpheComponents
+import app.morphe.engine.SelfUpdater.AppInstallation
+import app.morphe.engine.UpdateInfo
+import app.morphe.gui.LocalExitApplication
+import app.morphe.gui.LocalIsPatching
 import app.morphe.gui.data.constants.AppConstants
+import app.morphe.gui.data.repository.AppUpdateManager
+import app.morphe.gui.data.repository.AppUpdateState
 import app.morphe.gui.data.repository.UpdateCheckRepository
 import app.morphe.gui.ui.components.settings.SettingsSegmentCard
 import app.morphe.gui.ui.components.settings.SettingsSubViewHeader
@@ -121,11 +128,15 @@ fun AboutPane(
     modifier: Modifier = Modifier,
     horizontalPadding: PaddingValues = PaddingValues(0.dp),
     updateCheckRepository: UpdateCheckRepository = koinInject(),
+    appUpdateManager: AppUpdateManager = koinInject(),
 ) {
     val uriHandler = LocalUriHandler.current
     val layoutDirection = LocalLayoutDirection.current
     var updateCheck by remember { mutableStateOf<AppUpdateCheck?>(null) }
     var peopleList by remember { mutableStateOf<PeopleList?>(null) }
+    val appUpdateState by appUpdateManager.state.collectAsState()
+    val isPatching by LocalIsPatching.current
+    val exitApplication = LocalExitApplication.current
 
     LaunchedEffect(updateCheckRepository) {
         updateCheck = updateCheckRepository.checkUpdate()
@@ -169,7 +180,22 @@ fun AboutPane(
 
                         VersionCard(
                             updateCheck = updateCheck,
-                            onUpdateClick = { url -> uriHandler.openUri(url) },
+                            appUpdateState = appUpdateState,
+                            installation = appUpdateManager.installation,
+                            isPatching = isPatching,
+                            onStartUpdate = { info ->
+                                appUpdateManager.startUpdate(info, { isPatching }, exitApplication)
+                            },
+                            onCancelUpdate = { appUpdateManager.cancelDownload() },
+                            onRestartToUpdate = { appUpdateManager.applyStagedUpdate(exitApplication) },
+                            onRetryUpdate = { info ->
+                                if ((appUpdateState as? AppUpdateState.Failed)?.staged != null) {
+                                    appUpdateManager.applyStagedUpdate(exitApplication)
+                                } else {
+                                    appUpdateManager.startUpdate(info, { isPatching }, exitApplication)
+                                }
+                            },
+                            onOpenUrl = { url -> uriHandler.openUri(url) },
                         )
 
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -281,7 +307,14 @@ private fun AboutHeader() {
 @Composable
 private fun VersionCard(
     updateCheck: AppUpdateCheck?,
-    onUpdateClick: (String) -> Unit,
+    appUpdateState: AppUpdateState,
+    installation: AppInstallation,
+    isPatching: Boolean,
+    onStartUpdate: (UpdateInfo) -> Unit,
+    onCancelUpdate: () -> Unit,
+    onRestartToUpdate: () -> Unit,
+    onRetryUpdate: (UpdateInfo) -> Unit,
+    onOpenUrl: (String) -> Unit,
 ) {
     val unknownVer = stringResource(Res.string.unknown)
     val displayVersion = AppConstants.APP_VERSION.removePrefix("v")
@@ -343,28 +376,158 @@ private fun VersionCard(
                 val info = updateCheck.info
                 val updateVersion = "v${info.latestVersion.removePrefix("v")}"
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    Icon(
-                        imageVector = MorpheIcons.Download,
-                        contentDescription = null,
-                        tint = MorpheTheme.colors.primary,
-                        modifier = Modifier.size(16.dp),
-                    )
-                    Text(
-                        text = stringResource(Res.string.about_update_available, updateVersion),
-                        style = MorpheTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Medium,
-                        color = MorpheTheme.colors.primary,
-                        modifier = Modifier.weight(1f),
-                    )
-                    UpdateActionBadge(
-                        label = stringResource(Res.string.home_action_update),
-                        onClick = { onUpdateClick(info.downloadLink) },
-                    )
+                when (appUpdateState) {
+                    is AppUpdateState.Downloading -> {
+                        val pct = appUpdateState.progress?.let { " ${(it * 100).toInt()}%" }.orEmpty()
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            Icon(
+                                imageVector = MorpheIcons.Download,
+                                contentDescription = null,
+                                tint = MorpheTheme.colors.primary,
+                                modifier = Modifier.size(16.dp),
+                            )
+                            Text(
+                                text = "${stringResource(Res.string.update_banner_downloading, info.latestVersion)}$pct",
+                                style = MorpheTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium,
+                                color = MorpheTheme.colors.primary,
+                                modifier = Modifier.weight(1f),
+                            )
+                            UpdateActionBadge(
+                                label = stringResource(Res.string.cancel),
+                                onClick = onCancelUpdate,
+                            )
+                        }
+                    }
+
+                    is AppUpdateState.Verifying -> {
+                        Text(
+                            text = stringResource(Res.string.update_banner_verifying, info.latestVersion),
+                            style = MorpheTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium,
+                            color = MorpheTheme.colors.primary,
+                        )
+                    }
+
+                    is AppUpdateState.ReadyToRestart -> {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            Icon(
+                                imageVector = MorpheIcons.Check,
+                                contentDescription = null,
+                                tint = MorpheTheme.colors.secondary,
+                                modifier = Modifier.size(16.dp),
+                            )
+                            Text(
+                                text = stringResource(Res.string.update_banner_ready, info.latestVersion),
+                                style = MorpheTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium,
+                                color = MorpheTheme.colors.secondary,
+                                modifier = Modifier.weight(1f),
+                            )
+                            if (!isPatching) {
+                                UpdateActionBadge(
+                                    label = stringResource(Res.string.update_banner_restart_button),
+                                    onClick = onRestartToUpdate,
+                                )
+                            }
+                        }
+                    }
+
+                    is AppUpdateState.Applying -> {
+                        Text(
+                            text = stringResource(Res.string.update_banner_applying, info.latestVersion),
+                            style = MorpheTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium,
+                            color = MorpheTheme.colors.primary,
+                        )
+                    }
+
+                    is AppUpdateState.Failed -> {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            Icon(
+                                imageVector = MorpheIcons.Error,
+                                contentDescription = null,
+                                tint = MorpheTheme.colors.danger,
+                                modifier = Modifier.size(16.dp),
+                            )
+                            Text(
+                                text = appUpdateState.message,
+                                style = MorpheTheme.typography.bodySmall,
+                                color = MorpheTheme.colors.danger,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(1f),
+                            )
+                            UpdateActionBadge(
+                                label = stringResource(Res.string.retry),
+                                onClick = { onRetryUpdate(info) },
+                            )
+                        }
+                    }
+
+                    AppUpdateState.Idle -> {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            Icon(
+                                imageVector = MorpheIcons.Download,
+                                contentDescription = null,
+                                tint = MorpheTheme.colors.primary,
+                                modifier = Modifier.size(16.dp),
+                            )
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = stringResource(Res.string.about_update_available, updateVersion),
+                                    style = MorpheTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Medium,
+                                    color = MorpheTheme.colors.primary,
+                                )
+                                if (installation is AppInstallation.ManagedByHomebrew) {
+                                    Text(
+                                        text = stringResource(Res.string.update_banner_homebrew_hint),
+                                        style = MorpheTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                }
+                            }
+                            when (installation) {
+                                is AppInstallation.WritableJar -> {
+                                    UpdateActionBadge(
+                                        label = stringResource(Res.string.home_action_update),
+                                        onClick = { onStartUpdate(info) },
+                                    )
+                                }
+                                is AppInstallation.ManagedByHomebrew -> {
+                                    UpdateActionBadge(
+                                        label = stringResource(Res.string.update_banner_open_releases),
+                                        onClick = { onOpenUrl(info.downloadLink) },
+                                    )
+                                }
+                                is AppInstallation.UnsignedJar,
+                                is AppInstallation.ReadOnlyJar,
+                                AppInstallation.NotAJar -> {
+                                    UpdateActionBadge(
+                                        label = stringResource(Res.string.home_action_update),
+                                        onClick = { onOpenUrl(info.downloadLink) },
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

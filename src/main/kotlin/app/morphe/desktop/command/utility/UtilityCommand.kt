@@ -10,6 +10,6 @@ import picocli.CommandLine
 @CommandLine.Command(
     name = "utility",
     description = ["Commands for utility purposes."],
-    subcommands = [InstallCommand::class, UninstallCommand::class, ClearCacheCommand::class],
+    subcommands = [InstallCommand::class, UninstallCommand::class, ClearCacheCommand::class, UpdateCommand::class],
 )
 internal object UtilityCommand

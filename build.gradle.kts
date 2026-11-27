@@ -138,6 +138,7 @@ tasks {
         from(layout.buildDirectory.file("generated/aboutLibraries/aboutlibraries.json"))
 
         // Inject project version into version.properties
+        inputs.property("version", project.version)
         filesMatching("app/morphe/cli/version.properties") {
             expand(
                 "projectVersion" to project.version,
@@ -211,17 +212,19 @@ tasks {
     }
 
     publish {
-        dependsOn("overwriteShadowJar")
+        dependsOn("signShadowJar")
     }
 
     assemble {
-        dependsOn("overwriteShadowJar")
+        dependsOn("signShadowJar")
     }
 
     val minifyShadowJar = register<ProGuardTask>("minifyShadowJar") {
         description = "Minifies the shadow JAR using ProGuard rules"
         // Only run when explicitly requested via assemble or direct call
-        enabled = gradle.startParameter.taskNames.any { it.contains("assemble") || it.contains("minify") || it.contains("publish") }
+        enabled = gradle.startParameter.taskNames.any {
+            it.contains("assemble") || it.contains("minify") || it.contains("publish") || it.contains("signShadowJar")
+        }
         dependsOn(shadowJar)
 
         // Use the JAR produced by shadowJar as input
@@ -263,11 +266,53 @@ tasks {
         }
     }
 
-    // Ensure all shadow-related tasks wait for minification to finish before using the JAR.
+    val signShadowJar = register("signShadowJar") {
+        description = "Signs the shadow JAR with jarsigner when keystore.jks and credentials are present"
+        dependsOn(overwriteShadowJar)
+
+        val shadowJarFile = shadowJar.get().archiveFile.get().asFile
+        val keystoreFile = rootProject.file("keystore.jks")
+        val javaHome = project.javaToolchains.launcherFor(project.java.toolchain).get().metadata.installationPath.asFile
+
+        onlyIf {
+            shadowJarFile.exists() &&
+                keystoreFile.exists() &&
+                !System.getenv("KEYSTORE_PASSWORD").isNullOrBlank() &&
+                !System.getenv("KEYSTORE_ENTRY_ALIAS").isNullOrBlank()
+        }
+
+        doLast {
+            val isWindows = System.getProperty("os.name").orEmpty().lowercase().contains("windows")
+            val jarsigner = File(javaHome, if (isWindows) "bin/jarsigner.exe" else "bin/jarsigner")
+            require(jarsigner.isFile) { "jarsigner not found at ${jarsigner.absolutePath}" }
+
+            val keyAlias = System.getenv("KEYSTORE_ENTRY_ALIAS")
+            val signArgs = mutableListOf(
+                jarsigner.absolutePath,
+                "-keystore", keystoreFile.absolutePath,
+                "-storepass:env", "KEYSTORE_PASSWORD",
+                "-digestalg", "SHA-256",
+            )
+            if (!System.getenv("KEYSTORE_ENTRY_PASSWORD").isNullOrBlank()) {
+                signArgs += listOf("-keypass:env", "KEYSTORE_ENTRY_PASSWORD")
+            }
+            signArgs += listOf(shadowJarFile.absolutePath, keyAlias)
+
+            val signProcess = ProcessBuilder(signArgs).inheritIO().start()
+            check(signProcess.waitFor() == 0) { "jarsigner failed to sign ${shadowJarFile.name}" }
+
+            val verifyProcess = ProcessBuilder(jarsigner.absolutePath, "-verify", shadowJarFile.absolutePath)
+                .inheritIO()
+                .start()
+            check(verifyProcess.waitFor() == 0) { "jarsigner verification failed for ${shadowJarFile.name}" }
+        }
+    }
+
+    // Ensure all shadow-related tasks wait for minification & signing to finish before using the JAR.
     // This prevents "zip END header not found" errors caused by concurrent access.
-    named("shadowDistZip") { dependsOn(overwriteShadowJar) }
-    named("shadowDistTar") { dependsOn(overwriteShadowJar) }
-    named("startShadowScripts") { dependsOn(overwriteShadowJar) }
+    named("shadowDistZip") { dependsOn(signShadowJar) }
+    named("shadowDistTar") { dependsOn(signShadowJar) }
+    named("startShadowScripts") { dependsOn(signShadowJar) }
 
     withType<Test> {
         val testDataDir = layout.buildDirectory.dir("test-morphe-data").get().asFile

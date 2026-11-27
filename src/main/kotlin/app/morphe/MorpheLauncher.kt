@@ -7,6 +7,7 @@ package app.morphe
 
 import app.morphe.desktop.command.MainCommand
 import app.morphe.engine.BootstrapDownloader
+import app.morphe.engine.SelfUpdater
 import app.morphe.engine.util.Logger
 import app.morphe.engine.workspace.WorkspaceManager
 import java.awt.GraphicsEnvironment
@@ -23,7 +24,8 @@ fun main(args: Array<String>) {
 
     if (isGuiIntent) {
         if (isInternalGuiSubprocess) {
-            val guiArgs = args.filter { it != "--internal-gui-subprocess" }.toTypedArray()
+            SelfUpdater.launcherParentPid = System.getenv(SelfUpdater.LAUNCHER_PID_ENV)?.toLongOrNull()
+            val guiArgs = args.filterNot { it == "--internal-gui-subprocess" }.toTypedArray()
             launchGuiReflectively(guiArgs)
             return
         } else {
@@ -39,6 +41,7 @@ fun main(args: Array<String>) {
                 if (System.getProperty("os.name").startsWith("Mac")) {
                     System.setProperty("apple.awt.UIElement", "true")
                 }
+                SelfUpdater.cleanupUpdatesDirAsync()
                 val progress = BootstrapProgressWindow()
                 val downloadedJars = try {
                     BootstrapDownloader.downloadIfMissing(progress)
@@ -60,6 +63,7 @@ fun main(args: Array<String>) {
                     "--internal-gui-subprocess",
                     *args
                 )
+                processBuilder.environment()[SelfUpdater.LAUNCHER_PID_ENV] = ProcessHandle.current().pid().toString()
                 processBuilder.inheritIO()
                 val process = processBuilder.start()
                 process.waitFor()
@@ -71,6 +75,7 @@ fun main(args: Array<String>) {
             Logger.info("Running in Headless environment, falling back to CLI mode.")
         }
 
+        runCatching { SelfUpdater.cleanupUpdatesDir() }
         runCatching { WorkspaceManager.reapStaleWorkspaces() }
 
         CommandLine(MainCommand)
