@@ -11,12 +11,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.PatchedAppRecord
@@ -32,6 +36,7 @@ import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
 import app.morphe.gui.ui.theme.MorpheTheme
+import app.morphe.gui.ui.theme.contrastingForeground
 import app.morphe.morphe_desktop.generated.resources.*
 import app.morphe.patcher.patch.FormFactor
 import org.jetbrains.compose.resources.stringResource
@@ -46,6 +51,8 @@ fun YourAppRow(
     onClick: () -> Unit,
     appIconColorHex: String? = null,
     formFactor: FormFactor? = record.formFactor,
+    selectionMode: Boolean = false,
+    isSelected: Boolean = false,
 ) {
     val cardFills = LocalCardFills.current
 
@@ -80,8 +87,10 @@ fun YourAppRow(
         appIconColorHex = appIconColorHex,
         fill = cardFills[record.packageName],
         onClick = onClick,
-        onCustomise = {
-            cardFills.requestEdit(record.packageName, record.displayName, appIconColorHex)
+        onCustomise = if (selectionMode) null else {
+            {
+                cardFills.requestEdit(record.packageName, record.displayName, appIconColorHex)
+            }
         },
     ) {
         Row(
@@ -90,6 +99,23 @@ fun YourAppRow(
                 .padding(horizontal = 12.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            if (selectionMode) {
+                Checkbox(
+                    checked = isSelected,
+                    onCheckedChange = null,
+                    colors = CheckboxDefaults.colors(
+                        checkedColor = if (cardColors.isMonochrome) MorpheTheme.colors.primary else Color.White,
+                        checkmarkColor = if (cardColors.isMonochrome) {
+                            MorpheTheme.colors.primary.contrastingForeground()
+                        } else {
+                            Color.Black
+                        },
+                        uncheckedColor = cardColors.subtitle,
+                    ),
+                    modifier = Modifier.size(20.dp),
+                )
+                Spacer(Modifier.width(10.dp))
+            }
             MorpheAppAvatar(
                 name = record.displayName,
                 size = MorpheAvatarSize.MEDIUM,

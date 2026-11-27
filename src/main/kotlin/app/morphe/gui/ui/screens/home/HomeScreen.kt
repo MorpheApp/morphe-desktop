@@ -22,11 +22,14 @@ import app.morphe.engine.model.VersionStatus
 import app.morphe.engine.patches.SupportedAppCatalog
 import app.morphe.engine.patches.resolveVersionStatus
 import app.morphe.engine.util.AdbException
+import app.morphe.gui.BatchPatcherScreenRoute
 import app.morphe.gui.LocalModeState
 import app.morphe.gui.LocalNavController
 import app.morphe.gui.PatchSelectionParams
 import app.morphe.gui.PatchSelectionScreenRoute
 import app.morphe.gui.PatchesScreenRoute
+import app.morphe.gui.batch.BatchPatchCoordinator
+import app.morphe.gui.batch.BatchTarget
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.PatchingScreenRoute
@@ -46,7 +49,7 @@ import app.morphe.gui.ui.screens.home.components.PatchedAppDetailDialog
 import app.morphe.gui.ui.screens.home.components.UninstallConfirmDialog
 import app.morphe.gui.ui.screens.home.components.VersionWarningDialog
 import app.morphe.gui.ui.screens.home.components.handleContinue
-import app.morphe.gui.ui.screens.home.components.openFilePicker
+import app.morphe.gui.ui.screens.home.components.openFilesPicker
 import app.morphe.gui.ui.screens.home.components.proceedToPatching
 import app.morphe.gui.ui.theme.Defaults
 import app.morphe.gui.ui.theme.backgrounds.startBackgroundMotion
@@ -61,12 +64,14 @@ import app.morphe.gui.util.sourceSigningKeyFingerprintMap
 import app.morphe.gui.util.sourceSigningKeyMap
 import app.morphe.gui.util.sourceUpdateMap
 import app.morphe.gui.util.sourceVersionMap
+import app.morphe.morphe_desktop.generated.resources.*
 import java.awt.Desktop
 import java.io.File
 import java.util.UUID
 import kotlin.math.abs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -96,7 +101,20 @@ fun HomeScreenContent(
 
     val coroutineScope = rememberCoroutineScope()
     val patchSourceManager: PatchSourceManager = koinInject()
+    val batchPatchCoordinator: BatchPatchCoordinator = koinInject()
     val allSources by patchSourceManager.allSources.collectAsState()
+    val batchState by batchPatchCoordinator.state.collectAsState()
+    val savedBatchQueue by batchPatchCoordinator.savedQueue.collectAsState()
+    val isBatchRunning = batchState?.isActive == true
+    val hasPendingBatchQueue = batchState?.isPending == true || (batchState == null && savedBatchQueue != null)
+
+    LaunchedEffect(viewModel) {
+        viewModel.navigateToBatch.collect {
+            navController.navigate(BatchPatcherScreenRoute) {
+                launchSingleTop = true
+            }
+        }
+    }
 
     val pagerState = rememberPagerState(initialPage = uiState.selectedPage.ordinal) { HomePage.entries.size }
     val openPage: (HomePage) -> Unit = { page ->
@@ -267,6 +285,10 @@ fun HomeScreenContent(
             patchPrepProgress = patchPrepProgress,
             onPatchWith = { apkPath, overrides, chosenSource ->
                 coroutineScope.launch {
+                    if (viewModel.isBatchRunning()) {
+                        viewModel.showError(getString(Res.string.batch_patch_already_running))
+                        return@launch
+                    }
                     preparingPatch = true
                     patchPrepProgress = null
                     try {
@@ -406,21 +428,29 @@ fun HomeScreenContent(
             val onClearClick: () -> Unit = { viewModel.clearSelection() }
             val onChangeClick: () -> Unit = {
                 coroutineScope.launch {
-                    openFilePicker()?.let { file ->
-                        viewModel.onFileSelected(file)
+                    val files = openFilesPicker().orEmpty()
+                    when {
+                        files.size >= 2 -> viewModel.enqueueApkFiles(files)
+                        files.size == 1 -> viewModel.onFileSelected(files.first())
                     }
                 }
             }
             val onContinueClick: () -> Unit = {
-                handleContinue(
-                    uiState = if (activeApkInfo != null) uiState.copy(apkInfo = activeApkInfo) else uiState,
-                    viewModel = viewModel,
-                    navController = navController,
-                    isSimple = isSimple,
-                    selectedPatchSource = effectiveSimplePatchSource,
-                    coroutineScope = coroutineScope,
-                ) {
-                    showVersionWarningDialog = true
+                if (viewModel.isBatchRunning()) {
+                    coroutineScope.launch {
+                        viewModel.showError(getString(Res.string.batch_patch_already_running))
+                    }
+                } else {
+                    handleContinue(
+                        uiState = if (activeApkInfo != null) uiState.copy(apkInfo = activeApkInfo) else uiState,
+                        viewModel = viewModel,
+                        navController = navController,
+                        isSimple = isSimple,
+                        selectedPatchSource = effectiveSimplePatchSource,
+                        coroutineScope = coroutineScope,
+                    ) {
+                        showVersionWarningDialog = true
+                    }
                 }
             }
 
@@ -485,6 +515,10 @@ fun HomeScreenContent(
                                 openChangelogToken++
                                 openPage(HomePage.SETTINGS)
                             },
+                            batchState = batchState,
+                            savedBatchQueue = savedBatchQueue,
+                            onOpenBatch = { viewModel.openBatchQueue() },
+                            onDismissBatch = { batchPatchCoordinator.clear() },
                         )
                         HorizontalPager(
                             state = pagerState,
@@ -574,6 +608,12 @@ fun HomeScreenContent(
                                         onChangeClick = onChangeClick,
                                         onContinueClick = onContinueClick,
                                         isSimple = isSimple,
+                                        hasPendingBatchQueue = hasPendingBatchQueue,
+                                        isBatchRunning = isBatchRunning,
+                                        onPatchOutdatedAll = { viewModel.enqueueOutdatedApps() },
+                                        onBatchPatchSelected = { pkgs ->
+                                            viewModel.enqueueBatchTargets(pkgs.map { BatchTarget(it) })
+                                        },
                                         modifier = Modifier.fillMaxSize(),
                                     )
                                 }

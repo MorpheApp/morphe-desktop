@@ -68,7 +68,7 @@ internal fun MiddleContent(
         else -> {
             DropPromptSection(
                 isDragHovering = uiState.isDragHovering,
-                onBrowseClick = onChangeClick
+                onBrowseClick = onChangeClick,
             )
         }
     }
@@ -77,7 +77,7 @@ internal fun MiddleContent(
 @Composable
 internal fun DropPromptSection(
     isDragHovering: Boolean,
-    onBrowseClick: () -> Unit
+    onBrowseClick: () -> Unit,
 ) {
     val accents = MorpheTheme.colors
     val bracketColor = if (isDragHovering) accents.primary.copy(alpha = 0.7f)
@@ -160,7 +160,7 @@ internal fun ApkSelectedSection(
             val canProceed = patchesLoaded && (!isSimple || hasCompatiblePatches)
 
             MorpheButton(
-                label = stringResource(Res.string.home_stage_change_apk),
+                label = stringResource(Res.string.change_apk),
                 size = MorpheButtonSize.LARGE,
                 variant = MorpheButtonVariant.OUTLINED,
                 onClick = onChangeClick,

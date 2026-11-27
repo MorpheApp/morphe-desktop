@@ -5,12 +5,16 @@
 
 package app.morphe.gui.di
 
+import app.morphe.engine.OriginalApkStore
 import app.morphe.engine.PatchedAppStore
 import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.network.createHttpClient
 import app.morphe.engine.options.PatchPreferencesRepository
+import app.morphe.engine.util.AdbManager
 import app.morphe.engine.util.KeystoreService
 import app.morphe.engine.util.Logger
+import app.morphe.gui.batch.BatchPatchCoordinator
+import app.morphe.gui.batch.BatchPlanResolver
 import app.morphe.gui.data.repository.ChangelogRepository
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.LanguageRepository
@@ -56,10 +60,14 @@ val appModule = module {
     single { ChangelogRepository(get()) }
     single { PeopleRepository(get(), get()) }
     single { PatchedAppStore.shared }
+    single { OriginalApkStore.shared }
+    single { AdbManager() }
     single { PatchingSessionTracker() }
+    single { BatchPlanResolver(get(), get(), get(), get(), get(), get(), get()) }
+    single { BatchPatchCoordinator(get(), get(), get(), get(), get(), get(), get()) }
 
     viewModel {
-        HomeViewModel(get(), get(), get(), get(), get())
+        HomeViewModel(get(), get(), get(), get(), get(), batchPatchCoordinator = get())
     }
     viewModel {
         val psm = get<PatchSourceManager>()
@@ -90,6 +98,7 @@ val appModule = module {
             params.get(),
             sourceIdsByName = enabledSources.associate { it.name to it.id },
             enabledSources = enabledSources,
+            initialUseMount = params.get(),
         )
     }
     viewModel { params ->

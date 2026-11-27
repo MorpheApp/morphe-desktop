@@ -33,16 +33,19 @@ internal data class SystemSearchVisibility(
     val outputFolder: Boolean,
     val originalApks: Boolean,
     val autoStartAdb: Boolean,
+    val autoInstall: Boolean,
     val storage: Boolean,
     val versionInfo: Boolean,
     val changelog: Boolean,
     val licenses: Boolean,
     val documentation: Boolean,
 ) {
+    val hasAdbSection: Boolean
+        get() = autoStartAdb || autoInstall
     val hasAboutSection: Boolean
         get() = versionInfo || changelog || licenses || documentation
     val any: Boolean
-        get() = autoCleanup || updateChannel || outputFolder || originalApks || autoStartAdb || storage || hasAboutSection
+        get() = autoCleanup || updateChannel || outputFolder || originalApks || hasAdbSection || storage || hasAboutSection
 }
 
 @Composable
@@ -54,6 +57,7 @@ internal fun rememberSystemSearchVisibility(query: String): SystemSearchVisibili
             outputFolder = true,
             originalApks = true,
             autoStartAdb = true,
+            autoInstall = true,
             storage = true,
             versionInfo = true,
             changelog = true,
@@ -75,8 +79,11 @@ internal fun rememberSystemSearchVisibility(query: String): SystemSearchVisibili
     val keepOriginalTitle = stringResource(Res.string.settings_original_apks_mode_label)
     val keepOriginalCopyDesc = stringResource(Res.string.settings_original_apks_mode_desc_copy)
     val keepOriginalMoveDesc = stringResource(Res.string.settings_original_apks_mode_desc_move)
+    val adbSection = stringResource(Res.string.settings_section_adb_install)
     val adbTitle = stringResource(Res.string.settings_toggle_auto_start_adb_label)
     val adbDesc = stringResource(Res.string.settings_toggle_auto_start_adb_desc)
+    val autoInstallTitle = stringResource(Res.string.settings_toggle_auto_install_label)
+    val autoInstallDesc = stringResource(Res.string.settings_toggle_auto_install_desc)
     val storageSection = stringResource(Res.string.settings_section_storage)
     val storageClearAll = stringResource(Res.string.settings_cache_clear_all_title)
     val patchesCat = stringResource(Res.string.settings_cache_category_patches)
@@ -125,7 +132,19 @@ internal fun rememberSystemSearchVisibility(query: String): SystemSearchVisibili
             "backup",
             "repatch",
         ),
-        autoStartAdb = matchesSettingQuery(query, adbTitle, adbDesc, "adb", "daemon", "usb", "install"),
+        autoStartAdb = matchesSettingQuery(query, adbSection, adbTitle, adbDesc, "adb", "daemon", "usb", "install"),
+        autoInstall = matchesSettingQuery(
+            query,
+            adbSection,
+            autoInstallTitle,
+            autoInstallDesc,
+            "auto",
+            "install",
+            "adb",
+            "patching",
+            "device",
+            "mount",
+        ),
         storage = matchesSettingQuery(
             query,
             storageSection,
@@ -276,17 +295,34 @@ internal fun SystemSection(
             }
         }
 
-        if (visibility.autoStartAdb) {
-            SettingsGroup {
-                toggleItem(
-                    key = "auto_start_adb",
-                    icon = MorpheIcons.ADB,
-                    title = stringResource(Res.string.settings_toggle_auto_start_adb_label),
-                    description = stringResource(Res.string.settings_toggle_auto_start_adb_desc),
-                    checked = settings.autoStartAdb,
-                    enabled = !isPatching,
-                    onCheckedChange = settings::setAutoStartAdb,
-                )
+        if (visibility.hasAdbSection) {
+            val isSearching = searchQuery.isNotBlank()
+            SettingsSection(
+                title = stringResource(Res.string.settings_section_adb_install),
+                icon = MorpheIcons.ADB,
+            ) {
+                SettingsGroup {
+                    toggleItem(
+                        key = "auto_start_adb",
+                        visible = visibility.autoStartAdb,
+                        icon = MorpheIcons.ADB,
+                        title = stringResource(Res.string.settings_toggle_auto_start_adb_label),
+                        description = stringResource(Res.string.settings_toggle_auto_start_adb_desc),
+                        checked = settings.autoStartAdb,
+                        enabled = !isPatching,
+                        onCheckedChange = settings::setAutoStartAdb,
+                    )
+                    toggleItem(
+                        key = "auto_install_after_patching",
+                        visible = visibility.autoInstall && (settings.autoStartAdb || isSearching),
+                        icon = MorpheIcons.InstallMobile,
+                        title = stringResource(Res.string.settings_toggle_auto_install_label),
+                        description = stringResource(Res.string.settings_toggle_auto_install_desc),
+                        checked = engineConfig.autoInstallAfterPatching,
+                        enabled = !isPatching && settings.autoStartAdb,
+                        onCheckedChange = settings::setAutoInstallAfterPatching,
+                    )
+                }
             }
         }
 

@@ -104,8 +104,8 @@ internal fun proceedToPatching(
     }
 }
 
-internal suspend fun openFilePicker(): File? =
-    MorpheFilePicker.pickFile(
+internal suspend fun openFilesPicker(): List<File>? =
+    MorpheFilePicker.pickFiles(
         title = getString(Res.string.home_select_apk_file),
         extensions = BundleFormats.SUPPORTED_EXTENSIONS,
     )

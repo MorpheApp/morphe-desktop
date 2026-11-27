@@ -136,6 +136,11 @@ class SettingsStateHolder(
         scope.launch { engineConfigRepository.setAutoStartAdb(enabled) }
     }
 
+    fun setAutoInstallAfterPatching(enabled: Boolean) {
+        engineConfig = engineConfig.copy(autoInstallAfterPatching = enabled)
+        scope.launch { engineConfigRepository.setAutoInstallAfterPatching(enabled) }
+    }
+
     fun setAutoCleanupTempFiles(enabled: Boolean) {
         engineConfig = engineConfig.copy(autoCleanupTempFiles = enabled)
         scope.launch { engineConfigRepository.setAutoCleanupTempFiles(enabled) }

@@ -17,7 +17,7 @@
     <string name="trust">Trust</string>
     <string name="delete">Delete</string>
     <string name="disabled_while_patching">Disabled while patching</string>
-    <string name="drop_apk_here">Drop APK here</string>
+    <string name="drop_apk_here">Drop APK(s) here</string>
     <string name="release_to_drop">Release to drop</string>
     <string name="click_to_browse">or click to browse</string>
     <string name="error_could_not_load_patches">Could not load any patches</string>
@@ -34,6 +34,10 @@
     <string name="device_default">device</string>
     <string name="unknown">Unknown</string>
     <string name="installing">Installing…</string>
+    <string name="installed">Installed</string>
+    <string name="patched">Patched</string>
+    <string name="root_mount">Root mount</string>
+    <string name="change_apk">Change APK</string>
     <string name="folder">Folder</string>
     <string name="customize">Customize</string>
     <string name="customize_card_description">Customize card</string>
@@ -197,7 +201,6 @@
     <string name="home_apk_info_size_label">Size</string>
     <string name="home_apk_info_value_api">API %1$d</string>
     <string name="home_apk_info_from_label">From</string>
-    <string name="home_stage_change_apk">Change APK</string>
     <string name="home_stage_continue">Continue</string>
     <string name="home_stage_patch">Patch</string>
     <string name="home_stage_analyzing_title">Analyzing</string>
@@ -248,7 +251,6 @@
     <string name="home_sort_recently_patched_desc">Most recently patched first</string>
 
     <!-- Home Screen - YourAppsPane -->
-    <string name="home_your_apps_status_patched">Patched</string>
     <string name="home_filter_all_apps">All apps</string>
     <string name="home_filter_your_apps">Your apps</string>
     <string name="home_banner_view">View</string>
@@ -449,7 +451,6 @@
     <string name="result_adb_updating_on_device">Updating on %1$s…</string>
     <string name="result_adb_update_successful">Update successful!</string>
     <string name="result_adb_install_successful">Installation successful!</string>
-    <string name="result_adb_badge_root_mount">Root mount</string>
     <string name="result_adb_mount_button">Mount on %1$s</string>
     <string name="result_adb_mounting_on_device">Mounting on %1$s…</string>
     <string name="result_adb_mount_successful">Mounting successful!</string>
@@ -480,6 +481,84 @@
     <string name="result_cleanup_freed">Freed %1$s</string>
     <string name="result_adb_disabled_title">ADB is off. Install-on-device is disabled</string>
     <string name="result_adb_disabled_subtitle">Enable ADB in Settings to push patched APKs directly</string>
+
+    <!-- Batch Patching -->
+    <string name="batch_patch_title">Batch patching</string>
+    <string name="batch_patch_preparing">Preparing batch queue…</string>
+    <string name="batch_patch_inspecting_apks">Inspecting APKs (%1$d of %2$d)…</string>
+    <string name="batch_patch_preparing_next">Preparing next app…</string>
+    <string name="batch_patch_subtitle_running">Patching %1$d of %2$d · %3$s</string>
+    <string name="batch_patch_subtitle_finished">%1$d patched · %2$d failed · %3$d skipped</string>
+    <string name="batch_patch_subtitle_stopped">Stopped · %1$d patched · %2$d failed</string>
+    <string name="batch_patch_policy_install_title">Install when finished</string>
+    <string name="batch_patch_policy_install_desc">Automatically install patched apps on the selected ADB device once patching completes</string>
+    <string name="batch_patch_policy_mount_title">Mount when finished</string>
+    <string name="batch_patch_policy_mount_desc">Automatically root-mount patched apps on the selected ADB device once patching completes</string>
+    <string name="batch_patch_policy_mixed_title">Install &amp; mount when finished</string>
+    <string name="batch_patch_policy_mixed_desc">Automatically install or root-mount patched apps on the selected ADB device once patching completes</string>
+    <string name="batch_patch_policy_target_device">Target device: %1$s</string>
+    <string name="batch_patch_multi_source_warning_title">Multiple patch sources combined</string>
+    <string name="batch_patch_multi_source_warning">Some queued apps combine patches from multiple enabled sources. Review each app's selection if unexpected conflicts occur</string>
+    <string name="batch_patch_summary_saved_hint">Patched APKs are saved to your output folder and ready to install</string>
+    <string name="batch_patch_action_start">Start batch (%1$d)</string>
+    <string name="batch_patch_action_add_apks">Add APKs</string>
+    <string name="batch_patch_action_done">Done</string>
+    <string name="batch_patch_action_stop">Stop</string>
+    <string name="batch_patch_action_retry_unfinished">Retry unfinished</string>
+    <string name="batch_patch_action_install_all">Install all (%1$d)</string>
+    <string name="batch_patch_action_installing_progress">Installing %1$d of %2$d…</string>
+    <string name="batch_patch_action_attach_apk">Attach APK</string>
+    <string name="batch_patch_action_download_apk">Download APK</string>
+    <string name="batch_patch_action_edit_patches">Edit patches</string>
+    <string name="batch_patch_action_choose_source">Source</string>
+    <string name="batch_patch_action_force_version">Force version</string>
+    <string name="batch_patch_action_exclude">Exclude</string>
+    <string name="batch_patch_action_include">Include</string>
+    <string name="batch_patch_action_install">Install</string>
+    <string name="batch_patch_action_mount">Mount</string>
+    <string name="batch_patch_action_view_error">View error</string>
+    <string name="batch_patch_action_save_selection">Save selection (%1$d)</string>
+    <string name="batch_patch_state_needs_apk">APK needed</string>
+    <string name="batch_patch_state_no_patches">No patches</string>
+    <string name="batch_patch_state_no_selection">No patches selected</string>
+    <string name="batch_patch_state_excluded">Excluded</string>
+    <string name="batch_patch_state_running">Patching…</string>
+    <string name="batch_patch_state_cancelled">Cancelled</string>
+    <string name="batch_patch_badge_forced">Forced</string>
+    <string name="batch_patch_badge_newer_version">v%1$s available</string>
+    <string name="batch_patch_badge_install_failed">Install failed</string>
+    <string name="batch_patch_source_saved">Saved original</string>
+    <string name="batch_patch_source_attached">Attached file</string>
+    <string name="batch_patch_detail_wrong_package">Attached APK is for %1$s instead of %2$s</string>
+    <string name="batch_patch_detail_needs_apk">No local APK found. Attach or download a supported APK</string>
+    <string name="batch_patch_detail_version_mismatch">Version %1$s is not officially supported by the enabled patches</string>
+    <string name="batch_patch_detail_no_patches">No enabled patch source supports this app.</string>
+    <string name="batch_patch_detail_no_selection">No patches are selected for this app.</string>
+    <string name="batch_patch_detail_failed_patch">Failed on patch: %1$s</string>
+    <string name="batch_patch_dialog_stop_title">Stop batch patching?</string>
+    <string name="batch_patch_dialog_stop_message">The app currently being patched will be cancelled and remaining queued apps will be skipped. Apps already patched will be kept</string>
+    <string name="batch_patch_dialog_stop_confirm">Stop batch</string>
+    <string name="batch_patch_dialog_leave_title">Keep batch queue for later?</string>
+    <string name="batch_patch_dialog_leave_message">You can keep this queue so you can add more apps and start it later, or clear it now</string>
+    <string name="batch_patch_dialog_leave_keep">Keep queue</string>
+    <string name="batch_patch_dialog_leave_clear">Clear queue</string>
+    <string name="batch_patch_dialog_clear_title">Clear batch queue?</string>
+    <string name="batch_patch_dialog_clear_message">Remove all apps from the current batch queue?</string>
+    <string name="batch_patch_dialog_error_title">Patch error · %1$s</string>
+    <string name="batch_patch_dialog_source_title">Choose patch source · %1$s</string>
+    <string name="batch_patch_drop_hint">Drop APKs to attach or add to the batch queue</string>
+    <string name="batch_patch_already_running">Batch patching is currently running. Open the batch screen to check progress</string>
+    <string name="batch_home_banner_running_title">Batch patching in progress</string>
+    <string name="batch_home_banner_finished_title">Batch patching finished</string>
+    <string name="batch_home_banner_stopped_title">Batch patching stopped</string>
+    <string name="batch_home_banner_queued_title">Batch queue saved</string>
+    <string name="batch_home_banner_open_queue">Open queue</string>
+    <string name="batch_home_updates_patch_all">Patch all</string>
+    <string name="batch_home_multiselect_toggle">Select</string>
+    <string name="batch_home_multiselect_select_all">Select all</string>
+    <string name="batch_home_multiselect_deselect_all">Deselect all</string>
+    <string name="batch_home_multiselect_patch">Patch selected (%1$d)</string>
+    <string name="batch_home_multiselect_add">Add to queue (%1$d)</string>
 
     <!-- Icon Studio -->
     <string name="icon_studio_title">Icon Studio</string>
@@ -853,8 +932,11 @@
     <string name="settings_original_apks_open_button">Open folder</string>
     <string name="settings_original_apks_confirm_title">Delete kept original APKs?</string>
     <string name="settings_original_apks_confirm_message">This will delete every original APK Morphe has kept. Repatching an app will need its APK again</string>
+    <string name="settings_section_adb_install">ADB &amp; Installation</string>
     <string name="settings_toggle_auto_start_adb_label">Auto-start ADB</string>
     <string name="settings_toggle_auto_start_adb_desc">Spawn the ADB daemon on launch so connected devices are monitored. When off, Morphe never starts the server, and install/push features are disabled</string>
+    <string name="settings_toggle_auto_install_label">Auto-install after patching</string>
+    <string name="settings_toggle_auto_install_desc">Automatically install or mount patched apps on the selected ADB device once patching finishes</string>
     <string name="settings_section_storage">Storage &amp; cache</string>
     <string name="settings_cache_clear_all_title">Clear all cache</string>
     <string name="settings_cache_category_patches">Patches</string>
@@ -974,7 +1056,6 @@
     <string name="people_unavailable">Could not load the list</string>
 
     <!-- Changelog Dialog -->
-    <string name="changelog_badge_installed">Installed</string>
     <string name="changelog_badge_latest">Latest</string>
     <string name="changelog_badge_prerelease">Pre-release</string>
     <string name="changelog_date_today">Today</string>

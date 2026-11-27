@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -123,11 +124,14 @@ fun ResultScreenContent(outputPath: String, isMount: Boolean = false) {
         }
     }
 
-    // Cleanup state
+    // Cleanup & auto-install state
     var hasTempFiles by remember { mutableStateOf(false) }
     var tempFilesSize by remember { mutableStateOf(0L) }
     var tempFilesCleared by remember { mutableStateOf(false) }
     var autoCleanupEnabled by remember { mutableStateOf(false) }
+    var autoInstallEnabled by remember { mutableStateOf(false) }
+    var configLoaded by remember { mutableStateOf(false) }
+    var autoInstallTriggered by rememberSaveable(outputPath) { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         val (config, scratchExists, scratchSize) = withContext(Dispatchers.IO) {
@@ -143,6 +147,7 @@ fun ResultScreenContent(outputPath: String, isMount: Boolean = false) {
             }
         }
         autoCleanupEnabled = config.autoCleanupTempFiles
+        autoInstallEnabled = config.autoInstallAfterPatching
         autoRouteLinks = config.autoRouteLinksAfterInstall
         disableStockLinks = config.disableStockLinksAfterInstall
         hasTempFiles = scratchExists
@@ -150,6 +155,7 @@ fun ResultScreenContent(outputPath: String, isMount: Boolean = false) {
         if (config.autoCleanupTempFiles && !scratchExists) {
             tempFilesCleared = true
         }
+        configLoaded = true
     }
 
     fun installViaAdb() {
@@ -270,6 +276,26 @@ fun ResultScreenContent(outputPath: String, isMount: Boolean = false) {
             )
             linkState.isRunning = false
         }
+    }
+
+    // Auto-install or auto-mount once on entry when enabled and a ready device is selected.
+    LaunchedEffect(
+        configLoaded,
+        autoInstallEnabled,
+        autoInstallTriggered,
+        adbPreference.enabled,
+        monitorState.selectedDevice?.id,
+        monitorState.selectedDevice?.isReady,
+        outputPackage,
+        isMount,
+    ) {
+        if (!configLoaded || !autoInstallEnabled || autoInstallTriggered) return@LaunchedEffect
+        if (!adbPreference.enabled) return@LaunchedEffect
+        if (monitorState.selectedDevice?.isReady != true) return@LaunchedEffect
+        if (isMount && outputPackage == null) return@LaunchedEffect
+        if (installState.isRunning || installState.isSuccess) return@LaunchedEffect
+        autoInstallTriggered = true
+        if (isMount) mountViaAdb() else installViaAdb()
     }
 
     // Auto-route links after a successful install if enabled.

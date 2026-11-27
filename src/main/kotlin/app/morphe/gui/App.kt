@@ -27,6 +27,7 @@ import androidx.navigation.toRoute
 import app.morphe.engine.PatchEngine
 import app.morphe.engine.config.EngineConfigRepository
 import app.morphe.engine.util.Logger
+import app.morphe.gui.batch.BatchPatchCoordinator
 import app.morphe.gui.data.model.MorpheFill
 import app.morphe.gui.data.repository.ActiveMode
 import app.morphe.gui.data.repository.ConfigRepository
@@ -39,6 +40,7 @@ import app.morphe.gui.ui.components.LocalFrameWindowScope
 import app.morphe.gui.ui.components.LocalSettingsState
 import app.morphe.gui.ui.components.SettingsPage
 import app.morphe.gui.ui.components.rememberSettingsStateHolder
+import app.morphe.gui.ui.screens.batch.BatchPatcherScreen
 import app.morphe.gui.ui.screens.home.HomeScreen
 import app.morphe.gui.ui.screens.patches.PatchSelectionScreen
 import app.morphe.gui.ui.screens.patches.PatchesScreen
@@ -92,6 +94,9 @@ data class ResultScreenRoute(
 @Serializable
 data object SettingsScreenRoute
 
+@Serializable
+data object BatchPatcherScreenRoute
+
 data class PatchSelectionParams(
     val apkPath: String,
     val apkName: String,
@@ -103,6 +108,8 @@ data class PatchSelectionParams(
     val initialSelectionByBundle: Map<String, Set<String>> = emptyMap(),
     val initialPatchOptions: Map<String, String> = emptyMap(),
     val apkVersion: String = "",
+    val batchEditPackageName: String? = null,
+    val initialUseMount: Boolean = false,
 )
 
 val LocalNavController = compositionLocalOf<NavHostController> {
@@ -222,7 +229,9 @@ private fun appContent(
     val patchSourceManager: PatchSourceManager = koinInject()
     val updateCheckRepository: UpdateCheckRepository = koinInject()
     val patchingSessionTracker: PatchingSessionTracker = koinInject()
+    val batchPatchCoordinator: BatchPatchCoordinator = koinInject()
     val patchingSession by patchingSessionTracker.state.collectAsState()
+    val batchState by batchPatchCoordinator.state.collectAsState()
     val scope = rememberCoroutineScope()
     val enableParallaxState = remember { mutableStateOf(true) }
     val (parallaxState, parallaxMod) = rememberParallaxState(
@@ -383,7 +392,9 @@ private fun appContent(
         showAppIconsState = showAppIconsState,
         showMoreAppsCardState = showMoreAppsCardState,
     )
-    val isPatchingState = rememberUpdatedState(patchingSession.isInProgress)
+    val isPatchingState = rememberUpdatedState(
+        patchingSession.isInProgress || batchState?.isActive == true
+    )
 
     val targetDirection = if (appLanguage.isRtlLanguage()) LayoutDirection.Rtl else LayoutDirection.Ltr
 
@@ -498,6 +509,9 @@ private fun appContent(
                                             composable<ResultScreenRoute> { backStackEntry ->
                                                 val route = backStackEntry.toRoute<ResultScreenRoute>()
                                                 ResultScreen(outputPath = route.outputPath, isMount = route.isMount)
+                                            }
+                                            composable<BatchPatcherScreenRoute> {
+                                                BatchPatcherScreen()
                                             }
                                             composable<SettingsScreenRoute>(
                                                 enterTransition = { Animations.pushEnter },

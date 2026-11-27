@@ -24,6 +24,8 @@ import org.jetbrains.compose.resources.stringResource
 internal fun PatchSelectionBottomBar(
     selectedCount: Int,
     onPatchClick: () -> Unit,
+    actionLabel: String? = null,
+    allowEmptySelection: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val dividerColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.08f)
@@ -41,10 +43,10 @@ internal fun PatchSelectionBottomBar(
             }
             .padding(16.dp)
     ) {
-        val patchEnabled = selectedCount > 0
+        val patchEnabled = allowEmptySelection || selectedCount > 0
 
         MorpheButton(
-            label = stringResource(Res.string.patch_selection_action_patch, selectedCount),
+            label = actionLabel ?: stringResource(Res.string.patch_selection_action_patch, selectedCount),
             modifier = Modifier.fillMaxWidth(),
             variant = MorpheButtonVariant.FILLED,
             size = MorpheButtonSize.LARGE,

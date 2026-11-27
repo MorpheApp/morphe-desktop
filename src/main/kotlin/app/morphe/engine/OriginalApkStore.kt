@@ -27,6 +27,17 @@ class OriginalApkStore(
     fun contains(file: File): Boolean =
         file.absoluteFile.parentFile?.canonicalFile == dir.canonicalFile
 
+    /** Returns the kept original APK/bundle for [packageName], or null if none is stored. */
+    fun findFor(packageName: String): File? {
+        if (packageName.isBlank() || !dir.isDirectory) return null
+        val prefix = prefixFor(packageName)
+        return dir.listFiles { file ->
+            file.isFile &&
+                file.name.startsWith(prefix) &&
+                !file.name.endsWith(STAGING_SUFFIX)
+        }?.maxByOrNull { it.lastModified() }
+    }
+
     /**
      * Copies [apk] into the store for [packageName] and [version], returning the stored file or null
      * if [apk] is already in the store. Replaces any previous entry for that package only after the
@@ -36,7 +47,7 @@ class OriginalApkStore(
         if (contains(apk)) return null
         dir.mkdirs()
         // UNSAFE_PACKAGE_CHARS strips '-', so this prefix matches a single app.
-        val prefix = "${packageName.replace(UNSAFE_PACKAGE_CHARS, "_")}-"
+        val prefix = prefixFor(packageName)
         val safeVersion = version.ifBlank { "unknown" }.replace(UNSAFE_VERSION_CHARS, "_")
         val target = File(dir, "$prefix$safeVersion.${apk.extension.lowercase().ifEmpty { "apk" }}")
 
@@ -71,6 +82,9 @@ class OriginalApkStore(
 
     /** Deletes [file] if it is a kept original, leaving any file outside the store alone. */
     fun delete(file: File): Boolean = contains(file) && file.delete()
+
+    private fun prefixFor(packageName: String): String =
+        "${packageName.replace(UNSAFE_PACKAGE_CHARS, "_")}-"
 
     companion object {
         private const val STAGING_SUFFIX = ".part"
