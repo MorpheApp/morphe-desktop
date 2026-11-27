@@ -88,4 +88,16 @@
         <item quantity="one">%1$d विकल्प</item>
         <item quantity="other">%1$d विकल्प</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%2$d में से %1$d ऐप तैयार है</item>
+        <item quantity="other">%2$d में से %1$d ऐप तैयार हैं</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d ऐप कतार में है</item>
+        <item quantity="other">%1$d ऐप कतार में हैं</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d चुने गए</item>
+        <item quantity="other">%1$d चुने गए</item>
+    </plurals>
 </resources>

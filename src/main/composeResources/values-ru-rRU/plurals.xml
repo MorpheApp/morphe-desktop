@@ -132,4 +132,22 @@
         <item quantity="many">%1$d опций</item>
         <item quantity="other">%1$d опций</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">Готово %1$d из %2$d приложения</item>
+        <item quantity="few">Готово %1$d из %2$d приложений</item>
+        <item quantity="many">Готово %1$d из %2$d приложений</item>
+        <item quantity="other">Готово %1$d из %2$d приложений</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d приложение в очереди</item>
+        <item quantity="few">%1$d прил. в очереди</item>
+        <item quantity="many">%1$d прил. в очереди</item>
+        <item quantity="other">%1$d прил. в очереди</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d выбрано</item>
+        <item quantity="few">%1$d выбрано</item>
+        <item quantity="many">%1$d выбрано</item>
+        <item quantity="other">%1$d выбрано</item>
+    </plurals>
 </resources>

@@ -66,4 +66,13 @@
     <plurals name="versions_option_count">
         <item quantity="other">%1$d tùy chọn</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="other">%1$d trên %2$d ứng dụng đã sẵn sàng</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="other">%1$d ứng dụng đang chờ</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="other">%1$d đã chọn</item>
+    </plurals>
 </resources>

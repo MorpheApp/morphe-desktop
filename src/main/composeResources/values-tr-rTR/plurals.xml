@@ -88,4 +88,16 @@
         <item quantity="one">%1$d seçenek</item>
         <item quantity="other">%1$d seçenek</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%2$d uygulamadan %1$d tanesi hazır</item>
+        <item quantity="other">%2$d uygulamadan %1$d tanesi hazır</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d uygulama kuyruğa alındı</item>
+        <item quantity="other">%1$d uygulama kuyruğa alındı</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d seçildi</item>
+        <item quantity="other">%1$d seçildi</item>
+    </plurals>
 </resources>

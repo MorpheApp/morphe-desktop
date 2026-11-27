@@ -88,4 +88,16 @@
         <item quantity="one">%1$d هەڵبژاردە</item>
         <item quantity="other">%1$d هەڵبژاردە</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d لە %2$d ئەپ ئامادەیە</item>
+        <item quantity="other">%1$d لە %2$d ئەپ ئامادەن</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d ئەپ لە ڕیزبەندییە</item>
+        <item quantity="other">%1$d ئەپ لە ڕیزبەندییەن</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d هەڵبژێردراوە</item>
+        <item quantity="other">%1$d هەڵبژێردراوە</item>
+    </plurals>
 </resources>

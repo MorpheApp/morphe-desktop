@@ -110,4 +110,19 @@
         <item quantity="two">%1$d אפשרויות</item>
         <item quantity="other">%1$d אפשרויות</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d מתוך %2$d אפליקציות מוכנות</item>
+        <item quantity="two">%1$d מתוך %2$d אפליקציות מוכנות</item>
+        <item quantity="other">%1$d מתוך %2$d אפליקציות מוכנות</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d אפליקציה בתור</item>
+        <item quantity="two">%1$d אפליקציות בתור</item>
+        <item quantity="other">%1$d אפליקציות בתור</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d נבחר</item>
+        <item quantity="two">%1$d נבחרו</item>
+        <item quantity="other">%1$d נבחרים</item>
+    </plurals>
 </resources>

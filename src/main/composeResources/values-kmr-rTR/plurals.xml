@@ -88,4 +88,16 @@
         <item quantity="one">%1$d vebijark</item>
         <item quantity="other">%1$d vebijark</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d ji %2$d sepan amade ne</item>
+        <item quantity="other">%1$d ji %2$d sepan amade ne</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d sep li rêzeyê ye</item>
+        <item quantity="other">%1$d sepan li rêzeyê ne</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d hat hilbijartin</item>
+        <item quantity="other">%1$d hatin hilbijartin</item>
+    </plurals>
 </resources>

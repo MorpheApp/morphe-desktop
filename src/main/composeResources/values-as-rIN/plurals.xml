@@ -88,4 +88,16 @@
         <item quantity="one">%1$d বিকল্প</item>
         <item quantity="other">%1$d টা বিকল্প</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%2$d টাৰ ভিতৰত %1$d টা এপ সাজু হৈছে</item>
+        <item quantity="other">%2$d টাৰ ভিতৰত %1$d টা এপ সাজু হৈছে</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d টা এপ কিউত আছে</item>
+        <item quantity="other">%1$d টা এপ কিউত আছে</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d টা নিৰ্বাচন কৰা হৈছে</item>
+        <item quantity="other">%1$d টা নিৰ্বাচন কৰা হৈছে</item>
+    </plurals>
 </resources>

@@ -132,4 +132,22 @@
         <item quantity="many">%1$d parinkčių</item>
         <item quantity="other">%1$d parinkčių</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d iš %2$d programos paruošta</item>
+        <item quantity="few">%1$d iš %2$d programų paruošta</item>
+        <item quantity="many">%1$d iš %2$d programų paruošta</item>
+        <item quantity="other">%1$d iš %2$d programų paruošta</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d programa eilėje</item>
+        <item quantity="few">%1$d programos eilėje</item>
+        <item quantity="many">%1$d programos eilėje</item>
+        <item quantity="other">%1$d programos eilėje</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">pasirinkta %1$d</item>
+        <item quantity="few">%1$d pasirinkta</item>
+        <item quantity="many">%1$d pasirinkta</item>
+        <item quantity="other">%1$d pasirinkta</item>
+    </plurals>
 </resources>

@@ -88,4 +88,16 @@
         <item quantity="one">%1$d aukera</item>
         <item quantity="other">%1$d aukera</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%2$d aplikaziotik %1$d prest</item>
+        <item quantity="other">%2$d aplikaziotik %1$d prest</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d aplikazioa herrenean</item>
+        <item quantity="other">%1$d aplikazioa herrenean</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d hautatuta</item>
+        <item quantity="other">%1$d hautatuta</item>
+    </plurals>
 </resources>

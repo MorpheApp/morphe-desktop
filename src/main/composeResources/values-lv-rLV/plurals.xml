@@ -110,4 +110,19 @@
         <item quantity="one">%1$d opcija</item>
         <item quantity="other">%1$d opcijas</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="zero">%1$d no %2$d lietotnēm gatavas</item>
+        <item quantity="one">%1$d no %2$d lietotnēm gatava</item>
+        <item quantity="other">%1$d no %2$d lietotnēm gatavas</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="zero">%1$d lietotnes rindā</item>
+        <item quantity="one">%1$d lietotne rindā</item>
+        <item quantity="other">%1$d lietotnes rindā</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="zero">%1$d atlasīts</item>
+        <item quantity="one">%1$d atlasīts</item>
+        <item quantity="other">%1$d atlasīti</item>
+    </plurals>
 </resources>

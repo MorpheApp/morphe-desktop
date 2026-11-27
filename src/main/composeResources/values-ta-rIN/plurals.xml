@@ -80,4 +80,16 @@
         <item quantity="one">%1$d விருப்பம்</item>
         <item quantity="other">%1$d விருப்பங்கள்</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%2$d செயலிகளில் %1$d செயலி தயாராக உள்ளது</item>
+        <item quantity="other">%2$d செயலிகளில் %1$d செயலிகள் தயாராக உள்ளன</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d செயலி வரிசையில் உள்ளது</item>
+        <item quantity="other">%1$d செயலிகள் வரிசையில் உள்ளன</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d தேர்ந்தெடுக்கப்பட்டது</item>
+        <item quantity="other">%1$d தேர்ந்தெடுக்கப்பட்டன</item>
+    </plurals>
 </resources>

@@ -88,4 +88,16 @@
         <item quantity="one">%1$d opció</item>
         <item quantity="other">%1$d opcions</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d de %2$d aplicacions llestes</item>
+        <item quantity="other">%1$d de %2$d aplicacions llestes</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d aplicació en cola</item>
+        <item quantity="other">%1$d aplicacions en cola</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d seleccionat</item>
+        <item quantity="other">%1$d seleccionats</item>
+    </plurals>
 </resources>

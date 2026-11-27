@@ -132,4 +132,22 @@
         <item quantity="many">%1$d možností</item>
         <item quantity="other">%1$d možností</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d z %2$d aplikací je připraveno</item>
+        <item quantity="few">%1$d z %2$d aplikací je připraveno</item>
+        <item quantity="many">%1$d z %2$d aplikací je připraveno</item>
+        <item quantity="other">%1$d z %2$d aplikací je připraveno</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d aplikace je ve frontě</item>
+        <item quantity="few">%1$d aplikací je ve frontě</item>
+        <item quantity="many">%1$d aplikací je ve frontě</item>
+        <item quantity="other">%1$d aplikací je ve frontě</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d vybráno</item>
+        <item quantity="few">%1$d vybraných</item>
+        <item quantity="many">%1$d vybraných</item>
+        <item quantity="other">%1$d vybraných</item>
+    </plurals>
 </resources>

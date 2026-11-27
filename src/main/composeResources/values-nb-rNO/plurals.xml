@@ -88,4 +88,16 @@
         <item quantity="one">%1$d alternativ</item>
         <item quantity="other">%1$d alternativer</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d av %2$d app klar</item>
+        <item quantity="other">%1$d av %2$d apper klare</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d app i kø</item>
+        <item quantity="other">%1$d apper i kø</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d valgt</item>
+        <item quantity="other">%1$d valgt</item>
+    </plurals>
 </resources>

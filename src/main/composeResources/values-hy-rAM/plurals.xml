@@ -88,4 +88,16 @@
         <item quantity="one">%1$d տարբերակ</item>
         <item quantity="other">%1$d տարբերակ</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%2$d հավելվածից %1$d-ն պատրաստ է</item>
+        <item quantity="other">%2$d հավելվածից %1$d-ն պատրաստ են</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d հավելված հերթում է</item>
+        <item quantity="other">%1$d հավելված հերթում են</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d ընտրված է</item>
+        <item quantity="other">%1$d ընտրված է</item>
+    </plurals>
 </resources>

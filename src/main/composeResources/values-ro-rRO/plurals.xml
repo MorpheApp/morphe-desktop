@@ -110,4 +110,19 @@
         <item quantity="few">%1$d opțiuni</item>
         <item quantity="other">%1$d opțiuni</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d din %2$d aplicații gata</item>
+        <item quantity="few">%1$d din %2$d aplicații gata</item>
+        <item quantity="other">%1$d din %2$d aplicații gata</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d aplicație în așteptare</item>
+        <item quantity="few">%1$d aplicații în așteptare</item>
+        <item quantity="other">%1$d aplicații în așteptare</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d selectat</item>
+        <item quantity="few">%1$d selectate</item>
+        <item quantity="other">%1$d selectate</item>
+    </plurals>
 </resources>

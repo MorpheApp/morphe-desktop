@@ -66,4 +66,13 @@
     <plurals name="versions_option_count">
         <item quantity="other">%1$d ตัวเลือก</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="other">แอป %1$d จาก %2$d พร้อมแล้ว</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="other">คิวแอป %1$d รายการ</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="other">เลือกแล้ว %1$d รายการ</item>
+    </plurals>
 </resources>

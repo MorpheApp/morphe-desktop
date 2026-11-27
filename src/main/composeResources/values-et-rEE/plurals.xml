@@ -88,4 +88,16 @@
         <item quantity="one">%1$d valik</item>
         <item quantity="other">%1$d valikut</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d/%2$d rakendist valmis</item>
+        <item quantity="other">%1$d/%2$d rakendist valmis</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d rakend on järjekorrassa</item>
+        <item quantity="other">%1$d rakendit on järjekorrassa</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d valitud</item>
+        <item quantity="other">%1$d valitud</item>
+    </plurals>
 </resources>

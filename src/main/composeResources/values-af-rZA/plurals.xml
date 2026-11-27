@@ -88,4 +88,16 @@
         <item quantity="one">%1$d opsie</item>
         <item quantity="other">%1$d opsies</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d van %2$d toep gereed</item>
+        <item quantity="other">%1$d van %2$d toepassings gereed</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d toep. in tou</item>
+        <item quantity="other">%1$d toepassings in tou</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d gekies</item>
+        <item quantity="other">%1$d gekies</item>
+    </plurals>
 </resources>

@@ -132,4 +132,22 @@
         <item quantity="many">%1$d варыянтоў</item>
         <item quantity="other">%1$d варыянтаў</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d з %2$d праграмы гатовы</item>
+        <item quantity="few">%1$d з %2$d праграм гатовы</item>
+        <item quantity="many">%1$d з %2$d праграм гатовы</item>
+        <item quantity="other">%1$d з %2$d праграм гатовы</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d праграма ў чарзе</item>
+        <item quantity="few">%1$d праграм у чарзе</item>
+        <item quantity="many">%1$d праграм у чарзе</item>
+        <item quantity="other">%1$d праграм у чарзе</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">Выбрана: %1$d</item>
+        <item quantity="few">Выбрана: %1$d</item>
+        <item quantity="many">Выбрана: %1$d</item>
+        <item quantity="other">Выбрана: %1$d</item>
+    </plurals>
 </resources>

@@ -88,4 +88,16 @@
         <item quantity="one">%1$d valgmulighed</item>
         <item quantity="other">%1$d valgmuligheder</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d af %2$d app klar</item>
+        <item quantity="other">%1$d af %2$d apps klar</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d app i kø</item>
+        <item quantity="other">%1$d apps i kø</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d valgt</item>
+        <item quantity="other">%1$d valgt</item>
+    </plurals>
 </resources>

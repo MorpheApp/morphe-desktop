@@ -88,4 +88,16 @@
         <item quantity="one">%1$d опция</item>
         <item quantity="other">%1$d опция</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%2$d қолданбаның %1$d-і дайын</item>
+        <item quantity="other">%2$d қолданбаның %1$d-і дайын</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d қолданба кезекте</item>
+        <item quantity="other">%1$d қолданба кезекте</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d таңдалды</item>
+        <item quantity="other">%1$d таңдалды</item>
+    </plurals>
 </resources>

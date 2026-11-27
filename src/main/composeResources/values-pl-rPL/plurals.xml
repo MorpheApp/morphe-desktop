@@ -132,4 +132,22 @@
         <item quantity="many">%1$d opcji</item>
         <item quantity="other">%1$d opcji</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d z %2$d aplikacji gotowa</item>
+        <item quantity="few">%1$d z %2$d aplikacji gotowe</item>
+        <item quantity="many">%1$d z %2$d aplikacji gotowych</item>
+        <item quantity="other">%1$d z %2$d aplikacji gotowych</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d aplikacja w kolejce</item>
+        <item quantity="few">%1$d aplikacje w kolejce</item>
+        <item quantity="many">%1$d aplikacji w kolejce</item>
+        <item quantity="other">%1$d aplikacji w kolejce</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">Zaznaczono %1$d</item>
+        <item quantity="few">Zaznaczono %1$d</item>
+        <item quantity="many">Zaznaczono %1$d</item>
+        <item quantity="other">Zaznaczono %1$d</item>
+    </plurals>
 </resources>

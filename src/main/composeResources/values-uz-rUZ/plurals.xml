@@ -88,4 +88,16 @@
         <item quantity="one">%1$d ta variant</item>
         <item quantity="other">%1$d ta variant</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%2$d ta ilovadan %1$d tasi tayyor</item>
+        <item quantity="other">%2$d ta ilovadan %1$d tasi tayyor</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d ta ilova navbatda</item>
+        <item quantity="other">%1$d ta ilova navbatda</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d ta tanlandi</item>
+        <item quantity="other">%1$d ta tanlandi</item>
+    </plurals>
 </resources>

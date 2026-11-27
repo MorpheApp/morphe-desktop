@@ -154,4 +154,25 @@
         <item quantity="many">%1$d rogha</item>
         <item quantity="other">%1$d rogha</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d de %2$d app réidh</item>
+        <item quantity="two">%1$d de %2$d apps réidh</item>
+        <item quantity="few">%1$d de %2$d apps réidh</item>
+        <item quantity="many">%1$d de %2$d apps réidh</item>
+        <item quantity="other">%1$d de %2$d apps réidh</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d aip sa scuaine</item>
+        <item quantity="two">%1$d aip sa scuaine</item>
+        <item quantity="few">%1$d aip sa scuaine</item>
+        <item quantity="many">%1$d aip sa scuaine</item>
+        <item quantity="other">%1$d aip sa scuaine</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d roghnaithe</item>
+        <item quantity="two">%1$d roghnaithe</item>
+        <item quantity="few">%1$d roghnaithe</item>
+        <item quantity="many">%1$d roghnaithe</item>
+        <item quantity="other">%1$d roghnaithe</item>
+    </plurals>
 </resources>
