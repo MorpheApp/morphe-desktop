@@ -6,8 +6,8 @@ kotlin = "2.4.21"
 # CLI
 picocli = "4.7.7"
 # Keep in step with morphe-patcher: Gradle ships only one of the two, picked by comparing hashes as versions
-arsclib = "6435903152"
-morphe-patcher = "2.6.0"
+arsclib = "e016e76dcc"
+morphe-patcher = "2.6.1-dev.2"
 
 # Compose Desktop
 compose = "1.12.2"
