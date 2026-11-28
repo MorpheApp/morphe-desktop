@@ -23,6 +23,7 @@ import app.morphe.engine.options.updateOptionsFileFromSnapshots
 import app.morphe.engine.options.writePatchBundles
 import app.morphe.engine.patches.PatchBundleLoader
 import app.morphe.engine.patches.SupportedAppCatalog
+import app.morphe.engine.patches.narrowingFormFactor
 import app.morphe.engine.patches.supportedVersionsFor
 import app.morphe.engine.util.FileChecksum
 import app.morphe.engine.util.Logger
@@ -470,6 +471,10 @@ object PatchEngine {
                     } else emptyMap()
 
                     info("Filtering patches for $packageName v$packageVersion...")
+                    // Counted across every bundle, as a TV patch in one and the phone patches of
+                    // another split the app just the same
+                    val formFactor = allLoadedPatches.narrowingFormFactor(packageName, config.inputApk)
+                    formFactor?.let { info("Offering the patches of the ${it.name.lowercase()} build") }
                     loadedBundles.forEachIndexed { i, lb ->
                         val scope = effectiveBundleScopes[i]
                         val jsonEnabled = jsonEnabledByFile[lb.sourceFile] ?: emptySet()
@@ -486,6 +491,7 @@ object PatchEngine {
                             patches = lb.patches,
                             packageName = packageName,
                             packageVersion = packageVersion,
+                            formFactor = formFactor,
                             enabledNames = effectiveEnabledNames,
                             enabledIndices = scope.enabledPatchIndices,
                             disabledNames = effectiveDisabledNames,
@@ -530,6 +536,7 @@ object PatchEngine {
                         patches = config.patches,
                         packageName = packageName,
                         packageVersion = packageVersion,
+                        formFactor = config.patches.narrowingFormFactor(packageName, config.inputApk),
                         enabledPatches = config.enabledPatches,
                         disabledPatches = config.disabledPatches,
                         exclusiveMode = config.exclusiveMode,
@@ -809,6 +816,7 @@ object PatchEngine {
         patches: Set<Patch>,
         packageName: String,
         packageVersion: String,
+        formFactor: FormFactor?,
         enabledNames: Set<String>,
         enabledIndices: Set<Int>,
         disabledNames: Set<String>,
@@ -825,7 +833,7 @@ object PatchEngine {
         patches.withIndex().forEach patchLoop@{ (i, patch) ->
             val patchName = patch.name ?: return@patchLoop
             val patchNameLower = patchName.lowercase()
-            if (!isPatchCompatible(patch, patchName, packageName, packageVersion, force, log)) {
+            if (!isPatchCompatible(patch, patchName, packageName, packageVersion, formFactor, force, log)) {
                 return@patchLoop
             }
 
@@ -858,6 +866,7 @@ object PatchEngine {
         patches: Set<Patch>,
         packageName: String,
         packageVersion: String,
+        formFactor: FormFactor?,
         enabledPatches: Set<String>,
         disabledPatches: Set<String>,
         exclusiveMode: Boolean,
@@ -871,7 +880,7 @@ object PatchEngine {
             val patchName = patch.name ?: return@patchLoop
             val patchNameLower = patchName.lowercase()
 
-            if (!isPatchCompatible(patch, patchName, packageName, packageVersion, forceCompatibility, log)) {
+            if (!isPatchCompatible(patch, patchName, packageName, packageVersion, formFactor, forceCompatibility, log)) {
                 return@patchLoop
             }
 
@@ -896,10 +905,11 @@ object PatchEngine {
         patchName: String,
         packageName: String,
         packageVersion: String,
+        formFactor: FormFactor?,
         force: Boolean,
         log: (String) -> Unit,
     ): Boolean {
-        val supportedVersions = patch.supportedVersionsFor(packageName)
+        val supportedVersions = patch.supportedVersionsFor(packageName, formFactor)
         when {
             supportedVersions != null && supportedVersions.isEmpty() -> return false
             supportedVersions != null -> {

@@ -6,6 +6,7 @@
 package app.morphe.engine.model
 
 import app.morphe.engine.options.PatchOption
+import app.morphe.engine.patches.narrowingFormFactor
 import app.morphe.patcher.patch.ApkArchitecture
 import app.morphe.patcher.patch.AvailabilityResolver
 import app.morphe.patcher.patch.FormFactor
@@ -14,6 +15,7 @@ import app.morphe.patcher.patch.PatchAvailability
 import app.morphe.patcher.patch.SupportedAbi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import java.io.File
 
 /** Metadata for a single patch from a patch bundle. */
 @Serializable
@@ -53,6 +55,31 @@ data class PatchMetadata(
             )
         }
     }
+}
+
+/**
+ * This patch for the build of [packageName] made for [formFactor]: its entries for the other builds
+ * are cut, and null comes back when none is left, as the patch is then for another build only.
+ */
+fun PatchMetadata.forBuild(packageName: String, formFactor: FormFactor): PatchMetadata? {
+    val kept = compatiblePackages.filter { it.name != packageName || formFactor.isCoveredBy(it.formFactor) }
+    return when {
+        kept.size == compatiblePackages.size -> this
+        kept.none { it.name == packageName } -> null
+        else -> copy(compatiblePackages = kept)
+    }
+}
+
+/** The form factors these patches tell builds of [packageName] apart by, see [narrowingFormFactor]. */
+fun Iterable<PatchMetadata>.formFactorsOf(packageName: String): Set<FormFactor> =
+    flatMap { it.compatiblePackages }
+        .filter { it.name == packageName }
+        .mapNotNullTo(mutableSetOf()) { it.formFactor }
+
+/** These patches for the build of [packageName] in [apk], see [forBuild] and [narrowingFormFactor]. */
+fun List<PatchMetadata>.forBuildIn(packageName: String, apk: File): List<PatchMetadata> {
+    val formFactor = narrowingFormFactor(formFactorsOf(packageName), apk) ?: return this
+    return mapNotNull { it.forBuild(packageName, formFactor) }
 }
 
 @Serializable
