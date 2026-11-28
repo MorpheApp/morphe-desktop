@@ -11,7 +11,7 @@ morphe-patcher = "2.6.1-dev.2"
 
 # Compose Desktop
 compose = "1.12.2"
-material3 = "1.12.0-alpha03"
+material3 = "1.13.0-rc01"
 
 # Networking
 ktor = "3.6.1"
