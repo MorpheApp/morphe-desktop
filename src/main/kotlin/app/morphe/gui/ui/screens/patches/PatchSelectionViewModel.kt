@@ -25,7 +25,10 @@ import app.morphe.engine.patches.PatchResolver
 import app.morphe.engine.patches.SupportedAppCatalog
 import app.morphe.engine.model.PatchLockState
 import app.morphe.engine.model.PatchMetadata
+import app.morphe.engine.model.forBuild
+import app.morphe.engine.model.formFactorsOf
 import app.morphe.engine.model.lockState
+import app.morphe.engine.patches.narrowingFormFactor
 import app.morphe.engine.util.Logger
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
@@ -155,7 +158,17 @@ class PatchSelectionViewModel(
             val patchesResult = loadFromAllPaths()
 
             patchesResult.fold(
-                onSuccess = { rawBundles ->
+                onSuccess = { loadedBundles ->
+                    // Narrowed across every source, as a TV patch in one and the phone patches of
+                    // another split the app just the same
+                    val formFactor = withContext(Dispatchers.IO) {
+                        narrowingFormFactor(loadedBundles.flatMap { it.patches }.formFactorsOf(packageName), File(apkPath))
+                    }
+                    val rawBundles = formFactor?.let { build ->
+                        loadedBundles.map { bundle ->
+                            bundle.copy(patches = bundle.patches.mapNotNull { it.forBuild(packageName, build) })
+                        }
+                    } ?: loadedBundles
                     Logger.info(
                         "Loaded ${rawBundles.size} bundle(s), " +
                             "${rawBundles.sumOf { it.patches.size }} total patches for $packageName"

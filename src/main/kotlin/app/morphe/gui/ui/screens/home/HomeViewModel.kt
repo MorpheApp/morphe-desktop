@@ -32,6 +32,7 @@ import app.morphe.engine.model.PatchMetadata
 import app.morphe.engine.model.SupportedApp
 import app.morphe.engine.model.VersionResolution
 import app.morphe.engine.model.VersionStatus
+import app.morphe.engine.model.forBuildIn
 import app.morphe.engine.patches.SupportedAppCatalog
 import app.morphe.engine.patches.resolveVersionStatus
 import app.morphe.engine.util.Logger
@@ -210,14 +211,15 @@ class HomeViewModel(
             cachedPatches
         }
 
+        val buildPatches = withContext(Dispatchers.IO) { availablePatches.forBuildIn(apkInfo.packageName, inputFile) }
         val candidatePatches = if (allowIncompatible) {
-            availablePatches.filter { it.isUniversal || it.isCompatibleWith(apkInfo.packageName) }
+            buildPatches.filter { it.isUniversal || it.isCompatibleWith(apkInfo.packageName) }
         } else {
-            val matchingVersion = availablePatches.filter {
+            val matchingVersion = buildPatches.filter {
                 it.isUniversal || it.isCompatibleWith(apkInfo.packageName, apkInfo.versionName)
             }
             matchingVersion.ifEmpty {
-                availablePatches.filter { it.isUniversal || it.isCompatibleWith(apkInfo.packageName) }
+                buildPatches.filter { it.isUniversal || it.isCompatibleWith(apkInfo.packageName) }
             }
         }
 
@@ -307,11 +309,12 @@ class HomeViewModel(
             } else {
                 cachedPatches
             }
-            val compatibleWithVersion = candidatePatches.filter { patch ->
+            val buildPatches = withContext(Dispatchers.IO) { candidatePatches.forBuildIn(record.packageName, inputFile) }
+            val compatibleWithVersion = buildPatches.filter { patch ->
                 patch.isCompatibleWith(record.packageName, record.apkVersion) && patch.isEnabled
             }
             val resolvedPatches = compatibleWithVersion.ifEmpty {
-                candidatePatches.filter { patch ->
+                buildPatches.filter { patch ->
                     (patch.isUniversal || patch.isCompatibleWith(record.packageName)) && patch.isEnabled
                 }
             }
