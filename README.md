@@ -81,7 +81,7 @@ The GUI is far more user-friendly and straightforward than the CLI. On your firs
 
 ![Morphe GUI Result](docs/images/main_readme/success.png)
 
-Bravo! That's your first successful patch! When you're ready for granular control (selecting individual patches and editing patch options), switch on **Expert mode** in Settings. You can also manage patch sources anytime using the **Sources** tab in the top navigation bar. See the [documentation](docs/documentation.md).
+Bravo! That's your first successful patch! When you're ready for granular control (selecting individual patches and editing patch options), switch on **Expert mode** in Settings. You can also manage patch sources anytime using the **Sources** tab in the top navigation bar, or queue multiple apps at once with [Batch patching](docs/documentation.md#gui-batch) (using **Select** or dropping multiple APKs). See the [documentation](docs/documentation.md).
 
 
 #### CLI

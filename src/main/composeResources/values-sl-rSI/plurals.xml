@@ -132,4 +132,22 @@
         <item quantity="few">%1$d možnosti</item>
         <item quantity="other">%1$d možnosti</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d od %2$d aplikacij je pripravljenih</item>
+        <item quantity="two">%1$d od %2$d aplikacij je pripravljenih</item>
+        <item quantity="few">%1$d od %2$d aplikacij je pripravljenih</item>
+        <item quantity="other">%1$d od %2$d aplikacij je pripravljenih</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d aplikacija je v vrsti</item>
+        <item quantity="two">%1$d aplikacij je v vrsti</item>
+        <item quantity="few">%1$d aplikacij je v vrsti</item>
+        <item quantity="other">%1$d aplikacij je v vrsti</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d izbran</item>
+        <item quantity="two">%1$d izbrana</item>
+        <item quantity="few">%1$d izbrani</item>
+        <item quantity="other">%1$d izbranih</item>
+    </plurals>
 </resources>

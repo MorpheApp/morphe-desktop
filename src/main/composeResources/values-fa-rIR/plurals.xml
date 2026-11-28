@@ -88,4 +88,16 @@
         <item quantity="one">%1$d گزینه</item>
         <item quantity="other">%1$d گزینه</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d از %2$d اپلیکیشن آماده است</item>
+        <item quantity="other">%1$d از %2$d اپلیکیشن آماده هستند</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d اپلیکیشن در صف است</item>
+        <item quantity="other">%1$d اپلیکیشن در صف هستند</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d مورد انتخاب شد</item>
+        <item quantity="other">%1$d مورد انتخاب شد</item>
+    </plurals>
 </resources>

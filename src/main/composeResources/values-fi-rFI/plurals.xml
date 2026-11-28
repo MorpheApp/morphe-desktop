@@ -88,4 +88,16 @@
         <item quantity="one">%1$d vaihtoehto</item>
         <item quantity="other">%1$d vaihtoehtoa</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d %2$d:stä sovellus valmis</item>
+        <item quantity="other">%1$d %2$d:stä sovellusta valmis</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d sovellus jonossa</item>
+        <item quantity="other">%1$d sovellusta jonossa</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d valittu</item>
+        <item quantity="other">%1$d valittu</item>
+    </plurals>
 </resources>

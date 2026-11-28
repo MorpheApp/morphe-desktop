@@ -88,4 +88,16 @@
         <item quantity="one">%1$d አማራጭ</item>
         <item quantity="other">%1$d አማራጮች</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">ከ%2$d መተግበሪያዎች መካከል %1$d ዝግጁ ነው</item>
+        <item quantity="other">ከ%2$d መተግበሪያዎች መካከል %1$d ዝግጁ ናቸው</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d መተግበሪያ ተሰልፏል</item>
+        <item quantity="other">%1$d መተግበሪያዎች ተሰልፈዋል</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d ተመርጧል</item>
+        <item quantity="other">%1$d ተመርጠዋል</item>
+    </plurals>
 </resources>

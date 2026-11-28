@@ -115,6 +115,9 @@ open class EngineConfigRepository(
     suspend fun setAutoStartAdb(enabled: Boolean) =
         saveConfig { it.copy(autoStartAdb = enabled) }
 
+    suspend fun setAutoInstallAfterPatching(enabled: Boolean) =
+        saveConfig { it.copy(autoInstallAfterPatching = enabled) }
+
     suspend fun setAutoRouteLinksAfterInstall(enabled: Boolean) =
         saveConfig { it.copy(autoRouteLinksAfterInstall = enabled) }
 

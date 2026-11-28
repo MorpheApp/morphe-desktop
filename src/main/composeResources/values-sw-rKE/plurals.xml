@@ -88,4 +88,16 @@
         <item quantity="one">chaguo %1$d</item>
         <item quantity="other">chaguo %1$d</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d ya %2$d programu tayari</item>
+        <item quantity="other">%1$d ya %2$d programu tayari</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">programu %1$d imewekwa kwenye foleni</item>
+        <item quantity="other">programu %1$d zimewekwa kwenye foleni</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d imechaguliwa</item>
+        <item quantity="other">%1$d zimechaguliwa</item>
+    </plurals>
 </resources>

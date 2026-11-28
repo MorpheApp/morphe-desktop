@@ -3,4 +3,7 @@
     <plurals name="versions_patch_count">
         <item quantity="other">បំណះ %1$d</item>
     </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="other">%1$d ដែលបានរើស</item>
+    </plurals>
 </resources>

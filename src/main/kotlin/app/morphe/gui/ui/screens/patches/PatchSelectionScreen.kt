@@ -36,6 +36,7 @@ import app.morphe.engine.model.lockState
 import app.morphe.gui.LocalNavController
 import app.morphe.gui.PatchSelectionParams
 import app.morphe.gui.PatchingScreenRoute
+import app.morphe.gui.batch.BatchPatchCoordinator
 import app.morphe.gui.navigateComplex
 import app.morphe.gui.ui.components.MorpheScrollbarStyle
 import app.morphe.gui.ui.components.ScreenErrorDialog
@@ -61,19 +62,26 @@ fun PatchSelectionScreen(
         parametersOf(
             params.apkPath, params.apkName, params.patchesFilePath, params.packageName, params.apkArchitectures,
             effectiveList, params.patchSourceNames, params.initialSelectionByBundle, params.initialPatchOptions,
-            params.apkVersion,
+            params.apkVersion, params.initialUseMount,
         )
     }
 ) {
-    PatchSelectionScreenContent(viewModel = viewModel)
+    PatchSelectionScreenContent(
+        viewModel = viewModel,
+        batchEditPackageName = params.batchEditPackageName,
+    )
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
+fun PatchSelectionScreenContent(
+    viewModel: PatchSelectionViewModel,
+    batchEditPackageName: String? = null,
+) {
     val primaryColor = MorpheTheme.colors.primary
     val navController = LocalNavController.current
     val engineConfigRepository: EngineConfigRepository = koinInject()
+    val batchCoordinator: BatchPatchCoordinator = koinInject()
     val uiState by viewModel.uiState.collectAsState()
     val targetPackage = viewModel.targetPackage()
 
@@ -462,11 +470,23 @@ fun PatchSelectionScreenContent(viewModel: PatchSelectionViewModel) {
                     }
                 }
 
+                val isBatchEdit = batchEditPackageName != null
                 PatchSelectionBottomBar(
                     selectedCount = uiState.selectedCount,
+                    actionLabel = if (isBatchEdit) {
+                        stringResource(Res.string.batch_patch_action_save_selection, uiState.selectedCount)
+                    } else {
+                        null
+                    },
+                    allowEmptySelection = isBatchEdit,
                     onPatchClick = {
-                        val config = viewModel.createPatchConfig(continueOnError)
-                        navController.navigateComplex(PatchingScreenRoute, config)
+                        if (batchEditPackageName != null) {
+                            batchCoordinator.updateSelection(batchEditPackageName, viewModel.captureBatchEditSnapshot())
+                            navController.popBackStack()
+                        } else {
+                            val config = viewModel.createPatchConfig(continueOnError)
+                            navController.navigateComplex(PatchingScreenRoute, config)
+                        }
                     },
                 )
             }

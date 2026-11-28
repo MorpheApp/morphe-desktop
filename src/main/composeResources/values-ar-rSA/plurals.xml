@@ -176,4 +176,28 @@
         <item quantity="many">%1$d خيار</item>
         <item quantity="other">%1$d خيار</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="zero">%1$d من %2$d تطبيقات جاهزة</item>
+        <item quantity="one">%1$d من %2$d تطبيق جاهز</item>
+        <item quantity="two">%1$d من %2$d تطبيقين جاهزين</item>
+        <item quantity="few">%1$d من %2$d تطبيقات جاهزة</item>
+        <item quantity="many">%1$d من %2$d تطبيقات جاهزة</item>
+        <item quantity="other">%1$d من %2$d تطبيق جاهز</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="zero">%1$d تطبيقات في قائمة الانتظار</item>
+        <item quantity="one">%1$d تطبيق في قائمة الانتظار</item>
+        <item quantity="two">%1$d تطبيقان في قائمة الانتظار</item>
+        <item quantity="few">%1$d تطبيقات في قائمة الانتظار</item>
+        <item quantity="many">%1$d تطبيق في قائمة الانتظار</item>
+        <item quantity="other">%1$d تطبيق في قائمة الانتظار</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="zero">تم تحديد %1$d</item>
+        <item quantity="one">تم تحديد %1$d</item>
+        <item quantity="two">تم تحديد %1$d</item>
+        <item quantity="few">تم تحديد %1$d</item>
+        <item quantity="many">تم تحديد %1$d</item>
+        <item quantity="other">تم تحديد %1$d</item>
+    </plurals>
 </resources>

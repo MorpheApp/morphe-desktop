@@ -88,4 +88,16 @@
         <item quantity="one">%1$d επιλογή</item>
         <item quantity="other">%1$d επιλογές</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d από τις %2$d εφαρμογές είναι έτοιμη</item>
+        <item quantity="other">%1$d από τις %2$d εφαρμογές είναι έτοιμες</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d εφαρμογή στην ουρά</item>
+        <item quantity="other">%1$d εφαρμογές στην ουρά</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d επιλεγμένη</item>
+        <item quantity="other">%1$d επιλεγμένη</item>
+    </plurals>
 </resources>

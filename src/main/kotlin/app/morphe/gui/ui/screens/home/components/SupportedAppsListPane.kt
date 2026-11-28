@@ -5,11 +5,16 @@
 
 package app.morphe.gui.ui.screens.home.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -25,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.engine.model.SupportedApp
@@ -34,14 +40,19 @@ import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.ui.components.MorpheButton
 import app.morphe.gui.ui.components.MorpheButtonSize
 import app.morphe.gui.ui.components.MorpheButtonVariant
+import app.morphe.gui.ui.components.MorpheChoiceChip
+import app.morphe.gui.ui.components.MorphePanel
 import app.morphe.gui.ui.components.MorpheScrollbarStyle
 import app.morphe.gui.ui.components.SlimSearchField
+import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.screens.home.ApkInfo
 import app.morphe.gui.ui.screens.home.DeviceAppInfo
 import app.morphe.gui.ui.screens.home.PatchedAppState
 import app.morphe.gui.ui.screens.home.RecallUpdateInfo
 import app.morphe.gui.ui.theme.MorpheTheme
 import app.morphe.gui.ui.theme.outlineBorder
+import app.morphe.gui.ui.theme.outlineStroke
+import app.morphe.gui.ui.theme.panelFill
 import app.morphe.gui.util.AppIconSource
 import app.morphe.gui.util.DeviceMonitor
 import app.morphe.gui.util.rememberAppIcon
@@ -50,6 +61,7 @@ import app.morphe.gui.ui.components.MorpheDropdownItem
 import app.morphe.morphe_desktop.generated.resources.*
 import java.io.File
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -73,11 +85,24 @@ internal fun SupportedAppsListPane(
     sortMode: HomeAppSortMode = HomeAppSortMode.RECOMMENDED,
     onSortModeChange: (HomeAppSortMode) -> Unit = {},
     isSimple: Boolean = false,
+    onPatchOutdatedAll: () -> Unit = {},
+    onBatchPatchSelected: (List<String>) -> Unit = {},
+    hasPendingBatchQueue: Boolean = false,
+    isBatchRunning: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var expandedPackage by remember { mutableStateOf<String?>(null) }
     var showCommunityNoticeDialog by remember { mutableStateOf(false) }
+    var isSelecting by remember { mutableStateOf(false) }
+    var selectedPackages by remember { mutableStateOf<Set<String>>(emptySet()) }
+
+    LaunchedEffect(isBatchRunning) {
+        if (isBatchRunning && isSelecting) {
+            isSelecting = false
+            selectedPackages = emptySet()
+        }
+    }
 
     val configRepo: ConfigRepository = koinInject()
     val uriHandler = LocalUriHandler.current
@@ -128,22 +153,33 @@ internal fun SupportedAppsListPane(
         }
     }
 
-    BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
-      val paneMaxHeight = maxHeight
-      Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .align(Alignment.TopCenter),
-      ) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+    ) {
         val updateCount = patchedStates.values.count { it == PatchedAppState.PATCHED_WITH_UPDATES }
         if (filter == AppListFilter.ALL && updateCount > 0) {
-            PatchedUpdatesBanner(updateCount) { onFilterChange(AppListFilter.YOURS) }
+            PatchedUpdatesBanner(
+                count = updateCount,
+                onView = { onFilterChange(AppListFilter.YOURS) },
+                onPatchAll = if (isBatchRunning) null else onPatchOutdatedAll,
+            )
+        }
+
+        val visiblePackages = remember(filter, filtered, filteredRecords) {
+            if (filter == AppListFilter.YOURS) {
+                filteredRecords.map { it.packageName }
+            } else {
+                filtered.map { it.packageName }
+            }
+        }
+        val toggleSelection: (String) -> Unit = { pkg ->
+            selectedPackages = if (pkg in selectedPackages) selectedPackages - pkg else selectedPackages + pkg
         }
 
         Row(
             modifier = Modifier.fillMaxWidth().padding(end = 12.dp, bottom = 6.dp),
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             AppListFilterChips(
                 filter = filter,
@@ -152,12 +188,27 @@ internal fun SupportedAppsListPane(
                 yourCount = patchedRecords.size,
                 modifier = Modifier.weight(1f),
             )
+            if (activeCount > 0 && !isBatchRunning) {
+                MorpheChoiceChip(
+                    text = stringResource(Res.string.batch_home_multiselect_toggle),
+                    active = isSelecting,
+                    icon = MorpheIcons.Checklist,
+                    onClick = {
+                        isSelecting = !isSelecting
+                        if (!isSelecting) {
+                            selectedPackages = emptySet()
+                        } else {
+                            expandedPackage = null
+                        }
+                    },
+                )
+            }
             MorpheDropdown(
                 label = sortMode.label,
                 items = HomeAppSortMode.entries.map { mode ->
                     MorpheDropdownItem(mode.label) { onSortModeChange(mode) }
                 },
-                modifier = Modifier.width(170.dp),
+                modifier = Modifier.width(160.dp),
             )
         }
 
@@ -183,8 +234,10 @@ internal fun SupportedAppsListPane(
                 appIconColorByPackage = supportedApps.associate { it.packageName to (it.appIconColor ?: "") }.filterValues { it.isNotEmpty() },
                 formFactorByPackage = supportedApps.mapNotNull { app -> app.formFactor?.let { app.packageName to it } }.toMap(),
                 onShowDetail = onShowDetail,
-                paneMaxHeight = paneMaxHeight,
-                showSearch = activeCount > 4,
+                selectionMode = isSelecting,
+                selectedPackages = selectedPackages,
+                onToggleSelect = toggleSelection,
+                modifier = Modifier.weight(1f, fill = false),
             )
         } else when {
             isLoading -> {
@@ -249,15 +302,10 @@ internal fun SupportedAppsListPane(
             }
             else -> {
                 val listState = rememberLazyListState()
-                val headerSearchAllowance =
-                    if (supportedApps.size > 4) 68.dp else 22.dp
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(
-                            max = (paneMaxHeight - headerSearchAllowance)
-                                .coerceAtLeast(120.dp)
-                        ),
+                        .weight(1f, fill = false),
                 ) {
                     LazyColumn(
                         state = listState,
@@ -267,11 +315,15 @@ internal fun SupportedAppsListPane(
                         items(items = filtered, key = { it.packageName }) { app ->
                             SupportedAppListRow(
                                 app = app,
-                                isExpanded = expandedPackage == app.packageName,
+                                isExpanded = !isSelecting && expandedPackage == app.packageName,
                                 isSimple = isSimple,
                                 onClick = {
-                                    expandedPackage = if (expandedPackage == app.packageName) null
-                                                      else app.packageName
+                                    if (isSelecting) {
+                                        toggleSelection(app.packageName)
+                                    } else {
+                                        expandedPackage = if (expandedPackage == app.packageName) null
+                                        else app.packageName
+                                    }
                                 },
                                 patchSourceNames = sourceNamesByPackage[app.packageName] ?: emptyList(),
                                 patchedState = patchedStates[app.packageName] ?: PatchedAppState.NEVER_PATCHED,
@@ -284,9 +336,11 @@ internal fun SupportedAppsListPane(
                                     ),
                                     packageName = app.packageName,
                                 ),
+                                selectionMode = isSelecting,
+                                isSelected = app.packageName in selectedPackages,
                             )
                         }
-                        if (showMoreAppsCard && searchQuery.isBlank()) {
+                        if (showMoreAppsCard && searchQuery.isBlank() && !isSelecting) {
                             item(key = "more_apps_card") {
                                 MoreAppsCard(
                                     onClick = {
@@ -316,7 +370,81 @@ internal fun SupportedAppsListPane(
                 }
             }
         }
-      }
+
+        AnimatedVisibility(
+            visible = isSelecting,
+            enter = fadeIn() + expandVertically(),
+            exit = fadeOut() + shrinkVertically(),
+        ) {
+            val allVisibleSelected = visiblePackages.isNotEmpty() && visiblePackages.all { it in selectedPackages }
+            MorphePanel(
+                color = panelFill,
+                border = outlineStroke(MorpheTheme.colors.primary.copy(alpha = 0.4f)),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp, end = 12.dp),
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Text(
+                        text = pluralStringResource(Res.plurals.batch_selected_count, selectedPackages.size, selectedPackages.size),
+                        style = MorpheTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    if (visiblePackages.isNotEmpty()) {
+                        MorpheButton(
+                            label = stringResource(
+                                if (allVisibleSelected) Res.string.batch_home_multiselect_deselect_all
+                                else Res.string.batch_home_multiselect_select_all
+                            ),
+                            variant = MorpheButtonVariant.GHOST,
+                            size = MorpheButtonSize.COMPACT,
+                            onClick = {
+                                selectedPackages = if (allVisibleSelected) {
+                                    selectedPackages - visiblePackages.toSet()
+                                } else {
+                                    selectedPackages + visiblePackages
+                                }
+                            },
+                        )
+                    }
+                    Spacer(Modifier.weight(1f))
+                    MorpheButton(
+                        label = stringResource(Res.string.cancel),
+                        variant = MorpheButtonVariant.GHOST,
+                        size = MorpheButtonSize.COMPACT,
+                        onClick = {
+                            isSelecting = false
+                            selectedPackages = emptySet()
+                        },
+                    )
+                    MorpheButton(
+                        label = stringResource(
+                            if (hasPendingBatchQueue) Res.string.batch_home_multiselect_add
+                            else Res.string.batch_home_multiselect_patch,
+                            selectedPackages.size,
+                        ),
+                        icon = MorpheIcons.PlaylistAdd,
+                        variant = MorpheButtonVariant.FILLED,
+                        size = MorpheButtonSize.COMPACT,
+                        enabled = selectedPackages.isNotEmpty(),
+                        onClick = {
+                            val chosen = selectedPackages.toList()
+                            isSelecting = false
+                            selectedPackages = emptySet()
+                            onBatchPatchSelected(chosen)
+                        },
+                    )
+                }
+            }
+        }
     }
 
     if (showCommunityNoticeDialog) {

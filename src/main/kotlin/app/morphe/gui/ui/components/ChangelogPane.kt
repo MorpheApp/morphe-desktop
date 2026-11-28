@@ -339,10 +339,10 @@ private fun ChangelogTimelineRow(
                                 ChangelogBadge.PRERELEASE -> MorpheBadgeTone.Warning
                             }
                             val badgeLabel = when (it) {
-                                ChangelogBadge.INSTALLED -> stringResource(Res.string.changelog_badge_installed)
+                                ChangelogBadge.INSTALLED -> stringResource(Res.string.installed)
                                 ChangelogBadge.LATEST -> stringResource(Res.string.changelog_badge_latest)
                                 ChangelogBadge.PRERELEASE -> stringResource(Res.string.changelog_badge_prerelease)
-                                ChangelogBadge.DOWNLOADED -> stringResource(Res.string.changelog_badge_installed)
+                                ChangelogBadge.DOWNLOADED -> stringResource(Res.string.installed)
                             }
                             MorpheBadge(tone = badgeTone, variant = MorpheBadgeVariant.FILLED) {
                                 Text(text = badgeLabel, style = MorpheTheme.typography.labelSmall)

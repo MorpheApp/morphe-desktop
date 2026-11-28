@@ -110,4 +110,19 @@
         <item quantity="few">%1$d opcije</item>
         <item quantity="other">%1$d opcija</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d od %2$d aplikacija je spremna</item>
+        <item quantity="few">%1$d od %2$d aplikacija je spremno</item>
+        <item quantity="other">%1$d od %2$d aplikacija je spremno</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d aplikacija je u redu</item>
+        <item quantity="few">%1$d aplikacija je u redu</item>
+        <item quantity="other">%1$d aplikacija je u redu</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d odabrano</item>
+        <item quantity="few">%1$d odabrano</item>
+        <item quantity="other">%1$d odabrano</item>
+    </plurals>
 </resources>

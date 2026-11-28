@@ -5,6 +5,8 @@
 
 package app.morphe.gui.data.model
 
+import app.morphe.gui.batch.BatchInstallPolicy
+import app.morphe.gui.batch.SavedBatchQueue
 import app.morphe.gui.ui.theme.ThemePreference
 import app.morphe.gui.ui.theme.ThemeStyle
 import kotlinx.serialization.Serializable
@@ -69,6 +71,10 @@ data class AppConfig(
     val homeAppListFilter: String = "ALL",
     /** Preferred patch source name per app package name for Simple mode. */
     val preferredPatchSourceByPackage: Map<String, String> = emptyMap(),
+    /** Last chosen post-patch install policy for batch runs. */
+    val batchInstallPolicy: BatchInstallPolicy = BatchInstallPolicy.SAVE_ONLY,
+    /** Pending batch queue kept for later across sessions. */
+    val savedBatchQueue: SavedBatchQueue? = null,
 ) {
 
     fun getUpdateChannelPreference(): UpdateChannelPreference? {

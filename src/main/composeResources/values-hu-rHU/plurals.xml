@@ -88,4 +88,16 @@
         <item quantity="one">%1$d opció</item>
         <item quantity="other">%1$d opció</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d / %2$d alkalmazás kész</item>
+        <item quantity="other">%1$d / %2$d alkalmazás kész</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d alkalmazás a sorban</item>
+        <item quantity="other">%1$d alkalmazás a sorban</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d kiválasztva</item>
+        <item quantity="other">%1$d kiválasztva</item>
+    </plurals>
 </resources>

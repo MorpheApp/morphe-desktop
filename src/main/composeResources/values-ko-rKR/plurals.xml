@@ -66,4 +66,13 @@
     <plurals name="versions_option_count">
         <item quantity="other">%1$d개의 옵션</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="other">%2$d개 중 %1$d개의 앱 준비 완료</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="other">%1$d개의 앱이 대기열에 추가됨</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="other">%1$d개 선택됨</item>
+    </plurals>
 </resources>

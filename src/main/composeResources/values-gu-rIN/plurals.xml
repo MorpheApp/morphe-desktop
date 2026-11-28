@@ -4,4 +4,8 @@
         <item quantity="one">%1$d પેચ</item>
         <item quantity="other">%1$d પેચો</item>
     </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d પસંદ કરેલ</item>
+        <item quantity="other">%1$d પસંદ કરેલ</item>
+    </plurals>
 </resources>

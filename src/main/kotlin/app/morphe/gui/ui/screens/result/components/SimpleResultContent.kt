@@ -14,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -48,10 +49,60 @@ internal fun SimpleResultContent(
     var isInstalling by remember { mutableStateOf(false) }
     var installError by remember { mutableStateOf<String?>(null) }
     var installSuccess by remember { mutableStateOf(false) }
+    var autoInstallEnabled by remember { mutableStateOf(false) }
+    var configLoaded by remember { mutableStateOf(false) }
+    var autoInstallTriggered by rememberSaveable(outputPath) { mutableStateOf(false) }
     val adbManager = remember { AdbManager() }
     val engineConfigRepository: EngineConfigRepository = koinInject()
     val scope = rememberCoroutineScope()
     val completedScroll = rememberScrollState()
+
+    fun installOnDevice(deviceId: String) {
+        if (isInstalling) return
+        scope.launch {
+            isInstalling = true
+            installError = null
+            val result = adbManager.installApk(
+                apkPath = outputPath,
+                deviceId = deviceId,
+            )
+            result.fold(
+                onSuccess = {
+                    installSuccess = true
+                    PatchedAppStore.shared.getAll()
+                        .firstOrNull { it.outputApkPath == outputPath }
+                        ?.let { adbManager.routeLinksAfterInstall(deviceId, it, engineConfigRepository.loadConfig()) }
+                },
+                onFailure = { installError = (it as? AdbException)?.getUserMessage() ?: it.message }
+            )
+            isInstalling = false
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        autoInstallEnabled = engineConfigRepository.loadConfig().autoInstallAfterPatching
+        configLoaded = true
+    }
+
+    LaunchedEffect(
+        configLoaded,
+        autoInstallEnabled,
+        autoInstallTriggered,
+        adbPreference.enabled,
+        monitorState.isAdbAvailable,
+        monitorState.selectedDevice?.id,
+        monitorState.selectedDevice?.isReady,
+        monitorState.devices,
+    ) {
+        if (!configLoaded || !autoInstallEnabled || autoInstallTriggered) return@LaunchedEffect
+        if (!adbPreference.enabled || monitorState.isAdbAvailable != true) return@LaunchedEffect
+        if (isInstalling || installSuccess) return@LaunchedEffect
+        val device = monitorState.selectedDevice?.takeIf { it.isReady }
+            ?: monitorState.devices.firstOrNull { it.isReady }
+            ?: return@LaunchedEffect
+        autoInstallTriggered = true
+        installOnDevice(device.id)
+    }
 
     Box(modifier = modifier) {
         Column(
@@ -136,32 +187,17 @@ internal fun SimpleResultContent(
                     readyDevices.isNotEmpty() -> {
                         val device = selectedDevice ?: readyDevices.first()
                         MorpheButton(
-                            label = stringResource(Res.string.adb_install_on_button, device.displayName),
+                            label = if (installError != null) {
+                                stringResource(Res.string.retry)
+                            } else {
+                                stringResource(Res.string.adb_install_on_button, device.displayName)
+                            },
                             variant = MorpheButtonVariant.FILLED,
                             size = MorpheButtonSize.LARGE,
                             modifier = Modifier
                                 .widthIn(max = 480.dp)
                                 .fillMaxWidth(),
-                            onClick = {
-                                scope.launch {
-                                    isInstalling = true
-                                    installError = null
-                                    val result = adbManager.installApk(
-                                        apkPath = outputPath,
-                                        deviceId = device.id,
-                                    )
-                                    result.fold(
-                                        onSuccess = {
-                                            installSuccess = true
-                                            PatchedAppStore.shared.getAll()
-                                                .firstOrNull { it.outputApkPath == outputPath }
-                                                ?.let { adbManager.routeLinksAfterInstall(device.id, it, engineConfigRepository.loadConfig()) }
-                                        },
-                                        onFailure = { installError = (it as? AdbException)?.getUserMessage() ?: it.message }
-                                    )
-                                    isInstalling = false
-                                }
-                            }
+                            onClick = { installOnDevice(device.id) }
                         )
                     }
                     else -> {

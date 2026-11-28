@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -27,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.morphe.engine.model.PatchedAppRecord
 import app.morphe.patcher.patch.FormFactor
@@ -79,13 +77,23 @@ fun AppListFilterChips(
 
 /** Banner notifying the user when updates are available for previously patched apps. */
 @Composable
-fun PatchedUpdatesBanner(count: Int, onView: () -> Unit) {
+fun PatchedUpdatesBanner(
+    count: Int,
+    onView: () -> Unit,
+    onPatchAll: (() -> Unit)? = null,
+) {
     MorpheBanner(
         title = pluralStringResource(Res.plurals.home_banner_update_available, count, count),
         tone = MorpheBannerTone.Info,
         icon = MorpheIcons.Refresh,
         modifier = Modifier.padding(end = 12.dp, bottom = 8.dp),
     ) {
+        if (onPatchAll != null) {
+            MorpheBannerAction(
+                label = stringResource(Res.string.batch_home_updates_patch_all),
+                onClick = onPatchAll,
+            )
+        }
         MorpheBannerAction(label = stringResource(Res.string.home_banner_view), onClick = onView)
     }
 }
@@ -102,8 +110,10 @@ internal fun YourAppsListBody(
     appIconColorByPackage: Map<String, String>,
     formFactorByPackage: Map<String, FormFactor>,
     onShowDetail: (PatchedAppRecord) -> Unit,
-    paneMaxHeight: Dp,
-    showSearch: Boolean,
+    selectionMode: Boolean = false,
+    selectedPackages: Set<String> = emptySet(),
+    onToggleSelect: (String) -> Unit = {},
+    modifier: Modifier = Modifier,
 ) {
     when {
         patchedRecords.isEmpty() -> YourAppsEmptyHint(
@@ -116,11 +126,8 @@ internal fun YourAppsListBody(
         )
         else -> {
             val listState = rememberLazyListState()
-            val headerSearchAllowance = if (showSearch) 80.dp else MorpheTheme.dimens.chipHeight
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = (paneMaxHeight - headerSearchAllowance).coerceAtLeast(120.dp)),
+                modifier = modifier.fillMaxWidth(),
             ) {
                 LazyColumn(
                     state = listState,
@@ -133,9 +140,14 @@ internal fun YourAppsListBody(
                             state = patchedStates[record.packageName] ?: PatchedAppState.PATCHED,
                             deviceInfo = deviceAppInfo[record.packageName],
                             updateInfo = updateInfoByPackage[record.packageName],
-                            onClick = { onShowDetail(record) },
+                            onClick = {
+                                if (selectionMode) onToggleSelect(record.packageName)
+                                else onShowDetail(record)
+                            },
                             appIconColorHex = appIconColorByPackage[record.packageName],
                             formFactor = formFactorByPackage[record.packageName] ?: record.formFactor,
+                            selectionMode = selectionMode,
+                            isSelected = record.packageName in selectedPackages,
                         )
                     }
                 }

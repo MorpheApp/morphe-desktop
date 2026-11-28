@@ -35,6 +35,8 @@ import app.morphe.engine.model.VersionStatus
 import app.morphe.engine.patches.SupportedAppCatalog
 import app.morphe.engine.patches.resolveVersionStatus
 import app.morphe.engine.util.Logger
+import app.morphe.gui.batch.BatchPatchCoordinator
+import app.morphe.gui.batch.BatchTarget
 import app.morphe.gui.data.model.FollowMode
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.SourceVersionPref
@@ -69,8 +71,11 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
@@ -91,6 +96,7 @@ class HomeViewModel(
     private val adbManager: AdbManager = AdbManager(),
     private val engineConfigRepository: EngineConfigRepository = EngineConfigRepository.shared,
     private val keystoreService: KeystoreService = KeystoreService.shared,
+    private val batchPatchCoordinator: BatchPatchCoordinator,
 ) : ViewModel() {
 
     private var patchRepository: PatchRepository = patchSourceManager.getActiveRepositorySync()
@@ -99,6 +105,9 @@ class HomeViewModel(
 
     private val _uiState = MutableStateFlow(HomeUiState(isDefaultSource = isDefaultSource))
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+
+    private val _navigateToBatch = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    val navigateToBatch: SharedFlow<Unit> = _navigateToBatch.asSharedFlow()
 
     // Cached patches and supported apps
     private var cachedPatches: List<PatchMetadata> = emptyList()
@@ -584,6 +593,7 @@ class HomeViewModel(
                     }
                     // Retain snapshot so source management sheet displays failure state.
                     cachedSourcesResult = result
+                    patchSourceManager.updateLatestSnapshot(result)
                     lastResolveKeys = resolveKeys
                     viewModelScope.launch(Dispatchers.IO) { SourceSnapshots.write(result, snapshotKeys) }
                     _uiState.update {
@@ -603,6 +613,7 @@ class HomeViewModel(
                 cachedAllPatchFiles = result.resolved.mapNotNull { it.patchFile }
                 lastLoadedVersion = firstResolved?.resolvedVersion
                 cachedSourcesResult = result
+                patchSourceManager.updateLatestSnapshot(result)
                 lastResolveKeys = resolveKeys
                 viewModelScope.launch(Dispatchers.IO) { SourceSnapshots.write(result, snapshotKeys) }
 
@@ -729,6 +740,7 @@ class HomeViewModel(
         cachedPatchesFile = first?.patchFile
         cachedAllPatchFiles = snapshot.resolved.mapNotNull { it.patchFile }
         cachedSourcesResult = snapshot
+        patchSourceManager.updateLatestSnapshot(snapshot)
         val catalog = buildCatalog(snapshot.unionPatches)
         val sourceName = sourceLabel(snapshot)
         Logger.info("Showing ${catalog.supportedApps.size} supported apps from the last load while sources refresh")
@@ -1357,18 +1369,70 @@ class HomeViewModel(
     }
 
     fun onFilesDropped(files: List<File>) {
-        val apkFile = files.firstOrNull { BundleFormats.isApkOrBundle(it) }
-        if (apkFile != null) {
-            selectPage(HomePage.APPS)
-            onFileSelected(apkFile)
-        } else {
-            viewModelScope.launch {
-                _uiState.value = _uiState.value.copy(
-                    error = getString(Res.string.error_drop_valid_apk),
-                    isReady = false
-                )
+        val apkFiles = files.filter { BundleFormats.isApkOrBundle(it) }
+        when {
+            apkFiles.size >= 2 -> enqueueApkFiles(apkFiles)
+            apkFiles.size == 1 -> {
+                selectPage(HomePage.APPS)
+                onFileSelected(apkFiles.first())
+            }
+            else -> {
+                viewModelScope.launch {
+                    _uiState.value = _uiState.value.copy(
+                        error = getString(Res.string.error_drop_valid_apk),
+                        isReady = false
+                    )
+                }
             }
         }
+    }
+
+    fun isBatchRunning(): Boolean = batchPatchCoordinator.isRunning
+
+    fun enqueueBatchTargets(targets: List<BatchTarget>) {
+        if (targets.isEmpty()) return
+        if (batchPatchCoordinator.isRunning) {
+            viewModelScope.launch { showError(getString(Res.string.batch_patch_already_running)) }
+            return
+        }
+        val isSimple = patchSourceManager.activeMode.value == ActiveMode.SIMPLE
+        batchPatchCoordinator.enqueue(targets, isSimpleMode = isSimple)
+        _navigateToBatch.tryEmit(Unit)
+    }
+
+    fun enqueueOutdatedApps() {
+        val state = _uiState.value
+        val outdatedPackages = state.patchedRecords
+            .map { it.packageName }
+            .filter { pkg ->
+                state.patchedStates[pkg] == PatchedAppState.PATCHED_WITH_UPDATES ||
+                    state.updateInfoByPackage[pkg]?.appOutdated == true
+            }
+            .distinct()
+        if (outdatedPackages.isEmpty()) return
+        enqueueBatchTargets(outdatedPackages.map { BatchTarget(it) })
+    }
+
+    fun enqueueApkFiles(files: List<File>) {
+        if (files.isEmpty()) return
+        if (batchPatchCoordinator.isRunning) {
+            viewModelScope.launch { showError(getString(Res.string.batch_patch_already_running)) }
+            return
+        }
+        val isSimple = patchSourceManager.activeMode.value == ActiveMode.SIMPLE
+        if (batchPatchCoordinator.enqueueApkFiles(files, isSimpleMode = isSimple)) {
+            _navigateToBatch.tryEmit(Unit)
+        } else {
+            viewModelScope.launch { showError(getString(Res.string.error_drop_valid_apk)) }
+        }
+    }
+
+    fun openBatchQueue() {
+        if (batchPatchCoordinator.state.value == null && batchPatchCoordinator.savedQueue.value != null) {
+            val isSimple = patchSourceManager.activeMode.value == ActiveMode.SIMPLE
+            batchPatchCoordinator.openSavedQueue(isSimpleMode = isSimple)
+        }
+        _navigateToBatch.tryEmit(Unit)
     }
 
     fun clearSelection() {
@@ -1601,6 +1665,11 @@ class HomeViewModel(
         // Refresh badges and device state when history changes.
         viewModelScope.launch {
             patchedAppStore.changes.collect { refreshPatchedState() }
+        }
+
+        // Surface batch planning errors (e.g., all dropped files failed inspection).
+        viewModelScope.launch {
+            batchPatchCoordinator.errors.collect { message -> showError(message) }
         }
 
         // Refresh installed status for patched apps when the selected ADB device changes.

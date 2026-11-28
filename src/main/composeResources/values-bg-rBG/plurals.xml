@@ -88,4 +88,16 @@
         <item quantity="one">%1$d опция</item>
         <item quantity="other">%1$d опции</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d от %2$d приложения готови</item>
+        <item quantity="other">%1$d от %2$d приложения готови</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d приложение в опашка</item>
+        <item quantity="other">%1$d приложения в опашка</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d избрани</item>
+        <item quantity="other">%1$d избрани</item>
+    </plurals>
 </resources>

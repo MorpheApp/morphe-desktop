@@ -88,4 +88,16 @@
         <item quantity="one">%1$d opsyon</item>
         <item quantity="other">%1$d na mga pagpipilian</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d ng %2$d app ang handa na</item>
+        <item quantity="other">%1$d ng %2$d app ang handa na</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d app ang nakapila</item>
+        <item quantity="other">%1$d app ang nakapila</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d napili</item>
+        <item quantity="other">%1$d napili</item>
+    </plurals>
 </resources>

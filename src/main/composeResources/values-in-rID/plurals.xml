@@ -66,4 +66,13 @@
     <plurals name="versions_option_count">
         <item quantity="other">%1$d opsi</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="other">%1$d dari %2$d aplikasi siap</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="other">%1$d aplikasi dalam antrean</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="other">%1$d dipilih</item>
+    </plurals>
 </resources>

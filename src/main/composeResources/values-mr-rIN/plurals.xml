@@ -88,4 +88,16 @@
         <item quantity="one">%1$d पर्याय</item>
         <item quantity="other">%1$d पर्याय</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%2$d पैकी %1$d ॲप तयार आहे</item>
+        <item quantity="other">%2$d पैकी %1$d ॲप्स तयार आहेत</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d ॲप रांगेत आहे</item>
+        <item quantity="other">%1$d ॲप्स रांगेत आहेत</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d निवडले आहे</item>
+        <item quantity="other">%1$d निवडले आहेत</item>
+    </plurals>
 </resources>

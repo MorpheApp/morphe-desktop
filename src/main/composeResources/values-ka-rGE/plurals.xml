@@ -88,4 +88,16 @@
         <item quantity="one">%1$d ოფცია</item>
         <item quantity="other">%1$d ოფცია</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d %2$d-დან აპლიკაცია მზადაა</item>
+        <item quantity="other">%1$d %2$d-დან აპლიკაცია მზადაა</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d აპლიკაცია რიგშია</item>
+        <item quantity="other">%1$d აპლიკაცია რიგშია</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d შერჩეულია</item>
+        <item quantity="other">%1$d შერჩეულია</item>
+    </plurals>
 </resources>

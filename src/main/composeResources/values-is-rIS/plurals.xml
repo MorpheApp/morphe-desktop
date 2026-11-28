@@ -88,4 +88,16 @@
         <item quantity="one">%1$d valkostur</item>
         <item quantity="other">%1$d valkostir</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%1$d af %2$d app tilbúin</item>
+        <item quantity="other">%1$d af %2$d apps tilbúin</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d app í rað</item>
+        <item quantity="other">%1$d apps í rað</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d valin</item>
+        <item quantity="other">%1$d valin</item>
+    </plurals>
 </resources>

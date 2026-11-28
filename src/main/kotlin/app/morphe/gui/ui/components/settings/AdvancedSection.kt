@@ -146,7 +146,7 @@ internal fun rememberAdvancedSearchVisibility(query: String): AdvancedSearchVisi
             "abi",
         ),
         developerOptions = matchesSettingQuery(query, devTitle, devDesc, "developer", "local", "mpp"),
-        bytecodeMode = matchesSettingQuery(query, bytecodeTitle, bytecodeDesc, "bytecode", "dex", "strip_fast", "strip_safe", "full"),
+        bytecodeMode = matchesSettingQuery(query, bytecodeTitle, bytecodeDesc, "bytecode", "dex", "strip_fast", "strip_safe"),
         validateFingerprints = matchesSettingQuery(query, validateTitle, validateDesc, "fingerprint", "validate"),
         verifyWithSdk = matchesSettingQuery(query, verifyTitle, verifyDesc, "sdk", "d8", "zipalign", "verify"),
         androidSdkPath = matchesSettingQuery(query, sdkPathTitle, "sdk", "android_home", "directory"),
@@ -280,7 +280,6 @@ internal fun AdvancedSection(
                 val modes = listOf(
                     "STRIP_FAST" to stringResource(Res.string.settings_dev_bytecode_mode_strip_fast),
                     "STRIP_SAFE" to stringResource(Res.string.settings_dev_bytecode_mode_strip_safe),
-                    "FULL" to stringResource(Res.string.settings_dev_bytecode_mode_full),
                 )
                 val currentModeLabel = modes.firstOrNull { it.first == currentMode }?.second ?: currentMode
 

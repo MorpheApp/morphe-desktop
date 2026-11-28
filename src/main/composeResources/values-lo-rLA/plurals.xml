@@ -66,4 +66,13 @@
     <plurals name="versions_option_count">
         <item quantity="other">%1$d ຕົວເລືອກ</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="other">%1$d ຈາກ %2$d ແອັບ ພ້ອມແລ້ວ</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="other">%1$d ແອັບ ຢູ່ໃນຄິວ</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="other">ເລືອກ %1$d ລາຍການ</item>
+    </plurals>
 </resources>

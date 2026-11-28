@@ -26,6 +26,7 @@ data class EngineConfig(
     val keepArchitectures: Set<String> = AndroidArchitectures.ALL,
     val gitHubPat: String = "",
     val autoStartAdb: Boolean = false,
+    val autoInstallAfterPatching: Boolean = false,
     val autoRouteLinksAfterInstall: Boolean = false,
     val disableStockLinksAfterInstall: Boolean = false,
     val autoCleanupTempFiles: Boolean = true,

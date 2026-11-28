@@ -66,4 +66,13 @@
     <plurals name="versions_option_count">
         <item quantity="other">%1$d 個選項</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="other">%2$d 個應用程式中已有 %1$d 個準備就緒</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="other">%1$d 個應用程式已在佇列中</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="other">已選取 %1$d</item>
+    </plurals>
 </resources>

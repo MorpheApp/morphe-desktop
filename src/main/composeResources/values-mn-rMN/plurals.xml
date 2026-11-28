@@ -88,4 +88,16 @@
         <item quantity="one">%1$d сонголт</item>
         <item quantity="other">%1$d сонголт</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">%2$d аппликейшнээс %1$d нь бэлэн боллоо</item>
+        <item quantity="other">%2$d аппликейшнээс %1$d нь бэлэн боллоо</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">%1$d аппликейшн дараалалд орлоо</item>
+        <item quantity="other">%1$d аппликейшн дараалалд орлоо</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d сонгосон</item>
+        <item quantity="other">%1$d сонгосон</item>
+    </plurals>
 </resources>

@@ -66,4 +66,13 @@
     <plurals name="versions_option_count">
         <item quantity="other">%1$d 個のオプション</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="other">%2$d 個中 %1$d 個のアプリの準備が完了しました</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="other">%1$d 件のアプリがキューに入っています</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="other">%1$d 件選択中</item>
+    </plurals>
 </resources>

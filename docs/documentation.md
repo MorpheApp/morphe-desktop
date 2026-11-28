@@ -14,10 +14,12 @@ Now that you've done your first run, let's dig deeper into how the magic happens
   - [Simple mode](#gui-simple)
   - [Expert mode](#gui-expert)
   - [Managing patch sources](#gui-expert-sources)
+  - [Patch versions timeline](#gui-expert-source)
   - [Signing key verification & trust](#gui-signing-trust)
   - [Custom app icons (Icon Studio)](#gui-icon-studio)
   - [Link handling ("open with")](#gui-expert-links)
   - [Your apps](#gui-your-apps)
+  - [Batch patching](#gui-batch)
   - [Settings](#gui-settings)
     - [Storage & cache](#gui-settings-storage)
     - [Signing](#gui-settings-signing)
@@ -88,8 +90,8 @@ The GUI runs in one of two modes:
 
 | Mode                 | Who it's for               | What you control                                                                                                                      |
 |----------------------|----------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
-| **Simple** (default) | First-timers, fast patches | Streamlined workflow: drop an APK, pick the patch source on the card if multiple sources are enabled, and click **Patch** with default patches |
-| **Expert**           | Regular users, Power users | Full pipeline: choose patch sources & versions, select individual patches & edit their options, native-lib stripping, signing, and a live CLI-command preview |
+| **Simple** (default) | First-timers, fast patches | Streamlined workflow: drop an APK, pick the patch source on the card if multiple sources support it, and click **Patch** with default patches (always follows each source's **Stable** or **Pre-release** channel) |
+| **Expert**           | Regular users, Power users | Full pipeline: manage sources, browse & pin patch bundle versions, select individual patches & edit their options, native-lib stripping, signing, and a live CLI-command preview |
 
 <p align="center">
   <img src="images/documentation/gui/simple_home.png" width="45%" alt="Simple mode home" style="vertical-align: middle" />
@@ -111,9 +113,12 @@ Simple mode is the beginner path, covered step-by-step in the [first-run guide](
 4. Click **Patch** to immediately begin patching using tested default patches.
 5. The patching screen streams progress in a clean circular indicator, and on completion brings you straight to the result screen with an option to install via ADB or open the output folder. If a patch run fails, an in-depth failure screen appears with detailed error logs.
 
+> [!NOTE]
+> In Simple mode, per-release version browsing (**All versions** / **Browse patches**) is hidden on the **Sources** page, and any source pinned to a specific version in Expert mode automatically follows its configured release channel (**Stable** or **Pre-release**) while in Simple mode.
+
 <h3 id="gui-expert">Expert mode</h3>
 
-Expert mode is a five-screen pipeline giving you complete control over every step: **Apps (Home) → Patch source & version → Patch selection → Patching → Result**. Each screen below lists its controls (and the CLI flag it maps to, where there is one), then explains the details.
+Expert mode is a four-screen patching pipeline giving you complete control over every step: **Apps (Home) → Patch selection → Patching → Result**, alongside the **Sources** tab for managing patch sources and bundle versions. Each screen below lists its controls (and the CLI flag it maps to, where there is one), then explains the details.
 
 <h4 id="gui-window">The TopBar & Navigation Pill</h4>
 
@@ -127,7 +132,7 @@ The **Navigation Pill** sits in the center of the bar on Home with an animated s
 
 | Control                   | What it does                                                                                                                                                                                                                                                           |
 |---------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Sources** tab           | Opens the **Sources page** to add, edit, reorder, refresh, or remove patch sources and review signing keys – see [Managing patch sources](#gui-expert-sources).                                                                                                        |
+| **Sources** tab           | Opens the **Sources page** to add, edit, reorder, refresh, or remove patch sources, switch release channels (**Stable** / **Pre-release**), browse versions (Expert mode), and review signing keys – see [Managing patch sources](#gui-expert-sources). |
 | **Apps** tab              | Opens the **Apps page** with the APK staging area, Supported apps catalog, and Your apps patching history.                                                                                                                                                             |
 | **Settings** tab / button | Opens the integrated **Settings page** for preferences, storage & cache management, signing, native lib stripping, and about info – see [Settings](#gui-settings).                                                                                                     |
 | **Loading indicator**     | Displays an animated loading pill while patch manifests and releases are being fetched.                                                                                                                                                                               |
@@ -139,14 +144,14 @@ The **Navigation Pill** sits in the center of the bar on Home with an animated s
 
 | Control                                          | What it does                                                                           | CLI equivalent                                                             |
 |--------------------------------------------------|----------------------------------------------------------------------------------------|----------------------------------------------------------------------------|
-| Drag & drop / **Browse files**                   | Choose the APK to patch (`.apk`, `.apkm`, `.xapk`, `.apks`)                            | positional `<apk>` argument                                                |
+| Drag & drop / **Browse files**                   | Choose one APK to patch, or drop/select 2+ files (`.apk`, `.apkm`, `.xapk`, `.apks`) to open [Batch patching](#gui-batch) | positional `<apk>` argument                                                |
 | **Supported apps** list                          | The apps your patches target, each tagged with compatibility status                    | informational – compare with [`list-versions`](#subcommand-3-list-versions) |
 | **Patch source selector**                        | Choose which enabled source to patch with (in Simple mode when multiple sources exist) | `-p <source>`                                                              |
 | **Change APK**                                   | Swap the selected file                                                                 | –                                                                          |
 | **Patch** (Simple mode)                          | Immediately patch using default patches and selected source                            | runs the `patch` command with defaults                                     |
-| **Continue** / **Continue anyway** (Expert mode) | Proceed to patch source & patch selection                                              | `--force` (when it reads *Continue anyway*)                                |
+| **Continue** / **Continue anyway** (Expert mode) | Proceed to patch selection                                                             | `--force` (when it reads *Continue anyway*)                                |
 
-Drop an APK anywhere on the window (the zone reads **Drop APK here** → **Release to drop**) or use **Browse files**. Split-APK bundles (`.apkm` / `.xapk` / `.apks`) are merged into a single APK automatically.
+Drop an APK anywhere on the window (the zone reads **Drop APK(s) here** → **Release to drop**) or click it to browse. Picking one file stages it for single-app patching; dropping or selecting 2+ files opens [Batch patching](#gui-batch) directly with all of them queued. Split-APK bundles (`.apkm` / `.xapk` / `.apks`) are merged into a single APK automatically.
 
 The **Supported apps** list shows what your enabled patch sources can target, each tagged with its compatibility status:
 - **Recommended** (primary color): The exact version tested and targeted by the patch bundle.
@@ -177,57 +182,65 @@ Once an APK is dropped, Morphe reads its metadata (**Analyzing** / "Reading app 
   <img src="images/documentation/gui/home-version-warning.png" width="60%" alt="Selected Apk with warning" style="vertical-align: middle"/>
 </p>
 
-<h4 id="gui-expert-source">2. Choose a patch source & version</h4>
+<h4 id="gui-expert-sources">Managing patch sources</h4>
 
+The **Sources page** (accessed via the **Sources** tab in the top navigation pill) lets you manage the patch sources Morphe fetches from: add community sources (GitHub, GitLab, or Codeberg repos, GitHub pull requests, `.json` bundle manifest URLs, or `morphe.software/add-source` links), switch release channels, reorder priority, refresh, or remove them on demand. Adding more than one source is the GUI counterpart to passing several `-p` URLs on the CLI: their patches show up together, grouped by bundle, on the patch selection screen.
 
-| Control                                                                                              | What it does                          | CLI equivalent                                                      |
-|------------------------------------------------------------------------------------------------------|---------------------------------------|---------------------------------------------------------------------|
-| Release list (**Latest** / **Stable** / **Prerelease** / **Cached**) + **Download** / **Select**     | Pick and fetch a patch release        | `-p <repo-url>` (+ `--prerelease` for **Prerelease**)                |
-| **Patch notes**                                                                                      | Read a release's changelog            | -                                                                   |
-| **Local patch file → Browse**                                                                        | Use a `.mpp` already on disk          | `-p <file.mpp>`                                                     |
-| **Export JSON**                                                                                      | Save an `options.json` for this bundle | [`options-create`](#subcommand-4-options-create) / `--options-file` |
+The page header displays a live summary (`N of M enabled, X patches across Y apps`), a **Reload patches** refresh button, and an **Add source** button. Below it, enabled and disabled sources appear in a responsive grid of **source cards**, each displaying:
+- **Header**: source avatar with its priority number (`1`, `2`, …), source name, status tags (**Built-in**, **Disabled**, **Failed**), clickable repository link (or local path), an enable/disable toggle (locked when only one source remains enabled), and a **`⋯` More actions** menu (**Browse patches** in Expert mode, **Report an issue**, **Edit**, and **Remove** for custom sources).
+- **Version & metadata**: the active version tag (or `Resolving…`), plus indicators for **Local** or **Pull request** sources, release date (hover for the exact timestamp), **Pinned** (when pinned in **All versions**), **Cached** (offline fallback), and a verified **Signed** badge (hover to view the fingerprint; click to copy the full key).
+- **Stats strip**: **Patches** count (clickable in Expert mode to open **All versions**), bundle **Size**, and **Apps** count with app icon tiles and a clickable **searchable Apps dropdown** listing every supported app and its patch count.
+- **Channel / Updates row**: a segmented **Stable / Pre-release** switch on remote repository sources (switching to **Pre-release** asks you to confirm, since pre-release builds are still in development). Local, developer folder, GitHub PR, and non-channel JSON sources show their fixed update behavior (*Manual (replace file)*, *Newest .mpp in folder*, *Latest pull request build*, or *From JSON manifest*).
+- **Footer bar**: contextual quick actions – **All versions ›** in Expert mode (and a highlighted **Update to `<version>`** action when a newer release is available), **Show in folder** for local sources, **Open pull request** for PR sources, **Review signing key ›** on signer mismatch, or **Retry** on load failure.
 
-Morphe fetches the available releases from your configured source and tags them: **Latest**, **Stable**, **Prerelease** (experimental), and **Cached** (already downloaded). Pick one and **Download** / **Select** it. Expand **Patch notes** to read the changelog first. Already have a `.mpp`? **Local patch file → Browse** points straight at it. In Expert mode, you can also jump directly into a source's patches from the [Sources page](#gui-expert-sources).
+**Reordering.** Drag any source card directly to change its position in the grid. The priority number on each avatar represents **load priority** – lower numbers are loaded first. If two sources ship a patch or class with identical names, the higher-priority (lower-numbered) source wins.
+
+**Adding & editing sources.** Click **Add source** and choose **Remote** (accepts GitHub, GitLab, or Codeberg repo URLs, GitHub pull request URLs, `.json` bundle manifests, or `morphe.software/add-source` links with live URL validation) or **Local** (pick a `.mpp` file, or a build folder when [Developer options](#gui-settings-developer) is enabled).
+
+**Local sources & Folder watching.** A local source can point at a `.mpp` file on disk. When [Developer options](#gui-settings-developer) is enabled, local sources can also point at a build **folder** and an **Ignored .mpp patterns** editor appears at the bottom of the Sources page. Morphe automatically loads the newest `.mpp` built into that directory, and clicking **Reload patches** re-scans on demand without restarting the app.
+
+> [!NOTE]
+> In **Simple mode**, version browsing (**All versions** / **Browse patches**) is hidden, and any source pinned to a specific version in Expert mode automatically follows its configured channel.
 
 <p align="center">
-  <img src="images/documentation/gui/patches-releases.png" width="60%" alt="Release Screen" style="vertical-align: middle"/>
+  <img src="images/documentation/gui/sources-page.png" width="75%" alt="Patch sources page" style="vertical-align: middle"/>
+</p>
+
+<h4 id="gui-expert-source">Patch versions timeline (All versions)</h4>
+
+In **Expert mode**, click **All versions ›**, the **Patches** count, or **`⋯` → Browse patches** on any enabled remote source card to open its two-pane **All versions** timeline screen. (Opening a local source shows a **Local patch file** banner with the active `.mpp` filename.)
+
+| Control                                                                               | What it does                                       | CLI equivalent                                                            |
+|---------------------------------------------------------------------------------------|----------------------------------------------------|---------------------------------------------------------------------------|
+| **Stable / Pre-release** switch + **Search versions** + timeline rail                 | Browse, filter, and inspect available releases     | `-p <repo-url>` (+ `--prerelease` for **Pre-release**)                    |
+| **Auto-update** switch / **Use `<version>`**                                          | Follow the channel automatically or pin a release  | `-p <repo-url>/releases/tag/<tag>` (when pinned)                          |
+| **`⋯` → Export options.json**                                                         | Save an `options.json` for the selected release    | [`options-create`](#subcommand-4-options-create) / `--options-file`       |
+| **`⋯` → Show in folder** / **Download only** / **Open release page**                  | Reveal cached `.mpp`, pre-fetch, or open in browser| –                                                                         |
+
+- **Left pane (Version timeline)**: Switch between **Stable** and **Pre-release** (with release counts; hidden when offline, showing cached releases instead) or filter with **Search versions** and `↑`/`↓` arrow keys. Releases are grouped around the active version (**Newer**, **In use** tagged as *Following stable*, *Following pre-release*, or *Pinned*, and **Older**), showing **Version**, **Released**, and **Size**. Selecting a different release draws an **upgrade** (`↑`) or **downgrade** (`↓`) timeline path from the in-use version, and cached releases show a green checkmark (**Downloaded**).
+- **Right pane (Version details)**:
+  - **Hero & actions**: Displays the selected tag, downloaded checkmark, **Latest** badge, and either **In use** + mode badges or a relative offset (*"N versions newer/older than"*) with a clickable chip to jump back to the in-use release. Use **Auto-update** (on the latest release of a channel) to toggle between following new releases and staying pinned, click **Use `<version>`** to download (if needed) and activate that release, or open **`⋯`** for **Export options.json**, **Show in folder**, **Download only**, and **Open release page**.
+  - **Metadata bar**: Shows the channel, release date, patch and app counts with `+N` / `-N` delta badges compared to the in-use release, and bundle size.
+  - **Apps and patches**: A searchable table of supported apps (plus **Universal patches**) showing **Recommended** versions, clickable **Supported versions** download chips (highlighting newly added versions, dropped versions with strikethrough, and experimental versions), and per-app patch counts with deltas. Expand any row to browse its searchable patch grid with **New**, **Removed**, **Off by default**, and expandable **Options** badges. Uncached releases show a **Download** prompt to inspect their contents.
+  - **What's new**: Displays formatted markdown release notes for the selected version.
+
+<p align="center">
+  <img src="images/documentation/gui/patch-versions.png" width="75%" alt="All versions screen" style="vertical-align: middle"/>
 </p>
 
 > [!NOTE]
-> **Export JSON** writes an options file describing every patch and its settings – the same artifact the CLI's [`options-create`](#subcommand-4-options-create) produces. Edit it and feed it back via `--options-file` for repeatable, scriptable runs.
-
-<h4 id="gui-expert-sources">Managing patch sources</h4>
-
-The **Sources page** (accessed via the **Sources** tab in the top navigation pill) lets you manage the patch sources Morphe fetches from: add community sources (GitHub / GitLab / Codeberg repos, `.json` bundle manifest URLs, or `morphe.software/add-source` links), remove them, or refresh them on demand. Adding more than one source is the GUI counterpart to passing several `-p` URLs on the CLI: their patches show up together, grouped by bundle, on the patch selection screen.
-
-Each source row displays its current version, release channel badge, and signing key fingerprint:
-
-| Channel badge     | Meaning                                  |
-|-------------------|------------------------------------------|
-| 🟢 **Latest Stable** | Newest stable release – recommended      |
-| 🟡 **Older Stable**  | A stable release, but a newer one exists |
-| 🟣 **Prerelease**    | Newest pre-release (experimental)        |
-| 🩵 **Local**         | A local `.mpp` file or folder source     |
-| 🔴 **Error / Incompatible** | Source failed to fetch, or requires a different Patcher engine version |
-
-**Reordering.** Drag a source by its handle to change its position in the list. Order represents **load priority** – sources higher in the list are loaded first. If two sources ship a patch or class with identical names, the one higher in priority wins.
-
-**Local sources & Folder watching.** A local source can point at a `.mpp` file on disk. When [Developer options](#gui-settings-developer) is enabled, local sources can also point at a build **folder**. Morphe then automatically loads the newest `.mpp` built into that directory, and clicking **Refresh** re-scans the directory without restarting the app.
-
-<p align="center">
-  <img src="images/documentation/gui/source_sheet.png" width="50%" height="50%" alt="Sources sheet" style="vertical-align: middle"/>
-</p>
+> **`⋯` → Export options.json** writes an options file describing every patch and its settings – the same artifact the CLI's [`options-create`](#subcommand-4-options-create) produces. Edit it and feed it back via `--options-file` for repeatable, scriptable runs.
 
 <h5 id="gui-signing-trust">Signing key verification & trust</h5>
 
 To protect against tampered releases and compromised third-party repositories, Morphe cryptographically verifies every patch bundle before loading it:
 
 - **Official Morphe Patches**: Automatically verified against Morphe's pinned official signing key.
-- **Community Sources**: Uses a Trust-On-First-Use (TOFU) model. When a signed bundle is first loaded from a source, its public key fingerprint is pinned and displayed on the source row (`Signed by <fingerprint>`).
-- **Key Changes**: If a source's signing key changes, or if a release is unexpectedly unsigned or signed by an unknown key, Morphe refuses the unverified bundle, flags the source with a **Key changed** badge, and displays a warning banner.
-- **Reviewing & Trusting**: Clicking the badge opens the **Signing Key Trust Dialog** (`SigningKeyTrustDialog`), showing the previously trusted fingerprint alongside the new key's fingerprint. Only click **Trust** if the developer has officially announced a key rotation.
+- **Community Sources**: Uses a Trust-On-First-Use (TOFU) model. When a signed bundle is first loaded from a source, its public key fingerprint is pinned and shown via the verified **Signed** badge on the source card's metadata line (hover to inspect the fingerprint; click to copy the full key).
+- **Key Changes**: If a source's signing key changes, or if a release is unexpectedly unsigned or signed by an unknown key, Morphe refuses the unverified bundle, marks the card with a **Failed** tag and a signing-key-changed notice, and adds a **Review signing key ›** footer action.
+- **Reviewing & Trusting**: Clicking **Review signing key ›** opens the **Trust the new key?** (`SigningKeyTrustDialog`) dialog, showing the **Trusted key** fingerprint alongside the **New key** fingerprint (click to copy). Only click **Trust** if the developer has officially announced a key rotation.
 
-<h4 id="gui-expert-selection">3. Select patches</h4>
+<h4 id="gui-expert-selection">2. Select patches</h4>
 
 The full patch list from your selected bundle(s), with a running **"N of M selected"** count.
 
@@ -313,7 +326,7 @@ Hit **Save icon** to export the folder and wire it into the option (**Cancel** d
   <img src="images/documentation/gui/icon-studio.png" width="60%" alt="Icon Studio" style="vertical-align: middle"/>
 </p>
 
-<h4 id="gui-expert-patching">4. Patching</h4>
+<h4 id="gui-expert-patching">3. Patching</h4>
 
 
 | Control                        | What it does               | CLI equivalent               |
@@ -340,7 +353,7 @@ On failure in either mode, Morphe presents an in-depth diagnosis screen (`Expert
   <img src="images/documentation/gui/patching-error.png" width="60%" alt="Patching Screen Error" style="vertical-align: middle"/>
 </p>
 
-<h4 id="gui-expert-result">5. Result</h4>
+<h4 id="gui-expert-result">4. Result</h4>
 
 
 | Control                             | What it does                  | CLI equivalent                                    |
@@ -380,7 +393,7 @@ The **Link handling** section appears on the Result screen once the patched app 
 
 <h3 id="gui-your-apps">Your apps</h3>
 
-The home screen has two tabs: **Supported apps** (what your patches can target) and **Your apps**, a history of everything you've patched with Morphe. The "Your apps" tab carries a count badge, and when newer patches are available a banner ("N patched apps have updates available") jumps you there.
+The home screen has two tabs: **All apps** (what your patches can target) and **Your apps**, a history of everything you've patched with Morphe. The "Your apps" tab carries a count badge, and when newer patches are available a banner (*"N patched apps have updates available"*) lets you click **View** to inspect them or **Patch all** to update every outdated app in one [Batch patching](#gui-batch) run. You can also toggle **Select** next to the filter chips to multi-select apps across both tabs.
 
 <p align="center">
   <img src="images/documentation/gui/your-apps.png" width="60%" alt="Your Apps section" style="vertical-align: middle"/>
@@ -410,6 +423,52 @@ The detail view provides a comprehensive breakdown of the patched app:
   <img src="images/documentation/gui/your-apps-details-dialog.png" width="60%" alt="Your Apps details dialog" style="vertical-align: middle"/>
 </p>
 
+<h3 id="gui-batch">Batch patching</h3>
+
+Patch multiple apps in a single queued run instead of configuring them one by one. Batch patching works in both **Simple mode** and **Expert mode** and processes every queued app sequentially from a single preflight screen.
+
+#### Starting a batch
+
+You can start (or append to) a batch from **Home → Apps** in three ways:
+
+- **Multi-select (*Select*):** Click **Select** next to the **All apps** / **Your apps** filter chips to switch rows into checkboxes. Check apps across either or both tabs, use **Select all** / **Deselect all**, and click **Patch selected (N)** (or **Add to queue (N)** when a saved queue already exists).
+- **Update banner (*Patch all*):** When previously patched apps have patch updates available, click **Patch all** on the update banner to queue all outdated apps at once.
+- **Multi-APK drop or file picker:** Drag and drop 2 or more `.apk`, `.apkm`, `.xapk`, or `.apks` files onto **Drop APK(s) here**, or click to select multiple files at once.
+
+<p align="center">
+  <img src="images/documentation/gui/batch-home-select.png" width="55%" alt="Home multi-select for batch patching" style="vertical-align: middle"/>
+</p>
+
+#### Preflight review
+
+Once opened, Morphe inspects dropped APKs and automatically resolves local files for each queued package from files you attached, kept copies in `morphe-data/original-apks/`, and your patched-app history. Each app appears as a card showing its version, source APK, patch count, bundle names, and status badge (**Ready**, **APK needed**, **Unsupported version**, **Root mount**, etc.):
+
+| Control | What it does |
+|---|---|
+| **+ Add APKs** / drag & drop | Add more `.apk` / `.apkm` / `.xapk` / `.apks` files to the queue (dropping onto the window automatically attaches or appends) |
+| **Attach APK** / **Change APK** | Pick a local APK or split bundle for an app (or replace its current file) |
+| **Download APK** | Opens the app's download link when an APK is needed, outdated, or mismatched |
+| **Force version** | Override a version mismatch and queue an **Unsupported version** APK anyway (marked **Forced**) |
+| **Source** *(Simple mode)* | Switch patch source when multiple enabled sources support the app |
+| **Edit patches** | Opens the full [Patch selection](#gui-expert-selection) screen in batch-edit mode (`Save selection (N)` syncs choices back to the queue) |
+| **# Mount** *(Expert mode)* | Toggle root mount mode for that app |
+| **Exclude** / **Include** | Temporarily skip an app without removing it from the queue |
+| **Install / Mount when finished** | Shown when ADB is enabled and a device is connected; automatically installs/mounts patched apps after the batch finishes |
+| **Start batch (N)** / **Clear** / **Close** | Run all ready apps, clear the queue, or leave preflight (**Keep queue** saves the queue across restarts; **Clear queue** discards it) |
+
+<p align="center">
+  <img src="images/documentation/gui/batch-preflight.png" width="70%" alt="Batch patching preflight screen" style="vertical-align: middle"/>
+</p>
+
+#### Running, status banner &amp; finished
+
+- **Sequential execution:** Clicking **Start batch (N)** patches each ready app in order. In **Simple mode** it shows the circular progress view; in **Expert mode** it shows live logs and performance graphs. Use **Stop** in the header to cancel the active item and skip remaining queued apps while keeping already-patched outputs.
+- **Live Home status banner:** Returning to **Home** while a queue is planning, running, finished, or kept shows a live **Batch queue** banner at the top (**View** / **Open queue**). Competing single-app patch runs are blocked while a batch is active.
+- **Finished actions:** When the batch ends, each succeeded card provides **Install** (or **Mount**) / **Retry** and **Open folder**, while failed items offer **View error**. You can also click **Install all (N)** or **Retry unfinished** from the bottom bar.
+
+> [!NOTE]
+> When installing over ADB (whether individually, via **Install all**, or automatically), Morphe never auto-uninstalls an existing app on a signature mismatch; conflicts are reported per app so your existing app data stays safe.
+
 <h3 id="gui-settings">Settings</h3>
 
 Open Settings from the **Settings** tab in the Home navigation pill, or via the top-right **Settings** button on any workflow sub-screen. Think of it as the GUI's equivalent of the CLI flag set: most settings map directly to a `patch` flag. Settings is laid out as an integrated two-pane page with a live **Search settings** bar and three categories in the left sidebar: **Appearance**, **Advanced**, and **System**.
@@ -438,6 +497,7 @@ Open Settings from the **Settings** tab in the Home navigation pill, or via the 
 | **Output folder**              | Default location for patched APKs                                                                         | The input APK's folder                                                               | `-o` / `--out`                                                                             |
 | **Keep original APKs**         | Copy, Move, or Off: keep each app's original APK in `morphe-data/original-apks/`                         | Copy                                                                                 | `--save-original` (`OFF` unless set here)                                                |
 | **Auto-start ADB**             | Start the ADB daemon on launch so devices are monitored                                                   | Off                                                                                  | enables `-i` / install features                                                            |
+| **Auto-install after patching** | Automatically install or mount patched apps on the selected ADB device once patching finishes             | Off                                                                                  | `-i` / `--install`, `--mount`                                                              |
 | **Storage & cache**            | Inspect and clear caches, or open data root / logs directory                                              | –                                                                                    | [`utility clear-cache`](#utility-clear-cache)                                              |
 
 <p align="center">
@@ -451,7 +511,7 @@ A couple of items worth expanding on:
 - **About, Changelogs & Licenses** - **Settings → System → About** displays the application version, **View changelogs**, **Open Source licenses**, **Documentation**, and **Visit website**. The Changelog pane (also opened directly from update banners) features structured release notes parsed into categorized sections (*App support*, *Fixes*, *Improvements*, *New*, *Performance*, *Changes*) with change counters, clickable links, inline code chips, and release status badges (*Installed*, *Latest*, *Pre-release*).
 - **Storage & cache** - Found under **Settings → System**, this section displays live disk usage and file counts broken down by category (**Patches**, **Logs**, **Temporary files**, **Avatar cache**, and **App icon cache**). Each category can be cleared individually or all at once via **Clear all cache**, plus direct buttons to open Morphe's application data folder (`morphe-data/`) and logs folder (`morphe-data/logs/`) in your desktop file manager.
 - **Keep original APKs** - after a successful patch, Morphe keeps a copy of the APK you patched in `morphe-data/original-apks/`, named `<package>-<version>.<ext>`, and the app's repatch dialog uses that copy from then on, so you can tidy up your Downloads folder without losing it. The dropdown chooses **Copy** (the default), **Move**, which also removes the APK from where you picked it, or **Off**. When you **Forget** or **Uninstall** an app that has a kept APK, the dialog offers to delete that APK as well. When no **Output folder** is set, repatching from a kept APK saves the patched APK where the app's previous one was saved.
-- **Auto-start ADB** - when off, Morphe never starts the ADB server and all install/push features are disabled. Turn it on to install patched APKs to your phone from Morphe.
+- **Auto-start ADB** & **Auto-install after patching** *(Settings → System → ADB & Installation)* - when **Auto-start ADB** is off, Morphe never starts the ADB server and all install/push features are disabled. Turn it on to install patched APKs to your phone from Morphe. Enabling **Auto-install after patching** automatically installs (or root-mounts) finished APKs onto the selected connected device on the Result screen and turns on **Install / Mount when finished** by default in batch patching (respecting **Route links to patched app**, without ever auto-uninstalling on signature conflicts).
 - **Check for updates** - *Prerelease* surfaces pre-releases; *Stable* only stable ones; *Off* disables update checks. If you've never chosen, Morphe defaults smartly (Prerelease when you're running a dev build).
 - **Route links to patched app** - when on, every ADB install is followed by routing the app's supported web links to the patched app (the [Link handling](#gui-expert-links) step, run automatically). A nested **Disable stock app's links** option also stops the original app from opening those links – only relevant when a rename patch was used and the stock app is still installed. Both are reversible and need a connected device.
 
@@ -513,10 +573,10 @@ A debugging aid: capture logcat from a connected device after a patched app cras
 
 This section is for people **building** patches and other developers. Off by default. Toggling it on unlocks patch-development tools under **Settings → Advanced → Developer options** as well as folder source workflows. Please feel free to make a request in the issues tab if you feel a feature could be added here.
 
-- **Bytecode mode** – choose the DEX bytecode transformation mode applied during patching (*Fast*, *Safe*, or *Full*).
+- **Bytecode mode** – choose the DEX bytecode transformation mode applied during patching (*Fast* or *Safe*).
 - **Fingerprint validation** – validate that each `match()` matches only one method (slower patching, useful when testing patches).
 - **Android SDK verification** – verify patched DEX and APK files using Android SDK tools (`d8`, `zipalign`), with an **Android SDK directory** picker (**Auto-detected** / **Browse** / **Reset**).
-- **Folder sources** – normally a local source points at a single `.mpp` file. With Developer options on, the add/edit source dialog gains a **Folder** button next to **File**. Pick a folder and Morphe always loads the **newest `.mpp`** inside it. Point it at your patch build-output directory once and you never re-pick the file: each rebuild is used on the next load. The [source sheet](#gui-expert-sources) also gains a **refresh** button (top-right) that re-scans on demand, so a patch you just built shows up without leaving the screen. Build outputs like `*-sources.mpp` and `*-javadoc.mpp` are always ignored, and you can set your own exclude patterns for a folder source from the source manager.
+- **Folder sources** – normally a local source points at a single `.mpp` file. With Developer options on, the add/edit source dialog gains a **Folder** button next to **File**. Pick a folder and Morphe always loads the **newest `.mpp`** inside it. Point it at your patch build-output directory once and you never re-pick the file: each rebuild is used on the next load. Clicking **Reload patches** (top-right of the [Sources page](#gui-expert-sources)) re-scans on demand, so a patch you just built shows up without leaving the screen. Build outputs like `*-sources.mpp` and `*-javadoc.mpp` are always ignored, and with Developer options enabled you can add your own **Ignored .mpp patterns** at the bottom of the Sources page.
 
 > [!NOTE]
 > Existing folder sources keep working even if you later turn Developer options back off. The toggle only gates *creating* them.
@@ -548,7 +608,7 @@ Morphe can push patched APKs straight to your phone over ADB:
 1. Enable **Auto-start ADB** in Settings (off by default).
 2. Connect your phone via USB with **USB debugging** enabled, and accept the authorization prompt on the device.
 3. The **device indicator** in the top bar shows it; click to pick a device if several are connected.
-4. After patching, use **ADB install** on the Result screen.
+4. After patching, use **ADB install** on the Result screen (or **Install** / **Install all** on the [Batch patching](#gui-batch) finished screen), or enable **Auto-install after patching** under **Settings → System → ADB & Installation** to install automatically once patching finishes.
 
 <p align="center">
   <img src="images/documentation/gui/device-indicator.png" width="60%" alt="Device Indicator" style="vertical-align: middle"/>

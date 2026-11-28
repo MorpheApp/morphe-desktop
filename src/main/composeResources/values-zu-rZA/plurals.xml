@@ -88,4 +88,16 @@
         <item quantity="one">%1$d inketho</item>
         <item quantity="other">%1$d izinketho</item>
     </plurals>
+    <plurals name="batch_patch_ready_count">
+        <item quantity="one">i-app %1$d kue %2$d ilungile</item>
+        <item quantity="other">izinhlelo zohlelo %1$d kue %2$d zilungile</item>
+    </plurals>
+    <plurals name="batch_queue_pending_count">
+        <item quantity="one">i-app %1$d isemugqeni</item>
+        <item quantity="other">izinhlelo zohlelo %1$d zisemugqeni</item>
+    </plurals>
+    <plurals name="batch_selected_count">
+        <item quantity="one">%1$d ukhethiwe</item>
+        <item quantity="other">%1$d ukhethiwe</item>
+    </plurals>
 </resources>
