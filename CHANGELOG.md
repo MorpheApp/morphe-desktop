@@ -1,3 +1,10 @@
+# [2.5.0-dev.1](https://github.com/MorpheApp/morphe-desktop/compare/v2.4.0...v2.5.0-dev.1) (2026-11-28)
+
+
+### Features
+
+* Add batch patching and auto-install support ([#462](https://github.com/MorpheApp/morphe-desktop/issues/462)) ([4799cd5](https://github.com/MorpheApp/morphe-desktop/commit/4799cd5da380a32bc23b799473d298fbc2f7594a))
+
 # [2.4.0](https://github.com/MorpheApp/morphe-desktop/compare/v2.3.0...v2.4.0) (2026-11-26)
 
 
