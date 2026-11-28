@@ -23,6 +23,8 @@ import app.morphe.engine.patches.SupportedAppCatalog
 import app.morphe.engine.patches.resolveVersionStatus
 import app.morphe.engine.util.AdbException
 import app.morphe.gui.BatchPatcherScreenRoute
+import app.morphe.gui.LocalExitApplication
+import app.morphe.gui.LocalIsPatching
 import app.morphe.gui.LocalModeState
 import app.morphe.gui.LocalNavController
 import app.morphe.gui.PatchSelectionParams
@@ -33,6 +35,8 @@ import app.morphe.gui.batch.BatchTarget
 import app.morphe.gui.data.model.PatchSource
 import app.morphe.gui.data.model.PatchSourceType
 import app.morphe.gui.PatchingScreenRoute
+import app.morphe.gui.data.repository.AppUpdateManager
+import app.morphe.gui.data.repository.AppUpdateState
 import app.morphe.gui.data.repository.PatchSourceManager
 import app.morphe.gui.navigateComplex
 import app.morphe.gui.ui.components.AddPatchSourceDialog
@@ -102,11 +106,15 @@ fun HomeScreenContent(
     val coroutineScope = rememberCoroutineScope()
     val patchSourceManager: PatchSourceManager = koinInject()
     val batchPatchCoordinator: BatchPatchCoordinator = koinInject()
+    val appUpdateManager: AppUpdateManager = koinInject()
     val allSources by patchSourceManager.allSources.collectAsState()
     val batchState by batchPatchCoordinator.state.collectAsState()
     val savedBatchQueue by batchPatchCoordinator.savedQueue.collectAsState()
     val isBatchRunning = batchState?.isActive == true
     val hasPendingBatchQueue = batchState?.isPending == true || (batchState == null && savedBatchQueue != null)
+    val appUpdateState by appUpdateManager.state.collectAsState()
+    val isPatching by LocalIsPatching.current
+    val exitApplication = LocalExitApplication.current
 
     LaunchedEffect(viewModel) {
         viewModel.navigateToBatch.collect {
@@ -503,7 +511,24 @@ fun HomeScreenContent(
                             Column(modifier = Modifier.fillMaxSize()) {
                         HomeBanners(
                             uiState = uiState,
+                            appUpdateState = appUpdateState,
+                            installation = appUpdateManager.installation,
+                            isPatching = isPatching,
                             hideUpdateBanner = isChangelogOpen && uiState.selectedPage == HomePage.SETTINGS,
+                            onStartUpdate = { info ->
+                                appUpdateManager.startUpdate(info, { isPatching }, exitApplication)
+                            },
+                            onCancelUpdate = { appUpdateManager.cancelDownload() },
+                            onRestartToUpdate = { appUpdateManager.applyStagedUpdate(exitApplication) },
+                            onRetryUpdate = { info ->
+                                val failedStaged = (appUpdateState as? AppUpdateState.Failed)?.staged
+                                if (failedStaged != null) {
+                                    appUpdateManager.applyStagedUpdate(exitApplication)
+                                } else {
+                                    appUpdateManager.startUpdate(info, { isPatching }, exitApplication)
+                                }
+                            },
+                            onDismissUpdateError = { appUpdateManager.clearError() },
                             onDismissSourceUpdate = { viewModel.dismissSourceUpdateBanner() },
                             onDismissUpdateSession = { viewModel.dismissUpdateForSession() },
                             onDismissUpdateVersion = { viewModel.dismissUpdateForVersion() },

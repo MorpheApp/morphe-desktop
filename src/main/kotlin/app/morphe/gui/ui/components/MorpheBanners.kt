@@ -149,6 +149,7 @@ fun MorpheBanner(
     title: String,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
+    subtitleKey: (String) -> Any? = { it.substringBefore(BANNER_DETAIL_SEPARATOR) },
     tone: MorpheBannerTone = MorpheBannerTone.Info,
     icon: ImageVector? = null,
     leading: (@Composable () -> Unit)? = null,
@@ -206,7 +207,7 @@ fun MorpheBanner(
                     AnimatedContent(
                         targetState = subtitle,
                         transitionSpec = { fadeIn(tween(200)) togetherWith fadeOut(tween(200)) },
-                        contentKey = { it.substringBefore(BANNER_DETAIL_SEPARATOR) },
+                        contentKey = subtitleKey,
                         label = "bannerSubtitle",
                     ) { shownSubtitle ->
                         Text(
@@ -369,11 +370,13 @@ fun MorpheBannerAction(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     icon: ImageVector? = null,
+    enabled: Boolean = true,
     hoverAccent: Color? = null,
 ) = MorpheChoiceChip(
     text = label,
     active = false,
     dense = true,
+    enabled = enabled,
     modifier = modifier,
     icon = icon,
     accent = hoverAccent ?: MorpheTheme.colors.primary,

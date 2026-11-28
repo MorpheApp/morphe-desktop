@@ -22,6 +22,7 @@ import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import app.morphe.engine.MorpheData
+import app.morphe.engine.SelfUpdater
 import app.morphe.engine.util.Logger
 import app.morphe.engine.workspace.WorkspaceManager
 import app.morphe.gui.data.model.AppConfig
@@ -42,6 +43,7 @@ import org.jetbrains.skia.Image
 @Suppress("unused")
 fun launchGui(args: Array<String>) {
     Logger.init()
+    SelfUpdater.cleanupUpdatesDirAsync()
     runCatching { WorkspaceManager.reapStaleWorkspaces() }
 
     // Initialize native file dialogs before use.
@@ -117,7 +119,10 @@ fun launchGui(args: Array<String>) {
             LocalFrameWindowScope provides this,
             LocalDensity provides Density(density.density * uiScale, density.fontScale),
         ) {
-            app(initialSimplifiedMode = initialSimplifiedMode)
+            app(
+                initialSimplifiedMode = initialSimplifiedMode,
+                onExitApplication = ::exitApplication,
+            )
         }
     }
     }

@@ -15,12 +15,21 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.morphe.engine.SelfUpdater.AppInstallation
+import app.morphe.engine.UpdateInfo
 import app.morphe.gui.batch.BatchPhase
 import app.morphe.gui.batch.BatchPlanningStage
 import app.morphe.gui.batch.BatchRunState
 import app.morphe.gui.batch.SavedBatchQueue
+import app.morphe.gui.data.repository.AppUpdateState
+import app.morphe.gui.data.repository.updateInfoOrNull
 import app.morphe.gui.ui.components.MorpheBanner
 import app.morphe.gui.ui.components.MorpheBannerAction
 import app.morphe.gui.ui.components.MorpheBannerProgressRing
@@ -39,6 +48,14 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 internal fun HomeBanners(
     uiState: HomeUiState,
+    appUpdateState: AppUpdateState,
+    installation: AppInstallation,
+    isPatching: Boolean,
+    onStartUpdate: (UpdateInfo) -> Unit,
+    onCancelUpdate: () -> Unit,
+    onRestartToUpdate: () -> Unit,
+    onRetryUpdate: (UpdateInfo) -> Unit,
+    onDismissUpdateError: () -> Unit,
     onDismissUpdateSession: () -> Unit,
     onDismissUpdateVersion: () -> Unit,
     onDismissMultiSourceHint: () -> Unit,
@@ -53,7 +70,21 @@ internal fun HomeBanners(
     onOpenBatch: () -> Unit = {},
     onDismissBatch: () -> Unit = {},
 ) {
-    val showUpdate = uiState.showUpdateBanner && !hideUpdateBanner
+    var readyDismissedForSession by remember { mutableStateOf(false) }
+    LaunchedEffect(appUpdateState is AppUpdateState.ReadyToRestart) {
+        if (appUpdateState !is AppUpdateState.ReadyToRestart) {
+            readyDismissedForSession = false
+        }
+    }
+
+    val effectiveUpdateInfo = appUpdateState.updateInfoOrNull() ?: uiState.updateInfo
+    val isActiveUpdateVisible = when (appUpdateState) {
+        AppUpdateState.Idle -> false
+        is AppUpdateState.ReadyToRestart -> !readyDismissedForSession
+        else -> true
+    }
+    val showUpdate = effectiveUpdateInfo != null &&
+        (isActiveUpdateVisible || (uiState.showUpdateBanner && !hideUpdateBanner))
     val showBatchRunning = batchState?.isActive == true
     val showBatchPlanning = !showBatchRunning && batchState?.phase == BatchPhase.PLANNING
     val showBatchFinished = !showBatchRunning && !showBatchPlanning && batchState?.hasOutcome == true
@@ -183,10 +214,19 @@ internal fun HomeBanners(
                     )
                 }
                 BannerSlot(visible = showUpdate) {
-                    uiState.updateInfo?.let { info ->
+                    effectiveUpdateInfo?.let { info ->
                         UpdateBanner(
                             info = info,
+                            updateState = appUpdateState,
+                            installation = installation,
+                            isPatching = isPatching,
+                            onStartUpdate = { onStartUpdate(info) },
+                            onCancelUpdate = onCancelUpdate,
+                            onRestartToUpdate = onRestartToUpdate,
+                            onRetryUpdate = { onRetryUpdate(info) },
+                            onDismissError = onDismissUpdateError,
                             onDismissForSession = onDismissUpdateSession,
+                            onDismissReadyForSession = { readyDismissedForSession = true },
                             onDismissForVersion = onDismissUpdateVersion,
                             onShowChangelog = onShowChangelog,
                         )

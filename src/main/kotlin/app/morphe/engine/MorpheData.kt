@@ -41,6 +41,9 @@ object MorpheData {
     /** Directory for temporary patcher scratch files. */
     val tmpDir: File by lazy { File(root, "tmp").also { it.mkdirs() } }
 
+    /** Directory for staging and applying self-updates. */
+    val updatesDir: File get() = File(root, "updates")
+
     /** Directory for the kept original APKs of patched apps, see [OriginalApkStore]. */
     val originalApksDir: File get() = File(root, "original-apks")
 

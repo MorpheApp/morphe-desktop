@@ -15,6 +15,7 @@ import app.morphe.engine.util.KeystoreService
 import app.morphe.engine.util.Logger
 import app.morphe.gui.batch.BatchPatchCoordinator
 import app.morphe.gui.batch.BatchPlanResolver
+import app.morphe.gui.data.repository.AppUpdateManager
 import app.morphe.gui.data.repository.ChangelogRepository
 import app.morphe.gui.data.repository.ConfigRepository
 import app.morphe.gui.data.repository.LanguageRepository
@@ -57,6 +58,7 @@ val appModule = module {
     single { SeenPatchesRepository() }
     single { PatchSourceManager(get(), get()) }
     single { UpdateCheckRepository(get()) }
+    single { AppUpdateManager(get(), get()) }
     single { ChangelogRepository(get()) }
     single { PeopleRepository(get(), get()) }
     single { PatchedAppStore.shared }

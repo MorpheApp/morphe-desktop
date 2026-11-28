@@ -37,10 +37,17 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import app.morphe.engine.AppUpdateCheck
+import app.morphe.engine.SelfUpdater.AppInstallation
 import app.morphe.engine.util.isNewerVersion
 import app.morphe.engine.util.normalizeVersion
+import app.morphe.gui.LocalExitApplication
+import app.morphe.gui.LocalIsPatching
 import app.morphe.gui.data.constants.AppConstants
+import app.morphe.gui.data.repository.AppUpdateManager
+import app.morphe.gui.data.repository.AppUpdateState
 import app.morphe.gui.data.repository.ChangelogRepository
+import app.morphe.gui.data.repository.UpdateCheckRepository
 import app.morphe.gui.ui.components.settings.SettingsSubViewHeader
 import app.morphe.gui.ui.icons.MorpheIcons
 import app.morphe.gui.ui.theme.MorpheTheme
@@ -99,11 +106,23 @@ fun ChangelogPane(
     modifier: Modifier = Modifier,
     horizontalPadding: PaddingValues = PaddingValues(0.dp),
     changelogRepository: ChangelogRepository = koinInject(),
+    updateCheckRepository: UpdateCheckRepository = koinInject(),
+    appUpdateManager: AppUpdateManager = koinInject(),
 ) {
     val uriHandler = LocalUriHandler.current
     val state = rememberChangelogViewState(changelogRepository)
     val entryList = state.entries.orEmpty()
     val tagVersion = entryList.firstOrNull()?.version ?: state.installedVersion
+    var updateCheck by remember { mutableStateOf<AppUpdateCheck?>(null) }
+    val appUpdateState by appUpdateManager.state.collectAsState()
+    val isPatching by LocalIsPatching.current
+    val exitApplication = LocalExitApplication.current
+
+    LaunchedEffect(updateCheckRepository) {
+        updateCheck = updateCheckRepository.checkUpdate()
+    }
+
+    val availableUpdate = (updateCheck as? AppUpdateCheck.Available)?.info
 
     val layoutDirection = LocalLayoutDirection.current
 
@@ -114,16 +133,35 @@ fun ChangelogPane(
             onBack = onBack,
             modifier = Modifier.padding(horizontalPadding),
             trailing = {
-                MorpheButton(
-                    label = stringResource(Res.string.changelog_view_on_github_button),
-                    icon = MorpheIcons.GitHub,
-                    onClick = {
-                        val clean = tagVersion.normalizeVersion()
-                        uriHandler.openUri("https://github.com/MorpheApp/morphe-desktop/releases/tag/v$clean")
-                    },
-                    variant = MorpheButtonVariant.OUTLINED,
-                    size = MorpheButtonSize.COMPACT,
-                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    if (availableUpdate != null &&
+                        appUpdateManager.installation is AppInstallation.WritableJar &&
+                        appUpdateState is AppUpdateState.Idle
+                    ) {
+                        MorpheButton(
+                            label = stringResource(Res.string.home_action_update),
+                            icon = MorpheIcons.Download,
+                            onClick = {
+                                appUpdateManager.startUpdate(availableUpdate, { isPatching }, exitApplication)
+                            },
+                            variant = MorpheButtonVariant.PRIMARY,
+                            size = MorpheButtonSize.COMPACT,
+                        )
+                    }
+                    MorpheButton(
+                        label = stringResource(Res.string.changelog_view_on_github_button),
+                        icon = MorpheIcons.GitHub,
+                        onClick = {
+                            val clean = tagVersion.normalizeVersion()
+                            uriHandler.openUri("https://github.com/MorpheApp/morphe-desktop/releases/tag/v$clean")
+                        },
+                        variant = MorpheButtonVariant.OUTLINED,
+                        size = MorpheButtonSize.COMPACT,
+                    )
+                }
             },
         )
 

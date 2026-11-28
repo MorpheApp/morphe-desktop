@@ -158,6 +158,8 @@ val LocalIsPatching = compositionLocalOf<State<Boolean>> {
     error("No LocalIsPatching provided")
 }
 
+val LocalExitApplication = staticCompositionLocalOf { {} }
+
 val LocalBackgroundType = compositionLocalOf<MutableState<BackgroundType>> { 
     error("No background type provided") 
 }
@@ -197,13 +199,17 @@ val LocalAdbPreference = staticCompositionLocalOf<AdbPreferenceState> {
 
 @Composable
 fun app(
-    initialSimplifiedMode: Boolean = true
+    initialSimplifiedMode: Boolean = true,
+    onExitApplication: () -> Unit = {},
 ) {
     KoinApplication(koinConfiguration {
         logger(KoinLoggerAdapter)
         modules(appModule)
     }) {
-        appContent(initialSimplifiedMode = initialSimplifiedMode)
+        appContent(
+            initialSimplifiedMode = initialSimplifiedMode,
+            onExitApplication = onExitApplication,
+        )
     }
 }
 
@@ -222,7 +228,8 @@ private object KoinLoggerAdapter : KoinLogger(KoinLevel.INFO) {
 
 @Composable
 private fun appContent(
-    initialSimplifiedMode: Boolean
+    initialSimplifiedMode: Boolean,
+    onExitApplication: () -> Unit,
 ) {
     val configRepository: ConfigRepository = koinInject()
     val engineConfigRepository: EngineConfigRepository = koinInject()
@@ -413,6 +420,7 @@ private fun appContent(
                 LocalAdbPreference provides adbPreferenceState,
                 LocalSettingsState provides settingsState,
                 LocalIsPatching provides isPatchingState,
+                LocalExitApplication provides onExitApplication,
                 LocalBackgroundType provides backgroundTypeState,
                 LocalEnableParallax provides enableParallaxState,
                 LocalParallaxState provides parallaxState,
